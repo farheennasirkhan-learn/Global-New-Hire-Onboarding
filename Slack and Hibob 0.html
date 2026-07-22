@@ -1,0 +1,715 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bob UI Recreation - Interactive</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+    /* Reset & Base Styles */
+    :root {
+        --bg-color: #f7f8fa;
+        --text-main: #333333;
+        --text-muted: #6b7280;
+        --blue-primary: #3b82f6;
+        --blue-hover: #2563eb;
+        --border-color: #e5e7eb;
+        --card-bg: #ffffff;
+        --top-nav-bg: #000000;
+        --font-family: 'Poppins', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: transparent;
+        font-family: var(--font-family);
+        color: var(--text-main);
+    }
+
+    /* Main Container Fixed Dimensions - Reduced to 600px height */
+    #app-container {
+        width: 1100px;
+        height: 600px; /* Reduced per requirements */
+        background-color: var(--bg-color);
+        position: relative;
+        border-radius: 20px; 
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Top Navigation */
+    .top-nav {
+        height: 45px;
+        background-color: var(--top-nav-bg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        color: white;
+        z-index: 10;
+        position: relative;
+    }
+    
+    .nav-left { display: flex; align-items: center; gap: 15px; }
+    .app-icon { width: 20px; height: 20px; fill: white; }
+    .bob-logo { font-weight: 600; font-size: 14px; background: #333; padding: 2px 8px; border-radius: 4px; }
+    
+    .nav-center { flex: 1; display: flex; justify-content: center; }
+    .search-bar {
+        background: #222;
+        border: 1px solid #444;
+        border-radius: 20px;
+        padding: 4px 15px 4px 35px;
+        color: white;
+        width: 380px;
+        font-size: 11px;
+        position: relative;
+    }
+    .search-bar::before {
+        content: "🔍";
+        position: absolute;
+        left: 12px;
+        top: 5px;
+        font-size: 11px;
+        opacity: 0.6;
+    }
+    
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .bell-icon { position: relative; font-size: 14px; }
+    .bell-dot { position: absolute; top: -2px; right: -2px; width: 6px; height: 6px; background: red; border-radius: 50%; }
+    
+    .company-pill { display: flex; align-items: center; background: white; color: black; border-radius: 20px; padding: 2px 4px 2px 10px; gap: 8px; font-weight: 600; font-size: 11px; }
+    
+    .avatar {
+        width: 24px; height: 24px; border-radius: 50%; background: #ddd; 
+        display: flex; justify-content: center; align-items: center; font-size: 12px;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+        height: 80px; /* Reduced */
+        background: linear-gradient(135deg, #0f172a, #1d4ed8, #0000ff);
+        position: relative;
+        padding: 15px 25px;
+        color: white;
+        display: flex;
+        align-items: center;
+    }
+    .hero-banner h1 { font-size: 22px; line-height: 1.2; font-weight: 600; }
+    .turing-box {
+        position: absolute;
+        right: 25px;
+        top: 15px;
+        width: 75px;
+        height: 75px;
+        background: #000;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-weight: 700;
+        font-size: 10px;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        z-index: 5;
+    }
+    .turing-box svg { fill: white; width: 22px; height: 22px; margin-bottom: 2px; }
+
+    /* Main Content Area */
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        padding-top: 25px; 
+        display: flex;
+        gap: 20px;
+        overflow: hidden;
+    }
+
+    .col-left { flex: 1.8; display: flex; flex-direction: column; gap: 12px; }
+    .col-right { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+
+    /* Cards + Hover Highlight Effect */
+    .card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 18px;
+        transition: all 0.2s ease;
+    }
+    .card:hover {
+        border-color: #317eff;
+        box-shadow: 0 0 0 1px #317eff, 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .card-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; }
+    
+    .btn-blue {
+        background: var(--blue-primary); color: white; border: none; border-radius: 4px;
+        padding: 6px 14px; font-size: 12px; font-weight: 600; width: 100%; font-family: var(--font-family); cursor: pointer;
+    }
+
+    /* Specific Left Cards */
+    .task-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 10px 15px; border: 1px solid var(--border-color); border-radius: 6px; 
+    }
+    .task-item-left { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 500;}
+    .task-badge { background: #ef4444; color: white; width: 16px; height: 16px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 9px; font-weight: bold; }
+
+    .shoutout-box .input-row { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
+    .shoutout-input {
+        width: 100%; background: #f3f4f6; border-radius: 20px; padding: 8px 15px;
+        color: var(--text-muted); font-size: 12px; border: 1px solid transparent;
+    }
+    .shoutout-actions { display: flex; border-top: 1px solid var(--border-color); padding-top: 10px; }
+    .action-btn { flex: 1; display: flex; justify-content: center; align-items: center; gap: 6px; color: var(--text-muted); font-size: 11px; font-weight: 600; border-right: 1px solid var(--border-color); }
+    .action-btn:last-child { border-right: none; }
+
+    .feed-post { padding: 0; overflow: hidden; }
+    .post-header { display: flex; justify-content: space-between; padding: 12px 18px 8px; }
+    .post-author { display: flex; gap: 10px; }
+    .post-author-info h4 { font-size: 12px; margin-bottom: 2px; font-weight: 600;}
+    .post-author-info p { font-size: 10px; color: var(--text-muted); }
+    .post-body { padding: 0 18px 12px; font-size: 12px; line-height: 1.4; color: #4b5563; }
+    .post-body strong { color: var(--blue-primary); font-weight: 600; }
+    .post-image { height: 75px; background: #fcd34d; position: relative; overflow: hidden; }
+    .post-image .shape1 { position: absolute; top: 5px; right: 40px; width: 25px; height: 25px; background: #9f1239; border-radius: 50%; }
+    .post-image .shape2 { position: absolute; bottom: -5px; left: -5px; width: 35px; height: 35px; background: white; border-radius: 50%; }
+
+    /* Specific Right Cards */
+    .profile-card { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .profile-card .avatar { width: 45px; height: 45px; font-size: 20px; margin-bottom: 6px; }
+    .profile-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .profile-card p { font-size: 11px; color: var(--blue-primary); margin-bottom: 12px; font-weight: 500;}
+
+    .help-card p { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; line-height: 1.4; }
+    .btn-outline { background: white; border: 1px solid var(--border-color); border-radius: 4px; padding: 6px; width: 100%; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--font-family);}
+
+    .quick-actions { padding: 0; }
+    .quick-actions .card-title { padding: 12px 18px 5px; margin: 0; }
+    .qa-item { display: flex; justify-content: space-between; padding: 10px 18px; border-top: 1px solid var(--border-color); font-size: 11px; font-weight: 500;}
+    .qa-left { display: flex; align-items: center; gap: 8px; }
+
+    /* Aggressive Hotspot Buttons with Glassmorphism */
+    .hotspot-container {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 200;
+        transition: opacity 0.3s ease;
+    }
+    .hotspot-container.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .hotspot-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        
+        /* Glassmorphism using #317eff */
+        background: rgba(49, 126, 255, 0.35);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(49, 126, 255, 0.6);
+        
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        font-size: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        animation: aggressivePulse 1.2s infinite cubic-bezier(0.66, 0, 0, 1);
+        transition: all 0.2s ease;
+    }
+    .hotspot-btn:hover { background: rgba(49, 126, 255, 0.6); }
+
+    @keyframes aggressivePulse {
+        0% { box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 0 0 0 rgba(49, 126, 255, 0.7); transform: scale(1); }
+        60% { box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 0 0 15px rgba(49, 126, 255, 0); transform: scale(1.15); }
+        100% { box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 0 0 0 rgba(49, 126, 255, 0); transform: scale(1); }
+    }
+
+    /* Side Panels */
+    .side-panel {
+        position: absolute;
+        top: 45px;
+        bottom: 0;
+        width: 220px;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 150;
+    }
+    
+    .left-panel {
+        left: 0;
+        background: #000000;
+        color: white;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+        padding: 15px 0;
+        display: flex;
+        flex-direction: column;
+    }
+    .left-panel.open { transform: translateX(0); }
+    .lp-item { display: flex; align-items: center; gap: 12px; padding: 10px 20px; font-size: 12px; font-weight: 500; color: #a1a1aa; cursor: pointer; }
+    .lp-item.active, .lp-item:hover { color: white; background: rgba(255,255,255,0.1); }
+    .lp-item svg { fill: currentColor; width: 16px; height: 16px; }
+    .lp-spacer { flex: 1; }
+
+    .right-panel {
+        right: 0;
+        background: white;
+        transform: translateX(100%);
+        box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+        border-left: 1px solid var(--border-color);
+        padding: 10px 0;
+    }
+    .right-panel.open { transform: translateX(0); }
+    .rp-item { padding: 12px 20px; font-size: 12px; font-weight: 500; color: var(--text-main); cursor: pointer; }
+    .rp-item:hover { background: #f3f4f6; }
+    .rp-divider { height: 1px; background: var(--border-color); margin: 5px 15px; }
+    .rp-item.has-arrow { display: flex; justify-content: space-between; align-items: center; }
+    
+    .panel-close {
+        position: absolute;
+        top: 8px; right: 15px;
+        background: transparent; border: none;
+        color: #999; font-size: 24px; cursor: pointer; z-index: 10;
+    }
+    .left-panel .panel-close { color: #fff; opacity: 0.7; }
+    .left-panel .panel-close:hover { opacity: 1; }
+    .right-panel .panel-close { left: 15px; right: auto; }
+
+    /* Modals Overlay */
+    .modal-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 100;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .modal-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        position: relative;
+        overflow: hidden;
+        max-height: 95vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Top-Right Popup Close Button */
+    .modal-close {
+        position: absolute;
+        top: 10px; right: 15px;
+        background: none; border: none;
+        font-size: 24px; line-height: 1; color: #999;
+        z-index: 10; cursor: pointer; transition: color 0.2s;
+    }
+    .modal-close:hover { color: #333; }
+    
+    /* Modal 1: Request Time Off */
+    #modal-timeoff .modal-container { width: 600px; }
+    .modal-header { padding: 12px 20px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border-color); }
+    .timeoff-body { display: flex; height: 260px; }
+    .timeoff-left { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .timeoff-right { flex: 1; background: #f9fafb; border-left: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 11px; font-weight: 600; }
+    .form-group label span { color: red; }
+    .form-control { border: 1px solid var(--border-color); padding: 6px 10px; border-radius: 4px; font-size: 11px; width: 100%; outline: none; font-family: var(--font-family);}
+    .row-dates { display: flex; gap: 12px; }
+    textarea.form-control { resize: none; height: 50px; }
+    .timeoff-footer { padding: 12px 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; }
+    
+    .calendar-graphic { width: 60px; height: 60px; background: #fcd34d; border-radius: 8px; position: relative; margin-bottom: 12px; }
+    .calendar-graphic::before { content: ""; position: absolute; top: -5px; left: 10px; width: 8px; height: 12px; background: white; border-radius: 4px; border: 2px solid #f59e0b; }
+    .calendar-graphic::after { content: ""; position: absolute; top: -5px; right: 10px; width: 8px; height: 12px; background: white; border-radius: 4px; border: 2px solid #f59e0b; }
+    .cal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 15px 8px 8px; }
+    .cal-box { background: white; height: 14px; border-radius: 4px; display: flex; justify-content: center; align-items: center; color: #ef4444; font-weight: bold; font-size: 9px; }
+
+    /* Modal 2: Shoutout */
+    #modal-shoutout .modal-container { width: 500px; }
+    .shoutout-tabs { display: flex; border-bottom: 1px solid var(--border-color); padding: 0 15px; }
+    .shoutout-tab { padding: 10px 15px; font-weight: 600; font-size: 12px; color: var(--text-muted); border-bottom: 2px solid transparent; }
+    .shoutout-tab.active { color: var(--text-main); border-bottom-color: var(--blue-primary); }
+    .shoutout-modal-body { padding: 15px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .shoutout-user { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+    .shoutout-editor { border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
+    .shoutout-editor textarea { width: 100%; border: none; padding: 10px; height: 70px; resize: none; font-size: 12px; outline: none; font-family: var(--font-family); }
+    .shoutout-toolbar { border-top: 1px solid var(--border-color); padding: 6px 10px; display: flex; gap: 10px; color: #6b7280; font-size: 12px; background: #f9fafb;}
+    .shoutout-attachments { display: flex; gap: 15px; font-size: 11px; font-weight: 600; color: #4b5563; }
+    .btn-ghost { background: none; border: 1px solid var(--border-color); border-radius: 4px; padding: 6px 12px; font-size: 11px; font-weight: 600; font-family: var(--font-family); cursor: pointer;}
+    
+    /* Modal 3: Ask Bob AI */
+    #modal-askbob .modal-container { width: 400px; border-radius: 8px; }
+    #modal-askbob .modal-close { color: rgba(255,255,255,0.8); }
+    #modal-askbob .modal-close:hover { color: #fff; }
+    .askbob-header { background: #5a5a5a; color: white; padding: 10px 15px; display: flex; align-items: center; font-weight: 600; font-size: 13px; gap: 8px; }
+    .askbob-grid-icon { display: grid; grid-template-columns: repeat(2, 4px); gap: 2px; }
+    .askbob-grid-dot { width: 4px; height: 4px; background: white; border-radius: 50%; }
+    .askbob-body { padding: 20px 15px; display: flex; flex-direction: column; gap: 15px; }
+    .chat-row { display: flex; gap: 10px; align-items: flex-start; }
+    .ai-avatar { width: 28px; height: 28px; background: #f3e8ff; color: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .chat-bubble { background: #f9fafb; padding: 12px; border-radius: 8px; font-size: 12px; color: #374151; line-height: 1.4; border: 1px solid #f3f4f6;}
+    .chat-input-area { position: relative; }
+    .chat-input-area input { width: 100%; border: 1px solid #d1d5db; border-radius: 4px; padding: 10px 35px 10px 12px; font-size: 12px; outline: none; font-family: var(--font-family); }
+    .send-icon { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #9ca3af; cursor: pointer; }
+    .chat-footer { font-size: 10px; color: #6b7280; line-height: 1.3; padding-top: 4px;}
+
+</style>
+</head>
+<body>
+
+<div id="app-container">
+
+    <header class="top-nav">
+        <div class="nav-left" style="position: relative; padding-right: 55px;">
+            <svg class="app-icon" viewBox="0 0 24 24"><path d="M4 4h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 10h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4zM4 16h4v4H4zm6 0h4v4h-4zm6 0h4v4h-4z"></path></svg>
+            <div class="bob-logo">Bob</div>
+            <div class="hotspot-container" style="right: 0;">
+                <div class="hotspot-btn" onclick="toggleFeature('leftPanel', this)">☰</div>
+            </div>
+        </div>
+        <div class="nav-center">
+            <div class="search-bar">Search for people or areas in Bob</div>
+        </div>
+        <div class="nav-right" style="position: relative; padding-left: 55px;">
+            <div class="hotspot-container" style="left: 0;">
+                <div class="hotspot-btn" onclick="toggleFeature('rightPanel', this)">👤</div>
+            </div>
+            <div class="bell-icon">
+                🔔<div class="bell-dot"></div>
+            </div>
+            <div class="company-pill">
+                <svg width="12" height="8" viewBox="0 0 20 15" fill="black"><path d="M0 0h20v2H0zM5 5h15v2H5zM10 10h10v2H10z"></path></svg> 
+                TURING 
+                <div class="avatar">👤</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero-banner">
+        <h1>Hi John Khan,<br>glad you're here 👋</h1>
+        <div class="turing-box">
+            <svg viewBox="0 0 24 24"><path d="M3 13h18v-2H3v2zm0-7v2h18V6H3zm0 12h18v-2H3v2z"></path></svg>
+            TURING
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="col-left">
+            <div class="card">
+                <div class="card-title">Recently assigned</div>
+                <div class="task-item">
+                    <div class="task-item-left">
+                        <span style="font-size: 14px; opacity: 0.6;">📋</span> Fill and submit performance reviews
+                    </div>
+                    <div style="display:flex; align-items:center; gap: 8px;">
+                        <div class="task-badge">1</div>
+                        <span style="color: #9ca3af; font-size: 10px;">❯</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shoutout-box">
+                <div class="input-row">
+                    <div class="avatar">👤</div>
+                    <div style="position: relative; flex: 1; display: flex; align-items: center; padding-right: 55px;">
+                        <div class="shoutout-input" style="width: 100%;">Post a Shoutout</div>
+                        <div class="hotspot-container" style="right: 0;">
+                            <div class="hotspot-btn" onclick="toggleFeature('modal-shoutout', this)">📣</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="shoutout-actions">
+                    <div class="action-btn">🏆 Give Kudos</div>
+                    <div class="action-btn">📊 Create a poll</div>
+                </div>
+            </div>
+
+            <div class="card feed-post">
+                <div class="post-header">
+                    <div class="post-author">
+                        <div class="avatar">👤</div>
+                        <div class="post-author-info">
+                            <h4>Sivarama Silva</h4>
+                            <p>Apr 15, 2026, 7:50 AM • 🌍</p>
+                        </div>
+                    </div>
+                    <div style="color: #9ca3af;">⋮</div>
+                </div>
+                <div class="post-body">
+                    Wishing a very happy one-year anniversary to <strong>Anusha Ribeiro</strong>! In just one short year, you've made an incredible impact on our team and at Turing - thanks for always rising to the challenge.
+                </div>
+                <div class="post-image">
+                    <div class="shape1"></div>
+                    <div class="shape2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-right">
+            <div class="card profile-card">
+                <div class="avatar">👤</div>
+                <h3>John Khan</h3>
+                <p>Go to my profile</p>
+                <div style="position: relative; width: 100%; display: flex; align-items: center; padding-right: 55px;">
+                    <button class="btn-blue" style="width: 100%;">📅 Request time off</button>
+                    <div class="hotspot-container" style="right: 0;">
+                        <div class="hotspot-btn" onclick="toggleFeature('modal-timeoff', this)">📅</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card help-card">
+                <div class="card-title">Get help using Bob</div>
+                <p>Instantly get answers from the Bob Help Center, powered by AI.</p>
+                <div style="position: relative; width: 100%; display: flex; align-items: center; padding-right: 55px;">
+                    <button class="btn-outline" style="width: 100%;"><span>❔</span> Ask a question</button>
+                    <div class="hotspot-container" style="right: 0;">
+                        <div class="hotspot-btn" onclick="toggleFeature('modal-askbob', this)">❓</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card quick-actions">
+                <div class="card-title">Quick actions</div>
+                <div class="qa-item">
+                    <div class="qa-left"><span>🕒</span> My time off</div>
+                    <span style="color: #9ca3af; font-size: 9px;">❯</span>
+                </div>
+                <div class="qa-item">
+                    <div class="qa-left"><span>👥</span> People</div>
+                    <span style="color: #9ca3af; font-size: 9px;">❯</span>
+                </div>
+                <div class="qa-item" style="border-bottom:none;">
+                    <div class="qa-left"><span>📄</span> My docs</div>
+                    <span style="color: #9ca3af; font-size: 9px;">❯</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="side-panel left-panel" id="leftPanel">
+        <button class="panel-close" onclick="closeAll()">×</button>
+        <div class="lp-item active">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg> Home
+        </div>
+        <div class="lp-item">
+            <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg> Org
+        </div>
+        <div class="lp-item">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></svg> Time
+        </div>
+        <div class="lp-item">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"></path></svg> Docs
+        </div>
+        <div class="lp-item">
+            <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"></path></svg> Tasks
+        </div>
+        <div class="lp-spacer"></div>
+        <div class="lp-item">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"></path></svg> Help
+        </div>
+    </nav>
+
+    <nav class="side-panel right-panel" id="rightPanel">
+        <button class="panel-close" onclick="closeAll()">×</button>
+        <div class="rp-item">Go to my profile</div>
+        <div class="rp-divider"></div>
+        <div class="rp-item">Bob Help Center</div>
+        <div class="rp-item">Resource center</div>
+        <div class="rp-item">Privacy policy</div>
+        <div class="rp-divider"></div>
+        <div class="rp-item has-arrow">Change language <span>❯</span></div>
+        <div class="rp-divider"></div>
+        <div class="rp-item">Log out</div>
+    </nav>
+
+    <div class="modal-overlay" id="modal-timeoff">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeAll()">×</button>
+            <div class="modal-header">Submit request</div>
+            <div class="timeoff-body">
+                <div class="timeoff-left">
+                    <div class="form-group">
+                        <label>What kind of request?</label>
+                        <select class="form-control"><option>Select a policy</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>When?</label>
+                        <div class="row-dates">
+                            <div class="form-group" style="flex:1;">
+                                <label>Start date<span>*</span></label>
+                                <input type="text" class="form-control" placeholder="📅 mm/dd/yyyy">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>End date<span>*</span></label>
+                                <input type="text" class="form-control" placeholder="📅 mm/dd/yyyy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Anything to add?</label>
+                        <textarea class="form-control" placeholder="Note"></textarea>
+                        <div style="text-align: right; font-size: 10px; color: #9ca3af;">0/200</div>
+                    </div>
+                </div>
+                <div class="timeoff-right">
+                    <div class="calendar-graphic">
+                        <div class="cal-grid">
+                            <div class="cal-box">✓</div>
+                            <div class="cal-box">✓</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 10px; color: #6b7280; max-width: 160px;">Select your policy and dates to see which calendar days are counted in the request.</p>
+                </div>
+            </div>
+            <div class="timeoff-footer">
+                <button class="btn-blue" style="width: auto;">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-shoutout">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeAll()">×</button>
+            <div class="shoutout-tabs">
+                <div class="shoutout-tab active">Shoutout</div>
+                <div class="shoutout-tab">Poll</div>
+                <div class="shoutout-tab">Kudos</div>
+            </div>
+            <div class="shoutout-modal-body">
+                <div class="shoutout-user">
+                    <div class="avatar" style="width:20px; height:20px; font-size:10px;">👤</div>
+                    John Khan
+                </div>
+                <div class="form-group">
+                    <label style="font-weight:500; color:#4b5563;">Audience<span style="color:red;">*</span></label>
+                    <select class="form-control"><option>Choose audience</option></select>
+                </div>
+                <div class="shoutout-editor">
+                    <textarea placeholder="Share news and @mention people"></textarea>
+                    <div class="shoutout-toolbar">
+                        <span>T</span> <span>B</span> <span>I</span> <span>U</span> <span>🔗</span> <span>≡</span> <span>😃</span> <span>@</span>
+                    </div>
+                </div>
+                <div class="shoutout-attachments">
+                    <span style="cursor: pointer;">🖼️ Add image or video</span>
+                    <span style="cursor: pointer;">📄 Add document</span>
+                </div>
+                <div class="form-group" style="margin-top: 5px;">
+                    <label style="font-weight:500; color:#4b5563;">Email subject line<span style="color:red;">*</span> ⓘ</label>
+                    <input type="text" class="form-control" value="New shoutout">
+                </div>
+            </div>
+            <div class="timeoff-footer" style="gap:10px;">
+                <button class="btn-ghost">👁 Preview</button>
+                <button class="btn-blue" style="width: auto;">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-askbob">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeAll()">×</button>
+            <div class="askbob-header">
+                <div class="askbob-grid-icon">
+                    <div class="askbob-grid-dot"></div><div class="askbob-grid-dot"></div>
+                    <div class="askbob-grid-dot"></div><div class="askbob-grid-dot"></div>
+                    <div class="askbob-grid-dot"></div><div class="askbob-grid-dot"></div>
+                </div>
+                <span>❔ Ask Bob</span>
+            </div>
+            <div class="askbob-body">
+                <div class="chat-row">
+                    <div class="ai-avatar">✨</div>
+                    <div class="chat-bubble">
+                        Hi John Khan, I'm Bob's AI chatbot. I'm here to help you navigate Bob. How can I help?
+                    </div>
+                </div>
+                <div>
+                    <div class="chat-input-area">
+                        <input type="text" placeholder="Type your question here">
+                        <div class="send-icon">⏵</div>
+                    </div>
+                    <div class="chat-footer">
+                        This chatbot provides Bob Help Center and Community answers. Avoid sharing sensitive information.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let activeFeatureId = null;
+
+    function toggleFeature(targetId, hotspotElement) {
+        // Close existing panels/modals
+        closeAllUI();
+
+        // Open new feature
+        const target = document.getElementById(targetId);
+        if (target.classList.contains('modal-overlay')) {
+            target.classList.add('active');
+        } else {
+            target.classList.add('open'); // For side panels
+        }
+        
+        // Hide all hotspots smoothly
+        document.querySelectorAll('.hotspot-container').forEach(el => {
+            el.classList.add('hidden');
+        });
+        
+        activeFeatureId = targetId;
+    }
+
+    function closeAll() {
+        closeAllUI();
+        
+        // Show all hotspots smoothly
+        document.querySelectorAll('.hotspot-container').forEach(el => {
+            el.classList.remove('hidden');
+        });
+        
+        activeFeatureId = null;
+    }
+
+    function closeAllUI() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        document.getElementById('leftPanel').classList.remove('open');
+        document.getElementById('rightPanel').classList.remove('open');
+    }
+
+    // Allow clicking outside a side panel to close it and show hotspots again
+    document.addEventListener('click', function(event) {
+        if (activeFeatureId) {
+            const target = document.getElementById(activeFeatureId);
+            // If it's a side panel and we click outside of it and not on a hotspot btn
+            if (!target.classList.contains('modal-overlay') && 
+                !target.contains(event.target) && 
+                !event.target.closest('.hotspot-btn')) {
+                closeAll();
+            }
+        }
+    });
+
+</script>
+
+
+</body></html>

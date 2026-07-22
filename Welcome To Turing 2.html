@@ -1,0 +1,467 @@
+
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonathan Siddharth - CEO &amp; Founder</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+        /* Dark Mode Variables */
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-tertiary: #94a3b8;
+        --turing-blue: #60a5fa;
+        --turing-blue-light: rgba(59, 130, 246, 0);
+        --bg-main: #0f172a;
+        --card-bg: rgba(30, 41, 59, 0.8);
+        --surface-color: rgba(15, 23, 42, 0.1);
+        --border-color: #334155;
+        --border-hover: #475569;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-main);
+        margin: 0;
+        padding-bottom: 60px;
+        display: flex;
+        /* Moved to the left and added padding to keep it off the immediate edge */
+        justify-content: flex-start;
+        padding-left: 8vw;
+        align-items: center;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    /* --- BACKGROUND SLIDESHOW WITH PAN/ZOOM --- */
+    .bg-slideshow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .bg-slideshow span {
+        width: 100%;
+        height: 130%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: transparent;
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        animation: imageAnimation 24s linear infinite 0s;
+    }
+
+    .bg-slideshow span:nth-child(1) { background-image: url("https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/9pFqNdKKU_XDYIEj.jpg"); }
+    
+    .bg-slideshow span:nth-child(2) { background-image: url('https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/9c7DW3caH2cTiSWM.jpg'); animation-delay: 6s; }
+    .bg-slideshow span:nth-child(3) { background-image: url('https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/CWlb5qon1n6usyaV.jpg'); animation-delay: 12s; }
+    .bg-slideshow span:nth-child(4) { background-image: url('https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/XJO8Jcp9n-smano_.jpg'); animation-delay: 18s; }
+
+    @keyframes imageAnimation {
+        0% { opacity: 0; transform: scale(1); animation-timing-function: ease-in; }
+        8% { opacity: 1; transform: scale(1.02); animation-timing-function: ease-out; }
+        25% { opacity: 1; transform: scale(1.06); }
+        33% { opacity: 0; transform: scale(1.08); }
+        100% { opacity: 0; transform: scale(1.1); }
+    }
+
+    /* Top-to-bottom Black Vignette Overlay */
+    .bg-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9) 0%, rgba(15, 23, 42, 0.3) 40%, rgba(0, 0, 0, 0.8) 100%);
+        z-index: 0;
+    }
+
+    /* --- PROFILE CARD WITH 2s DELAY MOVE --- */
+    .profile-card {
+        background: var(--card-bg);
+        border-radius: 24px;
+        /* Reduced padding and max-width for a smaller container */
+        padding: 36px;
+        max-width: 780px; 
+        width: 90%;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-sizing: border-box;
+        animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, floatCard 6s ease-in-out 2s infinite alternate;
+        position: relative;
+        z-index: 1;
+        margin-top: 40px;
+    }
+
+    /* --- BADGE STYLING --- */
+    .agi-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        background: var(--turing-blue-light);
+        color: var(--turing-blue);
+        border-radius: 99px;
+        /* Increased to 16px to meet minimum */
+        font-size: 16px; 
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        border: 1px solid rgba(96, 165, 250, 0.2);
+    }
+
+    /* --- HEADER --- */
+    .profile-header {
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+    }
+    
+    .title-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .profile-title {
+        /* Reduced slightly for compactness, well above 16px */
+        font-size: 28px; 
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0;
+        letter-spacing: -0.02em;
+    }
+
+    /* --- 2-COLUMN GRID WITH HIGHLIGHT EFFECTS --- */
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* Reduced gap */
+        gap: 24px; 
+    }
+
+    .info-col {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        /* Reduced padding */
+        padding: 24px; 
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .info-col:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: var(--turing-blue);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(96, 165, 250, 0.15);
+    }
+
+    .section-title {
+        /* Increased to 16px */
+        font-size: 16px; 
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 700;
+        color: var(--turing-blue);
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .clean-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .clean-list li {
+        position: relative;
+        padding-left: 24px;
+        /* Reduced spacing slightly */
+        margin-bottom: 16px; 
+        /* Ensured it's 16px */
+        font-size: 16px; 
+        line-height: 1.5;
+        color: var(--text-secondary);
+    }
+
+    .clean-list li strong {
+        color: var(--text-primary);
+        font-weight: 600;
+    }
+
+    .clean-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 8px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: var(--turing-blue);
+    }
+
+    .clean-list.past-list li::before {
+        background-color: var(--text-tertiary);
+    }
+
+    /* --- SOCIAL MEDIA BUTTONS --- */
+    .social-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .social-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--surface-color);
+        color: var(--text-primary);
+        text-decoration: none;
+        /* Adjusted padding */
+        padding: 8px 16px; 
+        border-radius: 12px;
+        /* Increased to 16px */
+        font-size: 16px; 
+        font-weight: 600;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+
+    .social-btn:hover {
+        border-color: var(--turing-blue);
+        background: rgba(59, 130, 246, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .social-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+    }
+
+    /* --- MODAL POPUP --- */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .modal-content {
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        width: 90%;
+        max-width: 600px;
+        min-height: 400px;
+        padding: 30px;
+        position: relative;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: translateY(0);
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s ease;
+        z-index: 10;
+    }
+
+    .close-btn:hover {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .embed-wrapper {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+        color: var(--text-tertiary);
+        overflow: hidden;
+    }
+
+    /* Animations */
+    @keyframes fadeUp {
+        0% { opacity: 0; transform: translateY(15px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatCard {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-12px); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        body { padding-left: 0; justify-content: center; } /* Revert left-align on mobile so it doesn't break */
+        .profile-card { padding: 24px 20px; margin-top: 20px; }
+        .info-grid { grid-template-columns: 1fr; gap: 24px; }
+        .title-row { flex-direction: column; align-items: flex-start; gap: 16px; }
+        .social-container { width: 100%; justify-content: flex-start; }
+    }
+</style>
+</head>
+<body>
+
+<div class="bg-slideshow">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+<div class="bg-overlay"></div>
+
+<div class="profile-card">
+    
+    <div class="profile-header">
+        <div class="agi-badge">The Leader Getting Us To AGI</div>
+        
+        <div class="title-row">
+            <h1 class="profile-title">Jonathan Siddharth: CEO &amp; Founder</h1>
+            
+            <div class="social-container">
+                <button onclick="openModal('&lt;img src=\'https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/y29abl97ZzyKS327.png\' style=\'width:100%; height:100%; object-fit:contain; border-radius:12px; background:#fff;\' alt=\'Twitter\'&gt;')" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.004 3.976H5.078z"></path></svg>
+                    Twitter
+                </button>
+                <button onclick="openModal('&lt;img src=\'https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/qk5fsFy1U_aGe6s5.png\' style=\'width:100%; height:100%; object-fit:contain; border-radius:12px; background:#fff;\' alt=\'LinkedIn\'&gt;')" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path></svg>
+                    LinkedIn
+                </button>
+                
+                 <button onclick="openModal('&lt;img src=\'https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/jXPDOCffeZ5hesue.png\' style=\'width:100%; height:100%; object-fit:contain; border-radius:12px; background:#fff;\' alt=\'LinkedIn\'&gt;')" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                    Article
+                </button>
+
+                <button onclick="openModal('&lt;img src=\'https://articulateusercontent.com/rise/courses/mVjWLq9mTO0MZOdqRjzlMeICk3eoLxv1/cjcGUQ7-_8Pyq9C4.png\' style=\'width:100%; height:100%; object-fit:contain; border-radius:12px; background:#fff;\' alt=\'LinkedIn\'&gt;')" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>
+                    Youtube
+                </button>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-grid">
+        
+        <div class="info-col">
+            <h2 class="section-title">Currently</h2>
+            <ul class="clean-list">
+                <li><strong>CEO &amp; Founder</strong> of Turing</li>
+                <li><strong>Co-Founder:</strong> Vijay Krishnan</li>
+                <li><strong>Father</strong> of a 2 year old and 4 year old</li>
+                <li><strong>CNBC CEO Council Member</strong></li>
+                <li><strong>Machine Learning Engineer</strong></li>
+            </ul>
+        </div>
+
+        <div class="info-col">
+            <h2 class="section-title">Background</h2>
+            <ul class="clean-list past-list">
+                <li><strong>Board Member</strong> at Quora</li>
+                <li><strong>CEO &amp; Founder</strong> of Rover (acquired)</li>
+                <li><strong>Stanford M.S.</strong> in Computer Science Research - Machine Learning</li>
+            </ul>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="modal-overlay" id="embedModal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <div class="embed-wrapper" id="embedContainer">
+            </div>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('embedModal');
+    const embedContainer = document.getElementById('embedContainer');
+
+    function openModal(embedData) {
+        embedContainer.innerHTML = embedData;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        setTimeout(() => {
+            embedContainer.innerHTML = '';
+        }, 300);
+    }
+
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+</script>
+
+</body></html>
+

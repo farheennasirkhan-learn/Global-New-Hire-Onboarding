@@ -1,0 +1,230 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Tools Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --font-main: 'Poppins', sans-serif;
+            --accent: #317eff;
+            /* Glass Base Colors */
+            --glass-1: rgba(35, 100, 230, 0.2);
+--glass-2: rgba(45, 135, 240, 0.2);
+--glass-3: rgba(30, 170, 245, 0.2);
+--glass-4: rgba(10, 200, 240, 0.2);
+--glass-5: rgba(0, 230, 235, 0.2);
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: transparent;
+            min-height: 100vh;
+            margin-top: -40px;
+            padding: 40px 20px;
+            color: #1a1a1a;
+            font-size: 18px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom:12px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .subtext {
+            font-size: 18px;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 0.5;
+        }
+
+        .workflow-container {
+            display: flex;
+            gap: 15px;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: stretch;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .card {
+            flex: 1;
+            border-radius: 20px;
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            
+            /* Glassmorphism */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Staggered Floating start */
+        .card:nth-child(2) { animation-delay: 0.5s; background-color: var(--glass-2); }
+        .card:nth-child(1) { animation-delay: 0s; background-color: var(--glass-1); }
+        .card:nth-child(3) { animation-delay: 1s; background-color: var(--glass-3); }
+        .card:nth-child(4) { animation-delay: 1.5s; background-color: var(--glass-4); }
+        .card:nth-child(5) { animation-delay: 2s; background-color: var(--glass-5); }
+
+        /* Interaction Logic */
+        .workflow-container:hover .card { 
+            opacity: 0.5; 
+            animation-play-state: paused;
+        }
+
+        .workflow-container .card:hover { 
+            opacity: 1; 
+            transform: scale(1.05) translateY(-15px); 
+            background-color: rgba(255, 255, 255, 0.9);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            z-index: 10;
+        }
+
+        @keyframes pulse-blue {
+            0% { box-shadow: 0 0 0 0 rgba(49, 126, 255, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(49, 126, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(49, 126, 255, 0); }
+        }
+        .card:hover { animation: pulse-blue 1.5s infinite !important; }
+
+        /* Check Icon */
+        .check-badge {
+            position: absolute;
+            top: -12px;
+            background: var(--accent);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .card.activated .check-badge {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .tool-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .tool-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 6px;
+            font-weight: 400;
+        }
+
+        .tool-item i { font-size: 40px; }
+
+        @media (max-width: 900px) {
+            .workflow-container { flex-wrap: wrap; justify-content: center; }
+            .card { min-width: 200px; flex: none; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h1>Allowed Core Tools</h1>
+        <p class="subtext">These are the  <strong>recommended platforms for our work.</strong></p>
+    </div>
+
+    <div class="workflow-container">
+        <div class="card activated" onmouseenter="this.classList.add('activated')">
+            <div class="check-badge"><i class="bx bx-check"></i></div>
+            <div class="category-title">Communication</div>
+            <div class="tool-list">
+                <div class="tool-item"><i class="bx bxl-gmail" style="color: #EA4335;"></i>Gmail</div>
+                <div class="tool-item"><i class="bx bxl-slack" style="color: #4A154B;"></i>Slack</div>
+                <div class="tool-item"><i class="bx bxs-calendar" style="color: #4285F4;"></i>Google Calendar</div>
+            </div>
+        </div>
+
+        <div class="card activated" onmouseenter="this.classList.add('activated')">
+            <div class="check-badge"><i class="bx bx-check"></i></div>
+            <div class="category-title">Collaboration</div>
+            <div class="tool-list">
+                <div class="tool-item"><i class="bx bxs-file-doc" style="color: #4285F4;"></i>Docs</div>
+                <div class="tool-item"><i class="bx bxs-spreadsheet" style="color: #34A853;"></i>Sheets</div>
+                <div class="tool-item"><i class="bx bxs-slideshow" style="color: #FBBC04;"></i>Slides</div>
+            </div>
+        </div>
+
+        <div class="card activated" onmouseenter="this.classList.add('activated')">
+            <div class="check-badge"><i class="bx bx-check"></i></div>
+            <div class="category-title">Storage</div>
+            <div class="tool-list">
+                <div class="tool-item" style="margin-top: 20px;">
+                    <i class="bx bxl-google-cloud" style="color: #317eff;"></i>
+                    Turing Google <br>Drive Only
+                </div>
+            </div>
+        </div>
+
+        <div class="card activated" onmouseenter="this.classList.add('activated')">
+            <div class="check-badge"><i class="bx bx-check"></i></div>
+            <div class="category-title">Time Tracking</div>
+            <div class="tool-list">
+                <div class="tool-item" style="margin-top: 20px;"><i class="bx bx-time-five" style="color: #7d5fff ;"></i>Jibble</div>
+            </div>
+        </div>
+
+        <div class="card activated" onmouseenter="this.classList.add('activated')">
+            <div class="check-badge"><i class="bx bx-check"></i></div>
+            <div class="category-title">Support</div>
+            <div class="tool-list">
+                <div class="tool-item"><i class="bx bxl-trello" style="color: #0052CC;"></i>JIRA</div>
+                <div class="tool-item"><i class="bx bx-support" style="color: #2f3542;"></i>IT Support</div>
+                <div class="tool-item"><i class="bx bx-bot" style="color: #317eff;"></i>ALAN</div>
+            </div>
+        </div>
+    </div>
+
+
+</body></html>

@@ -1,0 +1,533 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staying in the Loop - 4 Column Bento</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Caveat:wght@500&display=swap');
+
+    :root {
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        
+        --accent-blue: #2563eb;
+        --accent-dark: #1e3a8a;
+        --accent-teal: #0d9488;
+        --accent-purple: #8b5cf6; /* Added for Turing Portal */
+        
+        --border-color: #e2e8f0;
+        --tag-bg: #eff6ff;
+        --tag-text: #1d4ed8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: transparent;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 1300px; /* Expanded for 4 columns */
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* --- Header --- */
+    .header {
+        text-align: center;
+        opacity: 0;
+        animation: fadeDown 0.8s ease forwards;
+        margin-bottom: 4px;
+    }
+
+    h1 {
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 8px 0;
+    }
+
+    .subtitle {
+        color: var(--text-secondary);
+        font-size: 18px;
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.5;
+    }
+
+    /* --- 4-Column Bento Grid --- */
+    .bento-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    /* Responsive fallbacks */
+    @media (max-width: 1100px) {
+        .bento-grid { grid-template-columns: repeat(2, 1fr); }
+        .comm-card { grid-column: span 1 !important; }
+        .resource-card, .welcome-bar { grid-column: span 2 !important; }
+    }
+    @media (max-width: 768px) {
+        .bento-grid { grid-template-columns: 1fr; }
+        .comm-card, .resource-card, .welcome-bar { grid-column: span 1 !important; }
+    }
+
+    /* --- General Card Styles --- */
+    .comm-card, .resource-card {
+        background: var(--card-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        opacity: 0;
+        transform: translateY(30px);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /* --- Communication Card Specifics --- */
+    .comm-card {
+        grid-column: span 1; /* Fits 4 in the first row */
+    }
+
+    /* Combined hover states for manual hover AND autoplay script */
+    .comm-card:hover, .comm-card.pseudo-hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.1);
+        border-color: var(--accent-blue);
+    }
+
+    .comm-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 4px;
+        background: var(--accent-blue);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.6s ease;
+    }
+    .comm-card.visible::before { transform: scaleX(1); }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+    }
+
+    .icon-box {
+        width: 44px;
+        height: 44px;
+        background: var(--tag-bg);
+        color: var(--accent-blue);
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .tag {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--tag-text);
+        background: var(--tag-bg);
+        padding: 6px 12px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .tag.pulse { animation: pulseTag 2s infinite; }
+
+    h3 {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 10px 0;
+    }
+
+    ul {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--text-secondary);
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    li { margin-bottom: 6px; }
+
+    .card-footer {
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 1px solid #f1f5f9;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* --- Resource Card Specifics --- */
+    .resource-card {
+        grid-column: span 2; /* 2 cards side-by-side in the 4-col row */
+        border-width: 2px;
+        gap: 12px;
+        align-self: start; /* Prevents vertical stretching, keeping them as short as possible */
+    }
+
+    .resource-card:hover, .resource-card.pseudo-hover {
+        transform: translateY(-5px);
+    }
+
+    /* Purple Variant (Turing Portal) */
+    .resource-card.purple {
+        border-color: #d8b4fe;
+        background: linear-gradient(135deg, #ffffff 0%, #faf5ff 100%);
+    }
+    .resource-card.purple:hover, .resource-card.purple.pseudo-hover { border-color: var(--accent-purple); box-shadow: 0 15px 30px -5px rgba(139, 92, 246, 0.15); }
+    
+    .res-icon.purple { background: var(--accent-purple); color: white; }
+    
+    .res-link.purple { background: #faf5ff; color: var(--accent-purple); border: 1px solid #e9d5ff; }
+    .res-link.purple:hover, .res-link.purple.pseudo-hover { background: var(--accent-purple); color: white; }
+
+    /* Teal Variant (Tickets) */
+    .resource-card.ticket {
+        border-color: #99f6e4;
+        background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
+    }
+    .resource-card.ticket:hover, .resource-card.ticket.pseudo-hover { border-color: var(--accent-teal); box-shadow: 0 15px 30px -5px rgba(13, 148, 136, 0.15); }
+    
+    .res-icon.teal { background: var(--accent-teal); color: white; }
+
+    .res-link.teal { background: #f0fdfa; color: var(--accent-teal); border: 1px solid #ccfbf1; }
+    .res-link.teal:hover, .res-link.teal.pseudo-hover { background: var(--accent-teal); color: white; }
+
+    .resource-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .res-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .res-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0;
+    }
+    
+    .res-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    .res-link {
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-align: center;
+        transition: all 0.2s ease;
+        display: inline-block;
+        margin-top: auto;
+    }
+
+    /* --- WELCOME BAR --- */
+    .welcome-bar {
+        grid-column: span 4; /* Spans across all 4 columns */
+        width: 100%;
+        background: linear-gradient(135deg, var(--accent-blue), var(--accent-dark));
+        color: white;
+        text-align: center;
+        padding: 16px;
+        border-radius: 16px;
+        font-size: 24px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
+        opacity: 0; 
+        transform: translateY(30px);
+        position: relative;
+        overflow: hidden;
+        /* Combining Entrance Slide and Premium Blink */
+        animation: 
+            slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 1.5s forwards, 
+            premiumBlink 3s ease-in-out 2.2s infinite alternate;
+    }
+
+    .welcome-bar:hover {
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 20px 35px -5px rgba(37, 99, 235, 0.5);
+    }
+
+    .welcome-bar::after {
+        content: '👋';
+        margin-left: 10px;
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+    .welcome-bar:hover::after {
+        transform: rotate(20deg) scale(1.2);
+    }
+
+    /* Confetti Particle Style (Injected via JS) */
+    .confetti {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        pointer-events: none;
+        z-index: 9999;
+    }
+
+    /* Animations */
+    .bookmark-draw path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: drawLine 1.5s ease 1.5s forwards; }
+    .ticket-pulse { animation: pulseTicket 2s infinite; }
+
+    @keyframes pulseTicket { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+    @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulseTag { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.2); } 70% { box-shadow: 0 0 0 6px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+    @keyframes drawLine { to { stroke-dashoffset: 0; fill: rgba(255,255,255,0.2); } }
+    
+    /* Premium Blink Effect (Modifies Filter/Shadow to preserve SlideUp transforms) */
+    @keyframes premiumBlink { 
+        0%, 100% { filter: brightness(1); box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3); } 
+        50% { filter: brightness(1.2); box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.3), 0 15px 35px 5px rgba(37, 99, 235, 0.7); } 
+    }
+
+    /* Staggered Delays */
+    .card-1 { animation: slideUp 0.6s ease 0.2s forwards; }
+    .card-2 { animation: slideUp 0.6s ease 0.3s forwards; }
+    .card-3 { animation: slideUp 0.6s ease 0.4s forwards; }
+    .card-4 { animation: slideUp 0.6s ease 0.5s forwards; }
+    .res-1 { animation: slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards; }
+    .res-2 { animation: slideUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s forwards; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header">
+        <h1>Staying in the Loop!</h1>
+        <div class="subtitle">
+            <strong>As a Boundaryless Team</strong>, here is how we stay connected and supported.
+        </div>
+    </div>
+
+    <div class="bento-grid">
+        
+        <div class="comm-card card-1 visible">
+            <div class="card-header">
+                <div class="icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </div>
+                <div class="tag pulse">Required</div>
+            </div>
+            <h3> All-Hands</h3>
+            <ul>
+                <li>Business Progress &amp; Key Objectives.</li>
+                <li>Led by Senior Leaders.</li>
+                <li><strong>Request time off</strong> if OOO.</li>
+            </ul>
+            <div class="card-footer">
+                Every other Wednesday @ 8:30 am PST
+            </div>
+        </div>
+
+        <div class="comm-card card-2 visible">
+            <div class="card-header">
+                <div class="icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <div class="tag">Optional</div>
+            </div>
+            <h3>AMA with Jonathan</h3>
+            <ul>
+                <li>Open to everyone.</li>
+                <li>"Ask Me Anything" with the CEO.</li>
+                <li>Direct Q&amp;A opportunity.</li>
+            </ul>
+            <div class="card-footer">
+                Around every 2 months
+            </div>
+        </div>
+
+        <div class="comm-card card-3 visible pseudo-hover">
+            <div class="card-header">
+                <div class="icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                </div>
+                <div class="tag">Recommended</div>
+            </div>
+            <h3>Top of Mind Weekly Emails</h3>
+            <ul>
+                <li>Includes Focus Areas &amp; Key Metrics.</li>
+                <li>Articles Jonathan is reading.</li>
+                <li>Highly recommended to review.</li>
+            </ul>
+            <div class="card-footer">
+                Start of each week
+            </div>
+        </div>
+
+        <div class="comm-card card-4 visible">
+            <div class="card-header">
+                <div class="icon-box">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="9" y2="9"></line><line x1="4" x2="20" y1="15" y2="15"></line><line x1="10" x2="8" y1="3" y2="21"></line><line x1="16" x2="14" y1="3" y2="21"></line></svg>
+                </div>
+                <div class="tag">Async</div>
+            </div>
+            <h3>Slack Channels</h3>
+            <ul>
+                <li><strong>Primary comms method</strong></li>
+                <li><strong>#announcements</strong>, #turing_team</li>
+                <li><strong>Fun:</strong> #cats-vs-dogs, #thrivetogether</li>
+                
+            </ul>
+            <div class="card-footer">
+                Key info &amp; Community
+            </div>
+        </div>
+
+        <div class="resource-card purple res-1">
+            <div class="resource-header">
+                <div class="res-icon purple">
+                    <svg class="bookmark-draw" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="res-title">Turing Portal</h3>
+                    <div class="res-sub">Holidays, Benefits, Updates</div>
+                </div>
+            </div>
+            <a href="https://sites.google.com/turing.com/the-turing-portal/home" target="_blank" class="res-link purple">
+                Visit the Portal →
+            </a>
+        </div>
+
+        <div class="resource-card ticket res-2">
+            <div class="resource-header">
+                <div class="res-icon teal">
+                    <svg class="ticket-pulse" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="res-title">People Team Tickets</h3>
+                    <div class="res-sub">HR, Payroll, Leave Requests</div>
+                </div>
+            </div>
+            <a href="mailto:people@turing.com" class="res-link teal">
+                Submit a Request →
+            </a>
+        </div>
+
+        <div class="welcome-bar" onmouseenter="fireConfetti()">
+            Welcome to Turing
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // Confetti Logic
+    function fireConfetti() {
+        const colors = ['#2563eb', '#8b5cf6', '#f59e0b', '#ef4444', '#10b981']; // Swapped teal for purple in confetti
+        const particleCount = 60; 
+
+        for (let i = 0; i < particleCount; i++) {
+            createParticle('left', colors);
+            createParticle('right', colors);
+        }
+    }
+
+    function createParticle(side, colors) {
+        const el = document.createElement('div');
+        el.classList.add('confetti');
+        document.body.appendChild(el);
+
+        if (side === 'left') {
+            el.style.left = '0px';
+            el.style.bottom = '0px';
+        } else {
+            el.style.right = '0px';
+            el.style.bottom = '0px';
+        }
+
+        el.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 8 + 6; 
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+
+        const xDir = side === 'left' ? 1 : -1;
+        const x = Math.random() * 400 * xDir + (150 * xDir);
+        const y = -(Math.random() * 500 + 300); 
+        const rot = Math.random() * 720 - 360;
+
+        const animation = el.animate([
+            { transform: `translate(0,0) rotate(0deg)`, opacity: 1 },
+            { transform: `translate(${x * 0.5}px, ${y * 0.5}px) rotate(${rot * 0.5}deg)`, opacity: 1, offset: 0.4 },
+            { transform: `translate(${x}px, ${y}px) rotate(${rot}deg)`, opacity: 0 }
+        ], {
+            duration: Math.random() * 1000 + 1500,
+            easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+            fill: 'forwards'
+        });
+
+        animation.onfinish = () => el.remove();
+    }
+
+    // Autoplay Hover Logic
+    document.addEventListener("DOMContentLoaded", () => {
+        const allCards = document.querySelectorAll('.comm-card, .resource-card');
+        let hoverIndex = 0;
+        
+        // Starts the loop after initial entrance animations complete
+        setTimeout(() => {
+            setInterval(() => {
+                // Clear state from all cards
+                allCards.forEach(card => card.classList.remove('pseudo-hover'));
+                
+                // Apply simulated hover to the current card
+                allCards[hoverIndex].classList.add('pseudo-hover');
+                
+                // Move to next
+                hoverIndex = (hoverIndex + 1) % allCards.length;
+            }, 1800); // Cycles every 1.8 seconds
+        }, 2000);
+    });
+</script>
+
+
+</body></html>

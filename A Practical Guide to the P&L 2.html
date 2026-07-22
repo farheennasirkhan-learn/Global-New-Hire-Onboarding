@@ -1,0 +1,1262 @@
+
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive P&amp;L Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+
+  @keyframes s4-border-rot {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  @keyframes s4-dot-pulse {
+    0%, 100% { box-shadow: 0 0 6px 1px rgba(49,126,255,0.7); opacity: 0.85; }
+    50%       { box-shadow: 0 0 16px 3px rgba(49,126,255,1); opacity: 1; }
+  }
+
+  @keyframes s4-row-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0); }
+    50%       { box-shadow: 0 0 0 3px rgba(49,126,255,0.2); }
+  }
+
+  @keyframes s4-slider-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 2px 8px rgba(49,126,255,0.15); }
+    50%       { box-shadow: 0 0 0 4px rgba(49,126,255,0.15), 0 4px 16px rgba(49,126,255,0.3); }
+  }
+
+  @keyframes s4-info-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes s4-val-flash {
+    0%   { background: rgba(49,126,255,0.12); }
+    100% { background: transparent; }
+  }
+
+  @keyframes s4-warn-blink {
+    0%, 100% { opacity: 0.85; }
+    50%       { opacity: 1; }
+  }
+
+  @keyframes s4-icon-float {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50%       { transform: translateY(-3px) scale(1.08); }
+  }
+
+  @keyframes s4-icon-float-2 {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50%       { transform: translateY(-3px) scale(1.08); }
+  }
+
+  @keyframes s4-icon-float-3 {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50%       { transform: translateY(-3px) scale(1.08); }
+  }
+
+  @keyframes s4-icon-float-4 {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50%       { transform: translateY(-3px) scale(1.08); }
+  }
+
+  @keyframes s4-pill-high-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 4px 12px rgba(49,126,255,0.3); }
+    50%       { box-shadow: 0 0 0 3px rgba(49,126,255,0.2), 0 6px 20px rgba(49,126,255,0.45); }
+  }
+
+  @keyframes s4-impact-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 2px 10px rgba(49,126,255,0.1); }
+    50%       { box-shadow: 0 0 0 3px rgba(49,126,255,0.12), 0 6px 20px rgba(49,126,255,0.18); }
+  }
+
+  @keyframes s4-bolt-pulse {
+    0%, 100% { filter: drop-shadow(0 0 4px rgba(49,126,255,0.5)); transform: scale(1); }
+    50%       { filter: drop-shadow(0 0 10px rgba(49,126,255,0.9)); transform: scale(1.15); }
+  }
+
+  @keyframes s4-info-icon-breathe {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 2px 8px rgba(49,126,255,0.15); }
+    50%       { box-shadow: 0 0 0 4px rgba(49,126,255,0.15), 0 4px 16px rgba(49,126,255,0.3); }
+  }
+
+  @keyframes s4-guide-pop {
+    from { opacity: 0; transform: translateY(8px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes s4-guide-pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(49,126,255,0); }
+    50%     { box-shadow: 0 0 0 5px rgba(49,126,255,.14); }
+  }
+
+  .s4,
+  .s4 * {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .s4 .material-icons-round {
+    font-family: 'Material Icons Round' !important;
+    font-weight: normal !important;
+    font-style: normal !important;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'liga';
+  }
+
+  .s4 {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 32px 28px;
+    background: #ffffff;
+    border-radius: 28px;
+    color: #0f172a;
+    position: relative;
+    overflow: visible;
+  }
+
+  .s4::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 28px;
+    opacity: 0.4;
+  }
+
+  .s4 > * { position: relative; z-index: 1; }
+
+  .s4 .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 14px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .s4 .badge .dot {
+    width: 7px; height: 7px;
+    background: #317eff;
+    border-radius: 50%;
+    animation: s4-dot-pulse 2.2s ease-in-out infinite;
+  }
+
+  .s4 .headline {
+    font-size: 36px;
+    font-weight: 700;
+    color: #020617;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin: 0 0 8px;
+  }
+
+  .s4 .subtitle {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+    max-width: 660px;
+    margin: 0 0 18px;
+  }
+
+  .s4 .guide-panel {
+    background: linear-gradient(135deg,#f8fbff,#eef4ff);
+    border: 1px solid rgba(49,126,255,.18);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    box-shadow: 0 10px 28px rgba(15,23,42,.06);
+    animation: s4-guide-pop .35s ease forwards;
+  }
+
+  .s4 .guide-copy {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .s4 .guide-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #317eff;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 10px 24px rgba(49,126,255,.28);
+    animation: s4-guide-pulse 2.2s ease-in-out infinite;
+  }
+
+  .s4 .guide-icon .material-icons-round {
+    font-size: 21px;
+    color: #fff;
+  }
+
+  .s4 .guide-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 3px;
+  }
+
+  .s4 .guide-text {
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .s4 .guide-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .s4 .guide-btn {
+    border: 0;
+    background: #317eff;
+    color: #fff;
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: .2s ease;
+    box-shadow: 0 10px 24px rgba(49,126,255,.24);
+  }
+
+  .s4 .guide-btn:hover {
+    transform: translateY(-2px);
+    background: #0f5ae0;
+  }
+
+  .s4 .guide-btn .material-icons-round {
+    font-size: 16px;
+  }
+
+  .s4 .guide-btn--secondary {
+    background: #fff;
+    color: #64748b;
+    border: 1px solid #dbe7ff;
+    box-shadow: none;
+  }
+
+  .s4 .guide-btn--secondary:hover {
+    color: #317eff;
+    background: #f8fbff;
+  }
+
+  .s4 .guide-progress {
+    display: none;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #317eff;
+    background: #fff;
+    border: 1px solid rgba(49,126,255,.18);
+    border-radius: 999px;
+    padding: 8px 11px;
+  }
+
+  .s4 .guide-progress.visible {
+    display: inline-flex;
+  }
+
+  .s4 .guide-progress .material-icons-round {
+    font-size: 15px;
+  }
+
+  .s4 .explorer {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+    position: relative;
+    z-index: 2;
+    overflow: visible;
+  }
+
+  .s4 .left-col {
+    width: 310px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+  }
+
+  .s4 .statement-outer {
+    padding: 1.5px;
+    border-radius: 20px;
+    background: linear-gradient(120deg, #e2e8f0 0%, #317eff55 25%, #e2e8f0 50%, #317eff33 75%, #e2e8f0 100%);
+    background-size: 300% 300%;
+    animation: s4-border-rot 5s linear infinite;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+  }
+
+  .s4 .statement-card {
+    background: #fff;
+    border-radius: 19px;
+    padding: 14px 14px;
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+  }
+
+  .s4 .statement-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .s4 .statement-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #317eff;
+    background: #eff6ff;
+    border: 1px solid rgba(49,126,255,.16);
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+
+  .s4 .statement-cue .material-icons-round {
+    font-size: 12px;
+  }
+
+  .s4 .pl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    margin-bottom: 1px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1e293b;
+    transition: background 0.2s ease, color 0.2s ease, transform .2s ease;
+    position: relative;
+    z-index: 20;
+  }
+
+  .s4 .pl-row:hover {
+    background: #eff6ff;
+    color: #317eff;
+    transform: translateX(3px);
+    z-index: 999;
+  }
+
+  .s4 .pl-row::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%) translateX(-4px);
+    width: 230px;
+    background: #0f172a;
+    color: #fff;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 0;
+    pointer-events: none;
+    transition: .2s ease;
+    z-index: 1000;
+    box-shadow: 0 14px 34px rgba(15,23,42,.22);
+  }
+
+  .s4 .pl-row::before {
+    content: '';
+    position: absolute;
+    left: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 6px 6px 6px 0;
+    border-style: solid;
+    border-color: transparent #0f172a transparent transparent;
+    opacity: 0;
+    transition: .2s ease;
+    z-index: 1001;
+  }
+
+  .s4 .pl-row:hover::after,
+  .s4 .pl-row:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+    z-index: 1000;
+  }
+
+  .s4 .pl-row.active {
+    background: #317eff;
+    color: #fff;
+    font-weight: 700;
+    animation: s4-row-glow 2s ease-in-out infinite;
+  }
+
+  .s4 .pl-row.guide-active {
+    outline: 3px solid rgba(49,126,255,.22);
+    outline-offset: 2px;
+  }
+
+  .s4 .pl-row.active .pl-value { color: #fff !important; }
+  .s4 .pl-row.active .tag-var,
+  .s4 .pl-row.active .tag-fix { background: rgba(255,255,255,0.2); color: #fff; }
+  .s4 .pl-row.val-flash { animation: s4-val-flash 0.4s ease forwards; }
+
+  .s4 .pl-indent { padding-left: 22px; }
+
+  .s4 .total-row {
+    font-weight: 700;
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0;
+    margin-top: 2px;
+    padding-top: 10px;
+  }
+
+  .s4 .final-row {
+    font-weight: 800;
+    font-size: 14px;
+    border-top: 2px solid #0f172a;
+    border-bottom: 3px double #0f172a;
+    border-radius: 0;
+    margin-top: 6px;
+  }
+
+  .s4 .pl-value {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    white-space: nowrap;
+  }
+
+  .s4 .val-neg { color: #dc2626; }
+  .s4 .val-pos { color: #16a34a; }
+
+  .s4 .tag-var,
+  .s4 .tag-fix {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    transition: all 0.2s;
+  }
+
+  .s4 .tag-var { background: #eff6ff; color: #317eff; }
+  .s4 .tag-fix { background: #f5f3ff; color: #7c3aed; }
+
+  .s4 .slider-card {
+    background: #fff;
+    border: 1.5px solid #317eff;
+    border-radius: 18px;
+    padding: 14px 16px;
+    animation: s4-slider-glow 2.5s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s4 .slider-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 16px; right: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(49,126,255,0.3), transparent);
+  }
+
+  .s4 .slider-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .s4 .slider-label { font-size: 15px; font-weight: 700; color: #0f172a; }
+
+  .s4 .margin-badge {
+    background: #317eff;
+    color: #fff;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 3px 12px;
+    border-radius: 20px;
+    min-width: 48px;
+    text-align: center;
+  }
+
+  .s4 .slider-hint {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .s4 input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .s4 input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(to right, #317eff var(--fill, 50%), #e2e8f0 var(--fill, 50%));
+    border-radius: 3px;
+  }
+
+  .s4 input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #317eff;
+    margin-top: -7px;
+    box-shadow: 0 0 0 3px rgba(49,126,255,0.2), 0 2px 6px rgba(0,0,0,0.15);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .s4 input[type=range]::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 6px rgba(49,126,255,0.25), 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .s4 .warn-callout {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 13px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 3px solid #ef4444;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #991b1b;
+    line-height: 1.5;
+    animation: s4-warn-blink 2s infinite;
+  }
+
+  .s4 .info-outer {
+    flex: 1;
+    padding: 1.5px;
+    border-radius: 20px;
+    background: linear-gradient(120deg, #e2e8f0 0%, #317eff44 30%, #e2e8f0 60%, #317eff22 100%);
+    background-size: 300% 300%;
+    animation: s4-border-rot 5s linear infinite 0.8s;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    position: relative;
+    z-index: 1;
+  }
+
+  .s4 .info-panel {
+    background: #fff;
+    border-radius: 19px;
+    padding: 20px 20px;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .s4 .info-anim { animation: s4-info-in 0.35s ease forwards; }
+
+  .s4 .info-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 8px;
+    letter-spacing: -0.025em;
+  }
+
+  .s4 .info-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(49,126,255,0.2);
+    animation: s4-info-icon-breathe 2.5s ease-in-out infinite;
+  }
+
+  .s4 .info-icon .material-icons-round {
+    font-size: 24px;
+    color: #317eff;
+    filter: drop-shadow(0 0 6px rgba(49,126,255,0.5));
+    animation: s4-icon-float 3s ease-in-out infinite;
+  }
+
+  .s4 .info-desc {
+    font-size: 13px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .s4 .formula-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 11px 16px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s4 .formula-row::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 16px; right: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(49,126,255,0.5), transparent);
+  }
+
+  .s4 .formula-eyebrow {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #317eff;
+    white-space: nowrap;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 4px rgba(49,126,255,0.6));
+  }
+
+  .s4 .formula-dark {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #e2e8f0;
+    letter-spacing: 0.3px;
+  }
+
+  .s4 .ownership-section { margin-bottom: 12px; }
+
+  .s4 .section-eyebrow {
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 8px;
+  }
+
+  .s4 .owner-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .s4 .owner-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    transition: transform 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s4 .owner-pill::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  }
+
+  .s4 .owner-pill.pill-high {
+    animation: s4-pill-high-glow 2.4s ease-in-out infinite;
+  }
+
+  .s4 .owner-pill.pill-high:nth-child(2) { animation-delay: 0.6s; }
+
+  .s4 .owner-pill:hover { transform: translateY(-2px); }
+
+  .s4 .owner-pill .material-icons-round {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .s4 .owner-pill:nth-child(1) .material-icons-round { animation: s4-icon-float   3.2s ease-in-out infinite; }
+  .s4 .owner-pill:nth-child(2) .material-icons-round { animation: s4-icon-float-2 3.2s ease-in-out infinite 0.8s; }
+  .s4 .owner-pill:nth-child(3) .material-icons-round { animation: s4-icon-float-3 3.2s ease-in-out infinite 1.6s; }
+  .s4 .owner-pill:nth-child(4) .material-icons-round { animation: s4-icon-float-4 3.2s ease-in-out infinite 2.4s; }
+
+  .s4 .owner-pill-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .s4 .owner-name {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .s4 .owner-level {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .s4 .impact-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: linear-gradient(135deg, #f0f6ff, #eff6ff);
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+    padding: 12px 14px;
+    animation: s4-impact-glow 3s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s4 .impact-callout::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 16px; right: 16px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(49,126,255,0.3), transparent);
+  }
+
+  .s4 .impact-icon {
+    font-size: 22px !important;
+    color: #317eff;
+    flex-shrink: 0;
+    margin-top: 1px;
+    animation: s4-bolt-pulse 2s ease-in-out infinite;
+  }
+
+  .s4 .impact-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.65;
+    margin: 0;
+    font-style: italic;
+  }
+
+  @media (max-width: 760px) {
+    .s4 {
+      padding: 28px 18px;
+      overflow: hidden;
+    }
+
+    .s4 .headline {
+      font-size: 28px;
+    }
+
+    .s4 .subtitle {
+      font-size: 15px;
+    }
+
+    .s4 .guide-panel {
+      grid-template-columns: 1fr;
+    }
+
+    .s4 .guide-actions {
+      justify-content: flex-start;
+    }
+
+    .s4 .explorer {
+      flex-direction: column;
+    }
+
+    .s4 .left-col {
+      width: 100%;
+    }
+
+    .s4 .pl-row::after,
+    .s4 .pl-row::before {
+      display: none;
+    }
+  }
+
+</style>
+</head>
+
+<body style="margin:0;padding:32px 20px;background:linear-gradient(160deg,#f0f4ff 0%,#f8fafc 60%,#f0fdf4 100%);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;">
+
+<div class="s4">
+
+  <div class="badge"><span class="dot"></span> P&amp;L Basics</div>
+  <h1 class="headline">How Revenue Turns Into Profit</h1>
+  <p class="subtitle">Before we pull levers, we need to understand the machine. We'll use a clean $1M example to isolate the mechanics. Follow dollars from top line to bottom line.</p>
+
+  <div class="guide-panel">
+    <div class="guide-copy">
+      <div class="guide-icon">
+        <span class="material-icons-round">tips_and_updates</span>
+      </div>
+      <div>
+        <div class="guide-title">How to use this slide</div>
+        <p class="guide-text">
+          Click each line item in the P&amp;L to understand what it means, how it is calculated, who influences it, and why it matters. Then use the margin slider to see how delivery costs change profit.
+        </p>
+      </div>
+    </div>
+
+    <div class="guide-actions">
+      <div class="guide-progress" id="guideProgress">
+        <span class="material-icons-round">auto_awesome</span>
+        <span id="guideProgressText">Guided walk-through running</span>
+      </div>
+
+      <button class="guide-btn" id="guideBtn" type="button" onclick="startGuide()">
+        <span class="material-icons-round">play_arrow</span>
+        Start guided walk-through
+      </button>
+
+      <button class="guide-btn guide-btn--secondary" id="stopGuideBtn" type="button" onclick="stopGuide()" style="display:none;">
+        <span class="material-icons-round">pause</span>
+        Stop
+      </button>
+    </div>
+  </div>
+
+  <div class="explorer">
+    <div class="left-col">
+
+      <div class="statement-outer">
+        <div class="statement-card">
+          <div class="statement-title">
+            <span>Statement of Operations</span>
+            <span class="statement-cue">
+              <span class="material-icons-round">touch_app</span>
+              Click each row
+            </span>
+          </div>
+
+          <div class="pl-row active" data-id="revenue" data-tip="Start here: revenue is the money billed to the client before costs are removed." onclick="selectRow(this, true)">
+            <span>Revenue</span>
+            <span class="pl-value" id="val-revenue">$1,000,000</span>
+          </div>
+
+          <div class="pl-row pl-indent" data-id="cogs" data-tip="These are delivery costs. In services, this is usually talent and subcontractor cost." onclick="selectRow(this, true)">
+            <span>Cost of Services <span class="tag-var">Var</span></span>
+            <span class="pl-value val-neg" id="val-cogs">($600,000)</span>
+          </div>
+
+          <div class="pl-row total-row" data-id="gross_profit" data-tip="Gross Profit shows what is left after direct delivery costs are removed." onclick="selectRow(this, true)">
+            <span>Gross Profit</span>
+            <span class="pl-value val-pos" id="val-gross_profit">$400,000</span>
+          </div>
+
+          <div class="pl-row pl-indent" data-id="opex" data-tip="OPEX is the cost to run the business outside direct delivery. It is harder to reduce quickly." onclick="selectRow(this, true)">
+            <span>Operating Exp (OPEX) <span class="tag-fix">Fix</span></span>
+            <span class="pl-value val-neg" id="val-opex">($250,000)</span>
+          </div>
+
+          <div class="pl-row total-row" data-id="operating_income" data-tip="EBIT shows whether the core business model is covering both delivery and overhead." onclick="selectRow(this, true)">
+            <span>Operating Income (EBIT)</span>
+            <span class="pl-value val-pos" id="val-ebit">$150,000</span>
+          </div>
+
+          <div class="pl-row pl-indent" data-id="taxes" data-tip="Taxes are applied after operating profit. No profit means no tax in this simplified model." onclick="selectRow(this, true)">
+            <span>Taxes (assumed 20%)</span>
+            <span class="pl-value val-neg" id="val-taxes">($30,000)</span>
+          </div>
+
+          <div class="pl-row final-row" data-id="net_income" data-tip="Net Income is the final profit after everything. This is what protects runway." onclick="selectRow(this, true)">
+            <span>Net Income</span>
+            <span class="pl-value val-pos" id="val-net">$120,000</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-card">
+        <div class="slider-head">
+          <span class="slider-label">Project Margin</span>
+          <span class="margin-badge" id="marginBadge">40%</span>
+        </div>
+        <p class="slider-hint">Move delivery costs up or down and watch what happens to profit.</p>
+        <input type="range" id="marginSlider" min="20" max="60" value="40" oninput="updateSlider(); stopGuide(false);" style="--fill: 50.0%;">
+        <div class="warn-callout" id="warnCallout">
+          <span class="material-icons-round" style="font-size:14px;vertical-align:middle;margin-right:4px;">warning_amber</span>
+          <strong>Margin is leverage.</strong> A small hit to delivery margin can wipe out EBIT.
+        </div>
+      </div>
+
+    </div>
+
+    <div class="info-outer">
+      <div class="info-panel" id="infoPanel">
+      <div class="info-anim">
+        <div class="info-title">
+          <div class="info-icon"><span class="material-icons-round">payments</span></div>
+          Revenue
+        </div>
+        <p class="info-desc">What you bill clients for the work. In services, it is usually hours x rate (minus discounts and write-offs).</p>
+
+        <div class="formula-row">
+          <span class="formula-eyebrow">Formula</span>
+          <span class="formula-dark">Billable Hours × Bill Rate</span>
+        </div>
+
+        <div class="ownership-section">
+          <span class="section-eyebrow">Who owns this</span>
+          <div class="owner-grid">
+        <div class="owner-pill pill-high" style="background:#317eff;color:#fff;">
+          <span class="material-icons-round" style="font-size:22px;filter:drop-shadow(0 0 6px rgba(255,255,255,0.7));">handshake</span>
+          <div class="owner-pill-text">
+            <span class="owner-name" style="color:#fff;">Sales</span>
+            <span class="owner-level" style="color:#fff;opacity:0.8;">High influence</span>
+          </div>
+        </div>
+        <div class="owner-pill pill-high" style="background:#317eff;color:#fff;">
+          <span class="material-icons-round" style="font-size:22px;filter:drop-shadow(0 0 6px rgba(255,255,255,0.7));">engineering</span>
+          <div class="owner-pill-text">
+            <span class="owner-name" style="color:#fff;">Delivery</span>
+            <span class="owner-level" style="color:#fff;opacity:0.8;">High influence</span>
+          </div>
+        </div>
+        <div class="owner-pill pill-low" style="background:#f1f5f9;color:#94a3b8;">
+          <span class="material-icons-round" style="font-size:22px;filter:none;">inventory_2</span>
+          <div class="owner-pill-text">
+            <span class="owner-name" style="color:#94a3b8;">Fulfillment</span>
+            <span class="owner-level" style="color:#94a3b8;opacity:0.5;">Low influence</span>
+          </div>
+        </div>
+        <div class="owner-pill pill-low" style="background:#f1f5f9;color:#94a3b8;">
+          <span class="material-icons-round" style="font-size:22px;filter:none;">corporate_fare</span>
+          <div class="owner-pill-text">
+            <span class="owner-name" style="color:#94a3b8;">Admin</span>
+            <span class="owner-level" style="color:#94a3b8;opacity:0.5;">Low influence</span>
+          </div>
+        </div></div>
+        </div>
+
+        <div class="impact-callout">
+          <span class="material-icons-round impact-icon">bolt</span>
+          <p class="impact-text">This is the engine. If you can't bill and collect, nothing else matters.</p>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const REVENUE = 1000000;
+  const OPEX = 250000;
+
+  let guideTimer = null;
+  let guideIndex = 0;
+
+  const guideOrder = [
+    'revenue',
+    'cogs',
+    'gross_profit',
+    'opex',
+    'operating_income',
+    'taxes',
+    'net_income'
+  ];
+
+  const plData = {
+    revenue: {
+      title: 'Revenue', icon: 'payments',
+      desc: 'What you bill clients for the work. In services, it is usually hours x rate (minus discounts and write-offs).',
+      formula: 'Billable Hours × Bill Rate',
+      impact: "This is the engine. If you can't bill and collect, nothing else matters.",
+      ctrl: { Sales: 3, Delivery: 3, Fulfillment: 1, Admin: 1 }
+    },
+    cogs: {
+      title: 'Cost of Services', icon: 'group',
+      desc: 'The direct cost to deliver — mostly people. Moves with volume and efficiency.',
+      formula: 'Direct Payroll + Sub-contractors',
+      impact: 'Every dollar added to delivery cost comes straight out of gross margin.',
+      ctrl: { Sales: 2, Delivery: 3, Fulfillment: 3, Admin: 1 }
+    },
+    gross_profit: {
+      title: 'Gross Profit', icon: 'trending_up',
+      desc: 'Revenue minus delivery costs. The pool of money that pays for overhead.',
+      formula: 'Revenue − Cost of Services',
+      impact: "Gross margin isn't about being positive. It's about being durable.",
+      ctrl: { Sales: 3, Delivery: 3, Fulfillment: 2, Admin: 1 }
+    },
+    opex: {
+      title: 'Operating Expenses', icon: 'account_balance',
+      desc: 'The cost to run the company outside of delivery. Fixed in the short term.',
+      formula: 'Admin + Sales & Marketing + Bench',
+      impact: "OPEX is sticky. When revenue drops, overhead doesn't shrink overnight.",
+      ctrl: { Sales: 1, Delivery: 2, Fulfillment: 2, Admin: 3 }
+    },
+    operating_income: {
+      title: 'Operating Income (EBIT)', icon: 'donut_large',
+      desc: "Profit from operations. If negative, the business model isn't covering overhead.",
+      formula: 'Gross Profit − OPEX',
+      impact: 'Positive EBIT means the core model funds itself.',
+      ctrl: { Sales: 1, Delivery: 1, Fulfillment: 1, Admin: 3 }
+    },
+    taxes: {
+      title: 'Taxes', icon: 'receipt_long',
+      desc: 'The share of Operating Income owed to the government. Flat 20% rate here.',
+      formula: 'Operating Income × 20%',
+      impact: 'Taxes only apply to profits. No profit, no tax.',
+      ctrl: { Sales: 1, Delivery: 1, Fulfillment: 1, Admin: 3 }
+    },
+    net_income: {
+      title: 'Net Income', icon: 'verified',
+      desc: 'Profit after everything. This is what determines your cash runway.',
+      formula: 'Operating Income − Taxes',
+      impact: 'If net income stays negative, the business needs outside capital to survive.',
+      ctrl: { Sales: 1, Delivery: 1, Fulfillment: 1, Admin: 3 }
+    }
+  };
+
+  const OWNER_ICONS = {
+    Sales: 'handshake',
+    Delivery: 'engineering',
+    Fulfillment: 'inventory_2',
+    Admin: 'corporate_fare'
+  };
+
+  const OWNER_COLORS = {
+    3: { bg: '#317eff', text: '#fff', label: 'High influence', cls: 'pill-high' },
+    2: { bg: '#dbeafe', text: '#1d4ed8', label: 'Some influence', cls: 'pill-med' },
+    1: { bg: '#f1f5f9', text: '#94a3b8', label: 'Low influence', cls: 'pill-low' }
+  };
+
+  function makeOwnership(ctrl) {
+    return Object.entries(ctrl).map(([name, lvl]) => {
+      const c = OWNER_COLORS[lvl];
+      const icon = OWNER_ICONS[name];
+      const iconFilter = lvl === 3
+        ? 'drop-shadow(0 0 6px rgba(255,255,255,0.7))'
+        : lvl === 2
+          ? 'drop-shadow(0 0 4px rgba(49,126,255,0.4))'
+          : 'none';
+
+      return `
+        <div class="owner-pill ${c.cls}" style="background:${c.bg};color:${c.text};">
+          <span class="material-icons-round" style="font-size:22px;filter:${iconFilter};">${icon}</span>
+          <div class="owner-pill-text">
+            <span class="owner-name" style="color:${c.text};">${name}</span>
+            <span class="owner-level" style="color:${c.text};opacity:${lvl===1?'0.5':'0.8'};">${c.label}</span>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  function renderInfo(id) {
+    const d = plData[id];
+
+    document.getElementById('infoPanel').innerHTML = `
+      <div class="info-anim">
+        <div class="info-title">
+          <div class="info-icon"><span class="material-icons-round">${d.icon}</span></div>
+          ${d.title}
+        </div>
+        <p class="info-desc">${d.desc}</p>
+
+        <div class="formula-row">
+          <span class="formula-eyebrow">Formula</span>
+          <span class="formula-dark">${d.formula}</span>
+        </div>
+
+        <div class="ownership-section">
+          <span class="section-eyebrow">Who owns this</span>
+          <div class="owner-grid">${makeOwnership(d.ctrl)}</div>
+        </div>
+
+        <div class="impact-callout">
+          <span class="material-icons-round impact-icon">bolt</span>
+          <p class="impact-text">${d.impact}</p>
+        </div>
+      </div>`;
+  }
+
+  function fmt(n) {
+    return n < 0 ? `($${Math.abs(n).toLocaleString()})` : `$${n.toLocaleString()}`;
+  }
+
+  function flashRow(id) {
+    const row = document.querySelector(`.s4 .pl-row[data-id="${id}"]`);
+    if (!row || row.classList.contains('active')) return;
+
+    row.classList.remove('val-flash');
+    void row.offsetWidth;
+    row.classList.add('val-flash');
+
+    setTimeout(() => row.classList.remove('val-flash'), 400);
+  }
+
+  function updateSlider() {
+    const slider = document.getElementById('marginSlider');
+    const margin = slider.value / 100;
+    const cogs = Math.round(REVENUE * (1 - margin));
+    const gp = REVENUE - cogs;
+    const ebit = gp - OPEX;
+    const taxes = ebit > 0 ? Math.round(ebit * 0.2) : 0;
+    const net = ebit - taxes;
+
+    const pct = ((slider.value - 20) / 40 * 100).toFixed(1);
+    slider.style.setProperty('--fill', pct + '%');
+    document.getElementById('marginBadge').textContent = slider.value + '%';
+
+    document.getElementById('val-cogs').textContent = `($${cogs.toLocaleString()})`;
+    document.getElementById('val-gross_profit').textContent = `$${gp.toLocaleString()}`;
+
+    const ebitEl = document.getElementById('val-ebit');
+    ebitEl.textContent = fmt(ebit);
+    ebitEl.className = 'pl-value ' + (ebit < 0 ? 'val-neg' : 'val-pos');
+
+    document.getElementById('val-taxes').textContent = taxes > 0 ? `($${taxes.toLocaleString()})` : '$0';
+
+    const netEl = document.getElementById('val-net');
+    netEl.textContent = fmt(net);
+    netEl.className = 'pl-value ' + (net < 0 ? 'val-neg' : 'val-pos');
+
+    document.getElementById('warnCallout').style.display = slider.value < 35 ? 'block' : 'none';
+
+    ['cogs','gross_profit','operating_income','taxes','net_income'].forEach(flashRow);
+  }
+
+  function setActiveRow(row) {
+    document.querySelectorAll('.s4 .pl-row').forEach(r => {
+      r.classList.remove('active');
+      r.classList.remove('guide-active');
+    });
+
+    row.classList.add('active');
+    renderInfo(row.dataset.id);
+  }
+
+  function selectRow(row, manual) {
+    if (manual) stopGuide(false);
+    setActiveRow(row);
+  }
+
+  function selectRowById(id) {
+    const row = document.querySelector(`.s4 .pl-row[data-id="${id}"]`);
+    if (!row) return;
+
+    setActiveRow(row);
+    row.classList.add('guide-active');
+  }
+
+  function startGuide() {
+    stopGuide(false);
+
+    guideIndex = 0;
+    document.getElementById('guideBtn').style.display = 'none';
+    document.getElementById('stopGuideBtn').style.display = 'inline-flex';
+    document.getElementById('guideProgress').classList.add('visible');
+
+    runGuideStep();
+
+    guideTimer = setInterval(() => {
+      guideIndex = (guideIndex + 1) % guideOrder.length;
+      runGuideStep();
+    }, 2300);
+  }
+
+  function runGuideStep() {
+    const id = guideOrder[guideIndex];
+    selectRowById(id);
+
+    const label = plData[id] ? plData[id].title : 'Line item';
+    document.getElementById('guideProgressText').textContent =
+      `Viewing ${guideIndex + 1} of ${guideOrder.length}: ${label}`;
+  }
+
+  function stopGuide(resetButtons = true) {
+    if (guideTimer) {
+      clearInterval(guideTimer);
+      guideTimer = null;
+    }
+
+    document.querySelectorAll('.s4 .pl-row').forEach(r => r.classList.remove('guide-active'));
+
+    if (resetButtons) {
+      document.getElementById('guideBtn').style.display = 'inline-flex';
+      document.getElementById('stopGuideBtn').style.display = 'none';
+      document.getElementById('guideProgress').classList.remove('visible');
+    } else if (!guideTimer) {
+      document.getElementById('guideBtn').style.display = 'inline-flex';
+      document.getElementById('stopGuideBtn').style.display = 'none';
+      document.getElementById('guideProgress').classList.remove('visible');
+    }
+  }
+
+  const slider = document.getElementById('marginSlider');
+  const pct = ((slider.value - 20) / 40 * 100).toFixed(1);
+
+  slider.style.setProperty('--fill', pct + '%');
+  renderInfo('revenue');
+</script>
+
+
+</body></html>
+

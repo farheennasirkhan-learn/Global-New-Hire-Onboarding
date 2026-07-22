@@ -1,0 +1,1349 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Triad of Value</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+
+  /* ── KEYFRAMES ── */
+  @keyframes s3-border-rot {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  @keyframes s3-btn-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 4px 14px rgba(49,126,255,0.35); }
+    50%       { box-shadow: 0 0 0 5px rgba(49,126,255,0.18), 0 8px 28px rgba(49,126,255,0.55); }
+  }
+
+  @keyframes s3-pill-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 4px 18px rgba(49,126,255,0.3); }
+    50%       { box-shadow: 0 0 0 6px rgba(49,126,255,0.16), 0 4px 24px rgba(49,126,255,0.45); }
+  }
+
+  @keyframes s3-dot-pulse {
+    0%, 100% { box-shadow: 0 0 6px 1px rgba(49,126,255,0.7); opacity: 0.85; }
+    50%       { box-shadow: 0 0 16px 3px rgba(49,126,255,1); opacity: 1; }
+  }
+
+  @keyframes s3-blink {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; }
+  }
+
+  @keyframes s3-lab-breathe {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 20px 60px rgba(0,0,0,0.1); }
+    50%       { box-shadow: 0 0 0 3px rgba(49,126,255,0.18), 0 20px 60px rgba(49,126,255,0.1); }
+  }
+
+  @keyframes s3-spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @keyframes s3-trap-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(239,68,68,0), 0 2px 8px rgba(239,68,68,0.08);
+      border-color: #fecaca;
+    }
+    50% {
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.1), 0 4px 16px rgba(239,68,68,0.18);
+      border-color: #fca5a5;
+    }
+  }
+
+  @keyframes s3-play-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(49,126,255,0), 0 2px 8px rgba(49,126,255,0.08);
+      border-color: #e2e8f0;
+    }
+    50% {
+      box-shadow: 0 0 0 4px rgba(49,126,255,0.1), 0 4px 16px rgba(49,126,255,0.18);
+      border-color: #93c5fd;
+    }
+  }
+
+  @keyframes s3-icon-float {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50%       { transform: translateY(-5px) scale(1.04); }
+  }
+
+  /* ── WRAPPER ── */
+  .s3 {
+    font-family: 'Poppins', sans-serif;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 28px;
+    background: #ffffff;
+    border-radius: 28px;
+    color: #0f172a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s3::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 28px;
+    opacity: 0.4;
+  }
+
+  .s3 > * { position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  .s3 .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 14px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 14px;
+    border: 1px solid #1e293b;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+
+  .s3 .badge .dot {
+    width: 7px; height: 7px;
+    background: #317eff;
+    border-radius: 50%;
+    animation: s3-dot-pulse 2.2s ease-in-out infinite;
+  }
+
+  .s3 .headline {
+    font-size: 36px;
+    font-weight: 700;
+    color: #020617;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .s3 .subtitle {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+    max-width: 660px;
+    margin-bottom: 10px;
+  }
+
+  .s3 .subtitle strong { color: #0f172a; font-weight: 700; }
+
+  .s3 .divider-line {
+    width: 44px; height: 3px;
+    background: #317eff;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(49,126,255,0.5);
+  }
+
+  /* ── TOP ROW ── */
+  .s3 .top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .s3 .nudge-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #317eff;
+  }
+
+  .s3 .nudge-row .material-icons-round { font-size: 15px; }
+
+  .s3 .reset-btn {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+    background: none;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .s3 .reset-btn.visible { display: inline-flex; }
+  .s3 .reset-btn:hover { color: #317eff; border-color: #317eff; background: #eef4ff; }
+  .s3 .reset-btn .material-icons-round { font-size: 14px; }
+
+  /* ── PILL STEPPER ── */
+  .s3 .pill-stepper {
+    display: flex;
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+    margin-bottom: 14px;
+    border: 1px solid #e2e8f0;
+  }
+
+  .s3 .pill-step {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #94a3b8;
+    transition: all 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+    cursor: default;
+    white-space: nowrap;
+  }
+
+  .s3 .pill-step .material-icons-round { font-size: 16px; display: none; }
+
+  .s3 .pill-step.active {
+    background: #317eff;
+    color: #fff;
+    animation: s3-pill-glow 2.2s ease-in-out infinite;
+  }
+
+  .s3 .pill-step.active .material-icons-round { display: inline; }
+
+  .s3 .pill-step.done {
+    background: #fff;
+    color: #16a34a;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .s3 .pill-step.done .material-icons-round { display: inline; color: #16a34a; }
+
+  .s3 .pill-step.final {
+    background: #0f172a;
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(15,23,42,0.25);
+  }
+
+  .s3 .pill-step.final .material-icons-round { display: inline; }
+
+  /* ── PILLAR PANEL ── */
+  .s3 .panel-glow-wrap {
+    padding: 1.5px;
+    border-radius: 24px;
+    background: linear-gradient(
+      120deg,
+      #e2e8f0 0%, #317eff55 25%,
+      #e2e8f0 50%, #317eff33 75%, #e2e8f0 100%
+    );
+    background-size: 300% 300%;
+    animation: s3-border-rot 5s linear infinite;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.07);
+    margin-bottom: 24px;
+  }
+
+  .s3 .panel-wrap {
+    border-radius: 23px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .s3 .panel { display: none; flex-direction: row; }
+  .s3 .panel.active { display: flex; }
+
+  /* LEFT — icon side */
+  .s3 .panel-left {
+    width: 220px;
+    flex-shrink: 0;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #e2e8f0;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .s3 .pl-create  { background: linear-gradient(160deg, #eff6ff, #dbeafe); }
+  .s3 .pl-deliver { background: linear-gradient(160deg, #f5f3ff, #ede9fe); }
+  .s3 .pl-capture { background: linear-gradient(160deg, #f0fdf4, #dcfce7); }
+
+  .s3 .pillar-icon-wrap {
+    width: 88px; height: 88px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: s3-icon-float 3.5s ease-in-out infinite;
+  }
+
+  .s3 .pillar-icon-wrap .material-icons-round { font-size: 44px; }
+
+  .s3 .ic-create  { background: #dbeafe; border: 1.5px solid #bfdbfe; }
+  .s3 .ic-create  .material-icons-round { color: #2563eb; }
+  .s3 .ic-deliver { background: #ede9fe; border: 1.5px solid #ddd6fe; }
+  .s3 .ic-deliver .material-icons-round { color: #7c3aed; }
+  .s3 .ic-capture { background: #dcfce7; border: 1.5px solid #bbf7d0; }
+  .s3 .ic-capture .material-icons-round { color: #15803d; }
+
+  .s3 .pillar-name {
+    font-size: 18px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .s3 .pillar-sub {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+  }
+
+  /* RIGHT — content side */
+  .s3 .panel-right {
+    flex: 1;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .s3 .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Objective */
+  .s3 .obj-block {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1e293b;
+    line-height: 1.65;
+  }
+
+  .s3 .obj-block strong { font-weight: 800; color: #0f172a; }
+
+  /* Trap block */
+  .s3 .trap-block {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 3px solid #ef4444;
+    border-radius: 0 10px 10px 0;
+    padding: 10px 14px;
+    animation: s3-trap-pulse 2.8s ease-in-out infinite;
+  }
+
+  .s3 .trap-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #dc2626;
+    margin-bottom: 6px;
+  }
+
+  .s3 .trap-text {
+    font-size: 14px;
+    color: #991b1b;
+    line-height: 1.65;
+    font-weight: 500;
+  }
+
+  /* Playbook block */
+  .s3 .playbook-block {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #317eff;
+    border-radius: 0 10px 10px 0;
+    padding: 10px 14px;
+    animation: s3-play-pulse 2.8s ease-in-out infinite 1.4s;
+  }
+
+  .s3 .playbook-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #317eff;
+    margin-bottom: 6px;
+  }
+
+  .s3 .playbook-text {
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.65;
+  }
+
+  /* Fixed nav — always same position, outside the panel */
+  .s3 .fixed-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    margin-top: -2px;
+    border: 1.5px solid #e2e8f0;
+    border-top: 1px solid #f1f5f9;
+    border-radius: 0 0 23px 23px;
+    background: #fff;
+    margin-bottom: 16px;
+  }
+
+  .s3 .fixed-nav.hidden { display: none; }
+
+  .s3 .step-counter {
+    font-size: 13px;
+    font-weight: 600;
+    color: #94a3b8;
+  }
+
+  .s3 .nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #317eff;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    cursor: pointer;
+    animation: s3-btn-glow 2s ease-in-out infinite;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .s3 .nav-btn:hover {
+    background: #1a6aff;
+    transform: translateY(-1px);
+    animation: none;
+    box-shadow: 0 10px 32px rgba(49,126,255,0.55);
+  }
+
+  .s3 .nav-btn .material-icons-round { font-size: 17px; }
+
+  /* ── VIEW TOGGLE ── */
+  .s3 .view-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 4px;
+  }
+
+  .s3 .vt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8;
+    background: none;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .s3 .vt-btn .material-icons-round { font-size: 15px; }
+  .s3 .vt-btn.active { background: #fff; color: #317eff; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+  /* ── CARD SPREAD VIEW ── */
+  .s3 .card-spread {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .s3 .card-spread.active { display: grid; }
+
+  .s3 .spread-card {
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1.5px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    background: #fff;
+  }
+
+  .s3 .spread-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.1);
+  }
+
+  .s3 .spread-top {
+    padding: 32px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .s3 .sc-create .spread-top  { background: linear-gradient(160deg, #eff6ff, #dbeafe); }
+  .s3 .sc-deliver .spread-top { background: linear-gradient(160deg, #f5f3ff, #ede9fe); }
+  .s3 .sc-capture .spread-top { background: linear-gradient(160deg, #f0fdf4, #dcfce7); }
+
+  .s3 .spread-icon-wrap {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: s3-icon-float 3.5s ease-in-out infinite;
+  }
+
+  .s3 .spread-card:nth-child(2) .spread-icon-wrap { animation-delay: 0.8s; }
+  .s3 .spread-card:nth-child(3) .spread-icon-wrap { animation-delay: 1.6s; }
+
+  .s3 .spread-icon-wrap .material-icons-round { font-size: 40px; }
+
+  .s3 .spread-name {
+    font-size: 16px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .s3 .spread-sub {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+  }
+
+  .s3 .spread-obj {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    line-height: 1.6;
+    padding: 12px 20px 16px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .s3 .spread-obj strong { color: #0f172a; font-weight: 700; }
+
+  .s3 .spread-bottom {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .s3 .spread-trap {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 3px solid #ef4444;
+    border-radius: 0 8px 8px 0;
+    padding: 11px 13px;
+    animation: s3-trap-pulse 2.8s ease-in-out infinite;
+  }
+
+  .s3 .spread-play {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid #317eff;
+    border-radius: 0 8px 8px 0;
+    padding: 11px 13px;
+    animation: s3-play-pulse 2.8s ease-in-out infinite 1.4s;
+  }
+
+  .s3 .spread-block-label {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .s3 .spread-trap .spread-block-label { color: #dc2626; }
+  .s3 .spread-play .spread-block-label { color: #317eff; }
+
+  .s3 .spread-block-text {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .s3 .spread-trap .spread-block-text { color: #991b1b; font-weight: 500; }
+  .s3 .spread-play .spread-block-text { color: #334155; }
+
+  /* ── SUSTAINABILITY LAB ── */
+  .s3 .lab-outer {
+    padding: 1.5px;
+    border-radius: 24px;
+    background: linear-gradient(
+      120deg,
+      #1e293b 0%, #317eff66 35%,
+      #1e293b 65%, #317eff44 100%
+    );
+    background-size: 300% 300%;
+    animation: s3-border-rot 4s linear infinite;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+
+  .s3 .lab-wrap {
+    border-radius: 23px;
+    overflow: hidden;
+    background: #070c18;
+    padding: 44px 40px;
+  }
+
+  /* Lab header */
+  .s3 .lab-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 13px;
+    background: rgba(49,126,255,0.12);
+    border: 1px solid rgba(49,126,255,0.25);
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #317eff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+
+  .s3 .lab-badge .material-icons-round { font-size: 13px; }
+
+  .s3 .lab-headline {
+    font-size: 26px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.025em;
+    margin-bottom: 8px;
+  }
+
+  .s3 .lab-subtext {
+    font-size: 15px;
+    color: #64748b;
+    margin-bottom: 36px;
+  }
+
+  /* Lab layout */
+  .s3 .lab-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: center;
+  }
+
+  /* Display stage */
+  .s3 .display-stage {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid #1e293b;
+    border-radius: 18px;
+    padding: 36px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    min-height: 300px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Subtle top highlight */
+  .s3 .display-stage::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(49,126,255,0.3), transparent);
+  }
+
+  /* Triad circle */
+  .s3 .triad-visual {
+    width: 160px; height: 160px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .s3 .triad-ring {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    background: #1e293b;
+    transition: all 0.6s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+
+  .s3 .triad-ring.spinning {
+    animation: s3-spin-slow 8s linear infinite;
+  }
+
+  .s3 .triad-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px; height: 60px;
+    background: #070c18;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border: 1px solid #1e293b;
+  }
+
+  .s3 .triad-core .material-icons-round {
+    font-size: 26px;
+    color: #334155;
+    transition: all 0.4s ease;
+  }
+
+  /* Status */
+  .s3 .status-result {
+    font-size: 20px;
+    font-weight: 800;
+    color: #fff;
+    transition: all 0.3s ease;
+    letter-spacing: -0.02em;
+  }
+
+  .s3 .status-desc {
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.65;
+    max-width: 260px;
+    transition: all 0.3s ease;
+  }
+
+  /* Control panel */
+  .s3 .control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .s3 .toggle-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid #1e293b;
+    border-radius: 14px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s3 .toggle-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  }
+
+  .s3 .toggle-card:hover {
+    border-color: #317eff44;
+    background: rgba(49,126,255,0.05);
+  }
+
+  .s3 .toggle-card.active {
+    border-color: #317eff;
+    background: rgba(49,126,255,0.08);
+    box-shadow: 0 0 0 1px rgba(49,126,255,0.2), inset 0 1px 0 rgba(49,126,255,0.1);
+  }
+
+  .s3 .check-box {
+    width: 22px; height: 22px;
+    border: 2px solid #334155;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    background: transparent;
+  }
+
+  .s3 .toggle-card.active .check-box {
+    background: #317eff;
+    border-color: #317eff;
+    box-shadow: 0 0 10px rgba(49,126,255,0.4);
+  }
+
+  .s3 .check-box .material-icons-round {
+    font-size: 14px;
+    color: #fff;
+    display: none;
+  }
+
+  .s3 .toggle-card.active .check-box .material-icons-round { display: block; }
+
+  .s3 .toggle-info strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 3px;
+  }
+
+  .s3 .toggle-info span {
+    font-size: 12px;
+    color: #475569;
+  }
+
+  .s3 .toggle-instruction {
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+    text-align: center;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .s3 .toggle-instruction .material-icons-round { font-size: 14px; color: #317eff; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .s3 { padding: 32px 20px; }
+    .s3 .headline { font-size: 30px; }
+    .s3 .subtitle { font-size: 15px; }
+    .s3 .panel { flex-direction: column; min-height: auto; }
+    .s3 .panel-left { width: 100%; border-right: none; border-bottom: 1px solid #e2e8f0; padding: 24px; flex-direction: row; gap: 16px; text-align: left; }
+    .s3 .panel-right { padding: 24px; }
+    .s3 .lab-layout { grid-template-columns: 1fr; }
+    .s3 .pill-stepper { padding: 4px; }
+    .s3 .pill-step { padding: 10px 8px; font-size: 12px; }
+    .s3 .lab-wrap { padding: 28px 20px; }
+  }
+
+</style>
+</head>
+<body style="margin:0;padding:48px 20px;background:linear-gradient(160deg,#f0f4ff 0%,#f8fafc 60%,#f0fdf4 100%);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;">
+
+<div class="s3">
+
+  <!-- HEADER -->
+  <div class="badge">
+    <span class="dot"></span> Section 2: Performance Standards
+  </div>
+  <h1 class="headline">Apply the "Triad of Value"</h1>
+  <p class="subtitle">
+    Technical excellence alone does not define success. Profit alone does not define sustainability. A project succeeds only when <strong>strategic fit, execution quality, and financial return</strong> are synchronized.
+  </p>
+  <div class="divider-line"></div>
+
+  <!-- TOP ROW -->
+  <div class="top-row">
+    <div class="nudge-row">
+      <span class="material-icons-round">arrow_forward</span>
+      Explore each pillar in order.
+    </div>
+    <button class="reset-btn" id="resetBtn" onclick="resetSlide()">
+      <span class="material-icons-round">replay</span> Start over
+    </button>
+  </div>
+
+  <!-- PILL STEPPER -->
+  <div class="pill-stepper">
+    <div class="pill-step active" id="ps-0" onclick="jumpToStep(0)" style="cursor:pointer;">
+      <span class="material-icons-round">radio_button_checked</span> Creating Value
+    </div>
+    <div class="pill-step" id="ps-1" onclick="jumpToStep(1)" style="cursor:pointer;">
+      <span class="material-icons-round">check_circle</span> Delivering Value
+    </div>
+    <div class="pill-step" id="ps-2" onclick="jumpToStep(2)" style="cursor:pointer;">
+      <span class="material-icons-round">check_circle</span> Capturing Value
+    </div>
+    <div class="pill-step" id="ps-3" onclick="jumpToStep(3)" style="cursor:pointer;">
+      <span class="material-icons-round">science</span> The Lab
+    </div>
+  </div>
+
+  <!-- CARD SPREAD VIEW (alternate) -->
+  <div class="card-spread" id="cardSpread">
+
+    <!-- Card 1: Creating -->
+    <div class="spread-card sc-create">
+      <div class="spread-top">
+        <div class="spread-icon-wrap ic-create">
+          <span class="material-icons-round">psychology</span>
+        </div>
+        <div class="spread-name">Creating Value</div>
+        <div class="spread-sub">The Strategic Fit</div>
+      </div>
+      <p class="spread-obj"><strong>Core Objective:</strong> Focus on high-impact problems critical to the client's long-term roadmap.</p>
+      <div class="spread-bottom">
+        <div class="spread-trap">
+          <div class="spread-block-label">The Trap</div>
+          <p class="spread-block-text">Executing perfectly on low-value, easily replaceable tasks. Relevance expires when minor tasks are finished—and so does the revenue.</p>
+        </div>
+        <div class="spread-play">
+          <div class="spread-block-label">The Playbook</div>
+          <p class="spread-block-text">Target high-leverage challenges and embed deeply into the client's roadmap.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Delivering -->
+    <div class="spread-card sc-deliver">
+      <div class="spread-top">
+        <div class="spread-icon-wrap ic-deliver">
+          <span class="material-icons-round">speed</span>
+        </div>
+        <div class="spread-name">Delivering Value</div>
+        <div class="spread-sub">The Execution</div>
+      </div>
+      <p class="spread-obj"><strong>Core Objective:</strong> Establish unwavering trust through absolute consistency and predictability.</p>
+      <div class="spread-bottom">
+        <div class="spread-trap">
+          <div class="spread-block-label">The Trap</div>
+          <p class="spread-block-text">Relying on occasional brilliance and erratic individual heroics. Inconsistency creates doubt, which destroys trust much faster than bad work.</p>
+        </div>
+        <div class="spread-play">
+          <div class="spread-block-label">The Playbook</div>
+          <p class="spread-block-text">Build reliable, repeatable systems to relentlessly reduce execution variability.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Capturing -->
+    <div class="spread-card sc-capture">
+      <div class="spread-top">
+        <div class="spread-icon-wrap ic-capture">
+          <span class="material-icons-round">payments</span>
+        </div>
+        <div class="spread-name">Capturing Value</div>
+        <div class="spread-sub">The Financial ROI</div>
+      </div>
+      <p class="spread-obj"><strong>Core Objective:</strong> Ensure the business retains the economic benefit of the value created.</p>
+      <div class="spread-bottom">
+        <div class="spread-trap">
+          <div class="spread-block-label">The Trap</div>
+          <p class="spread-block-text">Accepting vague scopes, unprofitable pricing, or working for free. Failing to capture value turns a strategic partnership into a client subsidy.</p>
+        </div>
+        <div class="spread-play">
+          <div class="spread-block-label">The Playbook</div>
+          <p class="spread-block-text">Enforce commercial discipline. If it is not explicitly defined, we don't get paid for it.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PANEL WRAP (stepper view) -->
+  <div class="panel-glow-wrap" id="panelGlowWrap">
+    <div class="panel-wrap">
+
+      <!-- PANEL 1: Creating Value -->
+      <div class="panel active" id="panel-0">
+        <div class="panel-left pl-create">
+          <div class="pillar-icon-wrap ic-create">
+            <span class="material-icons-round">psychology</span>
+          </div>
+          <div class="pillar-name">Creating Value</div>
+          <div class="pillar-sub">The Strategic Fit</div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-body">
+            <p class="obj-block"><strong>Core Objective:</strong> Focus on high-impact problems critical to the client's long-term roadmap.</p>
+            <div class="trap-block">
+              <div class="trap-label">The Trap</div>
+              <p class="trap-text">Executing perfectly on low-value, easily replaceable tasks. Relevance expires when minor tasks are finished—and so does the revenue.</p>
+            </div>
+            <div class="playbook-block">
+              <div class="playbook-label">The Playbook</div>
+              <p class="playbook-text">Target high-leverage challenges and embed deeply into the client's roadmap.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: Delivering Value -->
+      <div class="panel" id="panel-1">
+        <div class="panel-left pl-deliver">
+          <div class="pillar-icon-wrap ic-deliver">
+            <span class="material-icons-round">speed</span>
+          </div>
+          <div class="pillar-name">Delivering Value</div>
+          <div class="pillar-sub">The Execution</div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-body">
+            <p class="obj-block"><strong>Core Objective:</strong> Establish unwavering trust through absolute consistency and predictability.</p>
+            <div class="trap-block">
+              <div class="trap-label">The Trap</div>
+              <p class="trap-text">Relying on occasional brilliance and erratic individual heroics. Inconsistency creates doubt, which destroys trust much faster than bad work.</p>
+            </div>
+            <div class="playbook-block">
+              <div class="playbook-label">The Playbook</div>
+              <p class="playbook-text">Build reliable, repeatable systems to relentlessly reduce execution variability.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: Capturing Value -->
+      <div class="panel" id="panel-2">
+        <div class="panel-left pl-capture">
+          <div class="pillar-icon-wrap ic-capture">
+            <span class="material-icons-round">payments</span>
+          </div>
+          <div class="pillar-name">Capturing Value</div>
+          <div class="pillar-sub">The Financial ROI</div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-body">
+            <p class="obj-block"><strong>Core Objective:</strong> Ensure the business retains the economic benefit of the value created.</p>
+            <div class="trap-block">
+              <div class="trap-label">The Trap</div>
+              <p class="trap-text">Accepting vague scopes, unprofitable pricing, or working for free. Failing to capture value turns a strategic partnership into a client subsidy.</p>
+            </div>
+            <div class="playbook-block">
+              <div class="playbook-label">The Playbook</div>
+              <p class="playbook-text">Enforce commercial discipline. If it is not explicitly defined, we don't get paid for it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SINGLE FIXED NAV ROW — button never moves -->
+  <div class="fixed-nav" id="fixedNav">
+    <span class="step-counter" id="stepCounter">1 of 3</span>
+    <button class="nav-btn" id="mainNavBtn" onclick="nextStep()">
+      Next <span class="material-icons-round">arrow_forward</span>
+    </button>
+  </div>
+
+  <!-- SUSTAINABILITY LAB -->
+  <div class="lab-outer" id="labOuter" style="display:none;">
+    <div class="lab-wrap">
+
+      <div class="lab-badge">
+        <span class="material-icons-round">science</span>
+        Sustainability Lab
+      </div>
+      <h2 class="lab-headline">The Triad Constructor</h2>
+      <p class="lab-subtext">Synchronization Test: No single pillar sustains the enterprise.</p>
+
+      <div class="lab-layout">
+
+        <!-- DISPLAY STAGE -->
+        <div class="display-stage">
+          <div class="triad-visual">
+            <div class="triad-ring" id="triadRing"></div>
+            <div class="triad-core">
+              <span class="material-icons-round" id="statusIcon">sensors_off</span>
+            </div>
+          </div>
+          <div class="status-result" id="statusText">Awaiting Synchronization</div>
+          <p class="status-desc" id="statusDesc">Toggle pillars to test the sustainability of your current engagement model.</p>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="control-panel">
+          <div class="toggle-card" id="tc-create" onclick="togglePillar('create')">
+            <div class="check-box" id="cb-create">
+              <span class="material-icons-round">check</span>
+            </div>
+            <div class="toggle-info">
+              <strong>Creating Value</strong>
+              <span>Strategic Significance</span>
+            </div>
+          </div>
+
+          <div class="toggle-card" id="tc-deliver" onclick="togglePillar('deliver')">
+            <div class="check-box" id="cb-deliver">
+              <span class="material-icons-round">check</span>
+            </div>
+            <div class="toggle-info">
+              <strong>Delivering Value</strong>
+              <span>Execution Excellence</span>
+            </div>
+          </div>
+
+          <div class="toggle-card" id="tc-capture" onclick="togglePillar('capture')">
+            <div class="check-box" id="cb-capture">
+              <span class="material-icons-round">check</span>
+            </div>
+            <div class="toggle-info">
+              <strong>Capturing Value</strong>
+              <span>Financial ROI</span>
+            </div>
+          </div>
+
+          <p class="toggle-instruction">
+            <span class="material-icons-round">touch_app</span>
+            Toggle pillars to test your engagement model.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  /* ── VIEW SWITCHER ── */
+  let currentView = 'stepper';
+
+  function switchView(view) {
+    currentView = view;
+    const stepper = document.getElementById('panelGlowWrap');
+    const pills   = document.querySelector('.s3 .pill-stepper');
+    const spread  = document.getElementById('cardSpread');
+    const nudge   = document.querySelector('.s3 .nudge-row');
+
+    document.getElementById('vt-stepper').classList.toggle('active', view === 'stepper');
+    document.getElementById('vt-cards').classList.toggle('active', view === 'cards');
+
+    if (view === 'cards') {
+      // In card view: show all at once, hide stepper elements
+      pills.style.display   = 'none';
+      nudge.style.display   = 'none';
+      stepper.style.display = 'none';
+      spread.classList.add('active');
+      // Also show lab if it was previously revealed
+      // Cards view always shows lab below
+      const lab = document.getElementById('labOuter');
+      lab.style.display = 'block';
+      // All pills done in stepper
+      document.getElementById('ps-3').classList.add('final');
+      document.getElementById('resetBtn').classList.add('visible');
+    } else {
+      // Stepper view
+      pills.style.display   = '';
+      nudge.style.display   = '';
+      spread.classList.remove('active');
+      // Restore stepper state
+      const lab = document.getElementById('labOuter');
+      // Only show lab if stepper has been completed
+      const allDone = ['ps-0','ps-1','ps-2'].every(id =>
+        document.getElementById(id).classList.contains('done')
+      );
+      if (allDone) {
+        stepper.style.display = 'none';
+        lab.style.display = 'block';
+      } else {
+        stepper.style.display = '';
+        lab.style.display = 'none';
+      }
+    }
+  }
+
+  /* ── STEPPER ── */
+  let currentStep = 0;
+
+  function jumpToStep(i) {
+    // Step 3 = The Lab — only accessible if all 3 pillars done
+    if (i === 3) {
+      if (currentStep < 3) return; // not unlocked yet
+      document.getElementById('panelGlowWrap').style.display = 'none';
+      document.getElementById('fixedNav').classList.add('hidden');
+      document.getElementById('labOuter').style.display = 'block';
+      document.getElementById('ps-3').classList.add('final');
+      document.getElementById('labOuter').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
+
+    // Mark all pills up to i as done, i as active, rest as inactive
+    for (let j = 0; j < 3; j++) {
+      const ps = document.getElementById('ps-' + j);
+      ps.classList.remove('active', 'done');
+      if (j < i) ps.classList.add('done');
+      else if (j === i) ps.classList.add('active');
+    }
+
+    // Show correct panel
+    for (let j = 0; j < 3; j++) {
+      document.getElementById('panel-' + j).classList.remove('active');
+    }
+    document.getElementById('panel-' + i).classList.add('active');
+
+    // Show panel wrap + fixed nav if coming from lab
+    document.getElementById('panelGlowWrap').style.display = '';
+    document.getElementById('fixedNav').classList.remove('hidden');
+    document.getElementById('labOuter').style.display = 'none';
+    document.getElementById('ps-3').classList.remove('final');
+
+    // Update nav button
+    currentStep = i;
+    document.getElementById('stepCounter').textContent = (i + 1) + ' of 3';
+    document.getElementById('mainNavBtn').innerHTML = i === 2
+      ? 'Open the Lab <span class="material-icons-round">science</span>'
+      : 'Next <span class="material-icons-round">arrow_forward</span>';
+
+    document.getElementById('resetBtn').classList.add('visible');
+  }
+
+  function nextStep() {
+    document.getElementById('ps-' + currentStep).classList.remove('active');
+    document.getElementById('ps-' + currentStep).classList.add('done');
+    document.getElementById('panel-' + currentStep).classList.remove('active');
+    document.getElementById('resetBtn').classList.add('visible');
+
+    currentStep++;
+
+    if (currentStep < 3) {
+      document.getElementById('ps-' + currentStep).classList.add('active');
+      document.getElementById('panel-' + currentStep).classList.add('active');
+      // Update counter and button label
+      document.getElementById('stepCounter').textContent = (currentStep + 1) + ' of 3';
+      if (currentStep === 2) {
+        document.getElementById('mainNavBtn').innerHTML = 'Open the Lab <span class="material-icons-round">science</span>';
+      }
+    } else {
+      // Reveal lab
+      document.getElementById('ps-3').classList.add('final');
+      document.getElementById('panelGlowWrap').style.display = 'none';
+      document.getElementById('fixedNav').classList.add('hidden');
+      const lab = document.getElementById('labOuter');
+      lab.style.display = 'block';
+      lab.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function resetSlide() {
+    currentStep = 0;
+    ['ps-0','ps-1','ps-2'].forEach(id => document.getElementById(id).classList.remove('active','done'));
+    document.getElementById('ps-0').classList.add('active');
+    document.getElementById('ps-3').classList.remove('final');
+
+    for (let i = 0; i < 3; i++) document.getElementById('panel-' + i).classList.remove('active');
+    document.getElementById('panel-0').classList.add('active');
+    document.getElementById('panelGlowWrap').style.display = '';
+    document.getElementById('labOuter').style.display = 'none';
+
+    // Reset fixed nav
+    document.getElementById('fixedNav').classList.remove('hidden');
+    document.getElementById('stepCounter').textContent = '1 of 3';
+    document.getElementById('mainNavBtn').innerHTML = 'Next <span class="material-icons-round">arrow_forward</span>';
+
+    // Reset lab state
+    activePillars.create = false;
+    activePillars.deliver = false;
+    activePillars.capture = false;
+    ['create','deliver','capture'].forEach(p => {
+      document.getElementById('tc-' + p).classList.remove('active');
+    });
+    updateVisuals();
+
+    document.getElementById('resetBtn').classList.remove('visible');
+    document.querySelector('.s3').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  /* ── SUSTAINABILITY LAB ── */
+  const activePillars = { create: false, deliver: false, capture: false };
+
+  const PILLAR_COLORS = {
+    create:  '#3b82f6',
+    deliver: '#8b5cf6',
+    capture: '#10b981'
+  };
+
+  function togglePillar(p) {
+    activePillars[p] = !activePillars[p];
+    document.getElementById('tc-' + p).classList.toggle('active', activePillars[p]);
+    updateVisuals();
+  }
+
+  function updateVisuals() {
+    const ring     = document.getElementById('triadRing');
+    const text     = document.getElementById('statusText');
+    const desc     = document.getElementById('statusDesc');
+    const icon     = document.getElementById('statusIcon');
+    const selected = Object.keys(activePillars).filter(k => activePillars[k]);
+    const count    = selected.length;
+
+    // Ring
+    if (count === 0) {
+      ring.style.background = '#1e293b';
+      ring.classList.remove('spinning');
+      icon.innerText       = 'sensors_off';
+      icon.style.color     = '#334155';
+      text.innerText       = 'Awaiting Synchronization';
+      text.style.color     = '#e2e8f0';
+      desc.innerText       = 'Toggle pillars to test the sustainability of your current engagement model.';
+      return;
+    }
+
+    // Build conic gradient
+    const step = 360 / count;
+    const parts = selected.map((k, i) =>
+      `${PILLAR_COLORS[k]} ${i * step}deg ${(i + 1) * step}deg`
+    );
+    ring.style.background = `conic-gradient(${parts.join(', ')})`;
+    ring.classList.add('spinning');
+
+    if (count === 3) {
+      icon.innerText   = 'verified';
+      icon.style.color = '#10b981';
+      text.innerText   = 'Sustainable Growth';
+      text.style.color = '#10b981';
+      desc.innerText   = 'Maximum Enterprise Value. You are creating strategic impact, delivering it with structural predictability, and capturing the financial return.';
+    } else if (count === 1) {
+      icon.innerText   = 'warning';
+      icon.style.color = '#f59e0b';
+      text.innerText   = 'Isolated Pillar';
+      text.style.color = '#e2e8f0';
+      desc.innerText   = 'A single pillar cannot sustain the enterprise. Without synchronization, the value created is either lost, unscalable, or irrelevant.';
+    } else if (activePillars.create && activePillars.deliver) {
+      icon.innerText   = 'trending_down';
+      icon.style.color = '#ef4444';
+      text.innerText   = 'The Charity Scenario';
+      text.style.color = '#ef4444';
+      desc.innerText   = 'Client value created, company value uncertain. We perform high-leverage work but fail to retain the economic benefit. This is a subsidy, not a business.';
+    } else if (activePillars.deliver && activePillars.capture) {
+      icon.innerText   = 'inventory_2';
+      icon.style.color = '#3b82f6';
+      text.innerText   = 'The Commodity Scenario';
+      text.style.color = '#3b82f6';
+      desc.innerText   = 'Profitable execution, limited strategic expansion. We are efficient and profitable, but the work isn\'t critical to the roadmap. High risk of replacement by cheaper competitors.';
+    } else if (activePillars.create && activePillars.capture) {
+      icon.innerText   = 'error_outline';
+      icon.style.color = '#f59e0b';
+      text.innerText   = 'The Churn Scenario';
+      text.style.color = '#f59e0b';
+      desc.innerText   = 'Important work, unstable trust. We have strategic fit and healthy pricing, but execution is volatile. Financial gains are quickly lost to rework and client churn.';
+    }
+  }
+</script>
+
+
+</body></html>
+
+

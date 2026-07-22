@@ -1,0 +1,175 @@
+<html lang="en"><head>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #317eff;
+            --text-main: #2d3436;
+            --text-light: #636e72;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            background: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 510px; /* Constrained height */
+            overflow: hidden;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        h1 span {
+            color: var(--primary);
+        }
+
+        p.description {
+            font-size: 18px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* Animation Area */
+        .transfer-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .icon-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .icon-box:hover {
+            transform: scale(1.1);
+        }
+
+        .material-icons {
+            font-size: 64px;
+            color: var(--primary);
+            animation: softPulse 3s infinite ease-in-out;
+        }
+
+        /* Dot Animation */
+        .dots {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: flow 1.5s infinite linear;
+        }
+
+        .dot:nth-child(2) { animation-delay: 0.5s; }
+        .dot:nth-child(3) { animation-delay: 1s; }
+
+        /* Footer */
+        .footer {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--primary);
+        }
+
+        .footer strong {
+            color: var(--primary);
+        }
+
+        .arrow {
+            margin-top: 15px;
+            animation: bounce 2s infinite;
+            color: var(--primary);
+        }
+
+        /* Keyframes */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes softPulse {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes flow {
+            0% { opacity: 0; transform: translateX(-20px); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(20px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(8px); }
+            60% { transform: translateY(4px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Turing is changing <span>how you get <span>paid</span>.</span></h1>
+        <p class="description">All payments will move from direct bank deposits<br> to a Wallet-based system powered by <strong>Airwallex.</strong></p>
+
+        <div class="transfer-container">
+            <div class="icon-box" id="bank-icon">
+                <span class="material-icons">account_balance</span>
+            </div>
+            
+            <div class="dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+
+            <div class="icon-box" id="wallet-icon" style="color: rgb(49, 126, 255);">
+                <span class="material-icons">account_balance_wallet</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            To keep receiving payments without interruption,<br><strong> you must complete one quick step today.</strong>
+           
+        </div>
+    </div>
+
+    <script>
+        // Hover reaction logic
+        const icons = document.querySelectorAll('.icon-box');
+        icons.forEach(icon => {
+            icon.addEventListener('mouseenter', () => {
+                icon.style.color = '#1e5bbd'; // Darker shade on hover
+            });
+            icon.addEventListener('mouseleave', () => {
+                icon.style.color = '#317eff';
+            });
+        });
+    </script>
+
+</body></html>

@@ -1,0 +1,604 @@
+<html lang="en"><head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Turing: The Journey</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+        --turing-blue: #2563eb;
+        --turing-blue-glow: rgba(37, 99, 235, 0.15);
+        --bg-white: #ffffff;
+        --slate-200: #e2e8f0;
+        --slate-400: #94a3b8;
+        --slate-600: #475569;
+        --slate-900: #0f172a;
+    }
+
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+    body {
+        margin: 0;
+        padding: 60px 0 0 0; 
+        font-family: 'Poppins', sans-serif;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 32px;
+        padding: 0 20px;
+    }
+    .section-kicker {
+        font-size: 15px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 600;
+        color: var(--turing-blue);
+        margin-bottom: 12px;
+        display: block;
+    }
+    .section-title {
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--slate-900);
+        margin: 0 0 16px 0;
+        letter-spacing: -0.03em;
+    }
+    .section-subtitle {
+        font-size: 18px;
+        color: var(--slate-600);
+        line-height: 1.6;
+        margin: 0 auto;
+        max-width: 1100px;
+    }
+
+    /* =========================================
+       THE JOURNEY (EXPANDED TIMELINE)
+       ========================================= */
+    .timeline-container {
+        width: 100%;
+        max-width: 1400px;
+        height: 450px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 40px;
+        position: relative;
+    }
+
+    .tube-line-container { 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        width: 100%; 
+        position: relative; 
+    }
+
+    .track-inactive { 
+        position: absolute; 
+        width: 100%; 
+        height: 26px; 
+        background: var(--slate-200); 
+        border-radius: 4px; 
+        z-index: 0; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .track-active { 
+        position: absolute; 
+        width: 0%; 
+        height: 26px; 
+        background: var(--turing-blue); 
+        border-radius: 4px; 
+        z-index: 1; 
+        top: 50%; 
+        transform: translateY(-50%); 
+        transition: width 4s cubic-bezier(0.4, 0, 0.2, 1); 
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Premium Light Swipe Effect */
+    .track-active::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -200px;
+        width: 150px;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        transform: skewX(-20deg);
+        animation: swipe-glow 3s infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    @keyframes swipe-glow {
+        0% { left: -200px; }
+        100% { left: 100%; }
+    }
+
+    .mission-thread {
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        white-space: nowrap;
+        position: absolute;
+        width: 1400px;
+        text-align: center;
+        pointer-events: none;
+        z-index: 2; /* Keeps text above the light swipe */
+    }
+
+    .track-inactive .mission-thread { color: var(--slate-400); }
+    .track-active .mission-thread { color: white; }
+
+    .station { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        position: relative; 
+        z-index: 2; 
+        height: 350px; 
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Smooth zoom */
+    }
+
+    /* Zoom and Highlight State (Triggered by Hover or Autoplay) */
+    .station.focused {
+        transform: scale(1.15);
+        z-index: 10;
+    }
+    
+    .tick-line {
+        position: absolute;
+        left: 50%;
+        width: 2px;
+        height: 20px;
+        background: var(--slate-200);
+        transform: translateX(-50%);
+        transition: background 0.4s ease, height 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .up .tick-line { bottom: 50%; margin-bottom: 13px; }
+    .down .tick-line { top: 50%; margin-top: 13px; }
+
+    .station.active .tick-line {
+        background: var(--turing-blue);
+        height: 30px;
+    }
+
+    .station.focused .tick-line {
+        box-shadow: 0 0 12px var(--turing-blue);
+    }
+    
+    .station-year { 
+        font-weight: 900; 
+        font-size: 14px; 
+        color: #cbd5e1; 
+        transition: 0.4s; 
+        position: absolute; 
+    }
+    .up .station-year { bottom: 50%; margin-bottom: 45px; }
+    .down .station-year { top: 50%; margin-top: 45px; }
+    .station.active .station-year { color: var(--turing-blue); }
+    .station.focused .station-year { text-shadow: 0 0 10px rgba(37,99,235,0.3); }
+
+    .station-info { position: absolute; width: 150px; text-align: center; opacity: 0; transition: 0.6s ease; }
+    .up .station-info { bottom: 50%; margin-bottom: 75px; transform: translateY(-10px); }
+    .down .station-info { top: 50%; margin-top: 75px; transform: translateY(10px); }
+    
+    .station.active .station-info { opacity: 1; transform: translateY(0); }
+    
+    .info-title { font-weight: 800; font-size: 13px; display: block; margin-bottom: 4px; color: var(--slate-900); }
+    .info-desc { font-size: 11px; color: var(--slate-600); line-height: 1.3; }
+
+    @media (max-width: 900px) {
+        .timeline-container { height: auto; padding: 40px 20px; margin-bottom: 20px; }
+        .tube-line-container { flex-direction: column; align-items: flex-start; height: 1100px; width: 100%; }
+        .track-inactive, .track-active { width: 30px; height: 100%; left: 20px; top: 0; transform: none; }
+        .track-active { height: 0%; width: 30px; }
+        
+        /* Adjust swipe for vertical layout */
+        .track-active::after {
+            width: 100%;
+            height: 150px;
+            top: -200px;
+            left: 0;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            transform: skewY(-20deg);
+            animation: swipe-glow-vertical 3s infinite;
+        }
+
+        @keyframes swipe-glow-vertical {
+            0% { top: -200px; }
+            100% { top: 100%; }
+        }
+
+        .mission-thread { writing-mode: vertical-rl; transform: rotate(180deg); height: 1100px; width: auto; }
+        .tick-line { left: 30px; top: 50%; width: 15px; height: 2px; transform: translateY(-50%) !important; margin: 0 !important; }
+        .station { flex-direction: row; width: 100%; height: 100px; margin-bottom: 20px; justify-content: flex-start; padding-left: 70px;}
+        .station-year { position: relative; top: auto; bottom: auto; margin-right: 15px; width: 60px; text-align: left; }
+        .station-info { position: relative; top: auto; bottom: auto; left: 0; text-align: left; transform: none; width: 100%; }
+        
+        .station.focused {
+            transform: scale(1.05) translateX(10px); /* Lighter scale + shift for mobile */
+        }
+    }
+</style>
+</head>
+<body>
+
+    <div class="section-header">
+        <span class="section-kicker">where we came from</span>
+        <h2 class="section-title">The Turing Journey</h2>
+        <p class="section-subtitle">Turing’s journey has been one of growth and evolution, built on talent, enterprise, and AI, all in service of Turing’s mission is to accelerate superintelligence to drive real economic progress.</p>
+    </div>
+
+    <div class="timeline-container">
+        <div class="tube-line-container">
+            
+            <div class="track-inactive">
+                <div class="mission-thread"> accelerate superintelligence to drive real economic progress.</div>
+            </div>
+            
+            <div class="track-active" id="active-track" style="width: 100%;">
+                <div class="mission-thread"> Accelerate superintelligence to drive real economic progress.</div>
+            </div>
+            
+            <div class="station up active" id="s0">
+                <div class="tick-line"></div>
+                <div class="station-year">2018</div>
+                <div class="station-info">
+                    <span class="info-title">Founding</span>
+                    <span class="info-desc">Founded by Jonathan and Vijay. Building the foundation.</span>
+                </div>
+            </div>
+
+            <div class="station down active" id="s1">
+                <div class="tick-line"></div>
+                <div class="station-year">2019</div>
+                <div class="station-info">
+                    <span class="info-title">Talent Foundation</span>
+                    <span class="info-desc">Built trusted access to top engineers worldwide.</span>
+                </div>
+            </div>
+
+            <div class="station up active" id="s2">
+                <div class="tick-line"></div>
+                <div class="station-year">2020</div>
+                <div class="station-info">
+                    <span class="info-title">Global Scale</span>
+                    <span class="info-desc">Scaled our network in a new era of distributed teams.</span>
+                </div>
+            </div>
+
+            <div class="station down active focused" id="s3">
+                <div class="tick-line"></div>
+                <div class="station-year">2021</div>
+                <div class="station-info">
+                    <span class="info-title">Enterprise Trust</span>
+                    <span class="info-desc">Pepsi and other major logos scaled with Turing.</span>
+                </div>
+            </div>
+
+            <div class="station up active" id="s4">
+                <div class="tick-line"></div>
+                <div class="station-year">2022</div>
+                <div class="station-info">
+                    <span class="info-title">AI Expansion</span>
+                    <span class="info-desc">Talent and enterprise foundations helped scale into AI.</span>
+                </div>
+            </div>
+
+            <div class="station down active" id="s5">
+                <div class="tick-line"></div>
+                <div class="station-year">2023</div>
+                <div class="station-info">
+                    <span class="info-title">Frontier Logos</span>
+                    <span class="info-desc">Added Anthropic, Google &amp; logos. Navigated macro headwinds.</span>
+                </div>
+            </div>
+
+            <div class="station up active" id="s6">
+                <div class="tick-line"></div>
+                <div class="station-year">2024</div>
+                <div class="station-info">
+                    <span class="info-title">AI Leadership</span>
+                    <span class="info-desc">Working with major AI companies and global enterprises.</span>
+                </div>
+            </div>
+
+            <div class="station down active" id="s7">
+                <div class="tick-line"></div>
+                <div class="station-year">2025</div>
+                <div class="station-info">
+                    <span class="info-title">TI Platform</span>
+                    <span class="info-desc">Compounding enterprise value through Turing Intelligence.</span>
+                </div>
+            </div>
+
+            <div class="station up active" id="s8">
+                <div class="tick-line"></div>
+                <div class="station-year">2026</div>
+                <div class="station-info">
+                    <span class="info-title">The Frontier</span>
+                    <span class="info-desc">New team members joining to extend our AI leadership.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', () => {
+            const track = document.getElementById('active-track');
+            const stops = document.querySelectorAll('.station');
+            
+            let isHovered = false;
+            let currentIndex = 0;
+            let autoplayInterval;
+
+            // Start timeline load animation
+            track.style.width = "100%";
+            
+            // Build the base states
+            stops.forEach((s, i) => { 
+                setTimeout(() => { 
+                    s.classList.add('active'); 
+                }, i * 450); 
+                
+                // Add Hover Listeners
+                s.addEventListener('mouseenter', () => {
+                    isHovered = true;
+                    clearFocus();
+                    s.classList.add('focused');
+                    currentIndex = i; // update tracker so autoplay resumes from here
+                });
+
+                s.addEventListener('mouseleave', () => {
+                    isHovered = false;
+                });
+            });
+
+            function clearFocus() {
+                stops.forEach(s => s.classList.remove('focused'));
+            }
+
+            // Start autoplay loop only after initial animation finishes (~4000ms)
+            setTimeout(() => {
+                // Set first highlight if user isn't hovering already
+                if(!isHovered) {
+                    stops[0].classList.add('focused');
+                }
+
+                autoplayInterval = setInterval(() => {
+                    if (!isHovered) {
+                        clearFocus();
+                        currentIndex = (currentIndex + 1) % stops.length;
+                        stops[currentIndex].classList.add('focused');
+                    }
+                }, 2000); // Transitions to next station every 2 seconds
+            }, 4000); 
+
+        });
+    </script>
+
+</body></html>
+
+Slide 5.
+
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+    :root {
+        --turing-blue: #317eff;
+        --turing-purple: #a855f7;
+        --turing-green: #22c55e;
+        --turing-orange: #f97316;
+        --turing-blue-glow: rgba(37, 99, 235, 0.15);
+        --bg-white: #ffffff;
+        --slate-50: #f8fafc;
+        --slate-200: #e2e8f0;
+        --slate-600: #475569;
+        --slate-900: #0f172a;
+    }
+    * { box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+    body {
+        margin: 0;
+        padding: 40px 0;
+        font-family: 'Poppins', sans-serif;
+        background: transparent;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-x: hidden;
+    }
+    .values-intro { text-align: center; max-width: 650px; margin: 20px 0 20px 0; padding: 0 20px; }
+    .values-intro-label { font-size: 15px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; color: var(--turing-blue); display: block; }
+    .intro-headline { font-size: 30px; font-weight: 600; color: var(--slate-900); margin: 10px 0 5px 0; letter-spacing: -0.02em; }
+    .intro-subtext { font-size: 16px; color: var(--slate-600); line-height: 1.5; }
+    .values-section { width: 100%; max-width: 800px; padding: 0 20px; }
+    .values-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+
+    /* Gradient Border Logic */
+    .value-card { 
+        background: white; 
+        border: 1px solid var(--slate-200); 
+        border-radius: 20px; 
+        padding: 24px; 
+        text-align: center; 
+        cursor: pointer; 
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        position: relative;
+        overflow: hidden; /* Clips the rotating gradient */
+        z-index: 0;
+    }
+
+    /* The rotating gradient layer */
+    .value-card::before {
+        content: '';
+        position: absolute;
+        z-index: -2;
+        left: -50%;
+        top: -50%;
+        width: 200%;
+        height: 200%;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-image: conic-gradient(transparent, var(--border-color, var(--turing-blue)), transparent 30%);
+        animation: rotate 4s linear infinite;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    /* The inner white cover to make it look like a border */
+    .value-card::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 2px; /* This defines border thickness */
+        background: white;
+        border-radius: 18px;
+    }
+
+    /* Card Specific Colors */
+    .value-card.card-client { --border-color: var(--turing-blue); --accent: var(--turing-blue); }
+    .value-card.card-speed { --border-color: var(--turing-purple); --accent: var(--turing-purple); }
+    .value-card.card-ai { --border-color: var(--turing-green); --accent: var(--turing-green); }
+    .value-card.card-joy { --border-color: var(--turing-orange); --accent: var(--turing-orange); }
+
+    .value-card:hover, .value-card.active { 
+        transform: translateY(-5px); 
+        box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.05); 
+        border-color: transparent; /* Hide static border to show gradient */
+    }
+    
+    .value-card:hover::before, .value-card.active::before {
+        opacity: 1;
+    }
+
+    @keyframes rotate {
+        100% { transform: rotate(1turn); }
+    }
+
+    .icon-box { width: 44px; height: 44px; background: var(--slate-50); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; transition: 0.3s; position: relative; z-index: 2; }
+    .value-card:hover .icon-box, .value-card.active .icon-box { background: var(--accent); transform: rotate(-5deg) scale(1.1); }
+    .icon-box svg { width: 20px; height: 20px; stroke: var(--slate-600); transition: 0.3s; }
+    .value-card:hover svg, .value-card.active svg { stroke: white; }
+    .value-card h3 { font-size: 17px; font-weight: 800; margin: 0 0 8px 0; color: var(--slate-900); position: relative; z-index: 2; }
+    .card-details { font-size: 15px; line-height: 1.4; color: var(--slate-600); opacity: 0.9; position: relative; z-index: 2; }
+    
+    .panel-container { background: var(--slate-50); border: 1px solid var(--slate-200); border-radius: 20px; padding: 25px; min-height: 110px; text-align: center; position: relative; }
+    .desc-block { position: absolute; top: 25px; left: 25px; right: 25px; opacity: 0; transform: translateY(10px); transition: 0.4s; pointer-events: none; }
+    .desc-block.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .desc-block h4 { font-size: 16px; text-transform: uppercase; color: var(--turing-blue); margin: 0 0 6px 0; letter-spacing: 1px; font-weight: 700; }
+    .desc-block p { font-size: 14px; color: var(--slate-800); line-height: 1.5; margin: 0; }
+    @media (max-width: 900px) {
+        .values-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<div class="values-intro">
+    <span class="values-intro-label">How we get there</span>
+    <h2 class="intro-headline">Our Operating System</h2>
+    <p class="intro-subtext"><strong>Ambition requires behavior.</strong> <br> These behaviors define how we work every single day.</p>
+</div>
+<div class="values-section">
+    <div class="values-grid">
+        <div class="value-card card-client" onmouseenter="handleValueHover('client', this)" onclick="handleValueHover('client', this)">
+            <div class="icon-box"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg></div>
+            <h3>Client-First</h3>
+            <div class="card-details">Be a Strategic Partner</div>
+        </div>
+        <div class="value-card card-speed" onmouseenter="handleValueHover('speed', this)" onclick="handleValueHover('speed', this)">
+            <div class="icon-box"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg></div>
+            <h3>Startup Speed</h3>
+            <div class="card-details">Think F1...Race with precision</div>
+        </div>
+        <div class="value-card card-ai" onmouseenter="handleValueHover('ai', this)" onclick="handleValueHover('ai', this)">
+            <div class="icon-box"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg></div>
+            <h3>AI-Forward</h3>
+            <div class="card-details">Adopt AI Engines in Every Workflow</div>
+        </div>
+        <div class="value-card card-joy" onmouseenter="handleValueHover('joy', this)" onclick="handleValueHover('joy', this)">
+            <div class="icon-box"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+            <h3>Work with Joy</h3>
+            <div class="card-details">Optimism &amp; Collaborative Celebration</div>
+        </div>
+    </div>
+    <div class="panel-container">
+        <div id="p-none" class="desc-block visible"><p style="opacity:0.5">Hover or tap a value to see our behavioral methodology.</p></div>
+        <div id="p-client" class="desc-block"><h4>Our Commitment</h4><p>Take ownership of the client relationship, being that strategic partner.</p></div>
+        <div id="p-speed" class="desc-block"><h4>Our Pace</h4><p>Speed is our advantage. Precision is our standard.</p></div>
+        <div id="p-ai" class="desc-block"><h4>Our Multiplier</h4><p>Every role leverages AI. We set the standard for human-AI productivity.</p></div>
+        <div id="p-joy" class="desc-block"><h4>Our Energy</h4><p>Solving hard problems should be fun. Joyful cultures fuel high performance.</p></div>
+    </div>
+</div>
+<script>
+    let isFiring = false;
+    function handleValueHover(type, el) {
+        document.querySelectorAll('.value-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        document.querySelectorAll('.desc-block').forEach(b => b.classList.remove('visible'));
+        document.getElementById('p-' + type).classList.add('visible');
+        
+        if (isFiring) return;
+        isFiring = true;
+        setTimeout(() => isFiring = false, 400);
+        
+        const rect = el.getBoundingClientRect();
+        const originX = (rect.left + rect.width / 2) / window.innerWidth;
+        const originY = (rect.top + rect.height / 2) / window.innerHeight;
+        
+        // Define colors for confetti to match the cards
+        const colorMap = {
+            'client': ['#317eff', '#93c5fd'],
+            'speed': ['#a855f7', '#d8b4fe'],
+            'ai': ['#22c55e', '#86efac'],
+            'joy': ['#f97316', '#fdba74']
+        };
+
+        if (type === 'ai') {
+            const aiText = confetti.shapeFromText({ text: 'AI', scalar: 1.2, fontWeight: 900 });
+            confetti({ shapes: [aiText], particleCount: 15, origin: { x: originX, y: originY }, colors: colorMap[type], spread: 70, scalar: 1.5 });
+        }
+        if (type === 'joy') {
+            const sparkle = confetti.shapeFromText({ text: '✨', scalar: 2 });
+            confetti({ shapes: [sparkle], particleCount: 20, origin: { x: originX, y: originY }, colors: ['#fcd34d', '#fbbf24', '#ffffff'], spread: 90, scalar: 2 });
+        }
+        
+        confetti({ 
+            particleCount: 20, 
+            spread: 50, 
+            origin: { x: originX, y: originY }, 
+            colors: colorMap[type], 
+            zIndex: 2000 
+        });
+    }
+</script>
+
+</body></html>
+
+

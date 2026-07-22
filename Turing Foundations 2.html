@@ -1,0 +1,381 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&amp;family=Material+Icons+Outlined&amp;display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #317eff; /* Blue accent */
+            --bg-dark: #121212;
+            --glass: rgba(30, 30, 30, 0.85);
+            --border: rgba(49, 126, 255, 0.3);
+            --text: #ffffff;
+            --text-muted: #d1d1d6;
+            --timer-speed: 5s; /* Speed of the auto-advance */
+        }
+
+        body {
+            margin: 0;
+            padding-bottom: 40px;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: transparent;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* --- NEW INFINITY TITLE STYLES --- */
+        .premium-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-align: center;
+            color: #317eff;
+            animation: infinityScale 4s infinite ease-in-out;
+        }
+
+        @keyframes infinityScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+        /* ---------------------------------- */
+
+        .outer-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 850px;
+            padding: 0 10px;
+            box-sizing: border-box;
+            justify-content: center;
+        }
+
+        .glass-container {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 750px;
+            height: 360px; /* Fixed height to prevent jumping */
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 160px 1fr;
+            gap: 25px;
+            position: relative;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            align-items: center;
+        }
+
+        .glass-container.blink-alert {
+            animation: borderBlink 1s infinite alternate;
+        }
+
+        @keyframes borderBlink {
+            0% { box-shadow: 0 0 10px rgba(49, 126, 255, 0.2); border-color: rgba(49, 126, 255, 0.3); }
+            100% { box-shadow: 0 0 25px rgba(49, 126, 255, 0.6); border-color: rgba(49, 126, 255, 1); }
+        }
+
+        .nav-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            position: relative;
+        }
+
+        /* ICON & LOADING RING */
+        .icon-wrapper {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotate(-90deg); /* Start from the top */
+        }
+
+        .progress-ring__circle {
+            stroke-dasharray: 440; /* Circumference of circle (2 * PI * 70) */
+            stroke-dashoffset: 440;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0s linear;
+        }
+
+        .active-timer .progress-ring__circle {
+            animation: fillStroke var(--timer-speed) linear forwards;
+        }
+
+        @keyframes fillStroke {
+            from { stroke-dashoffset: 440; }
+            to { stroke-dashoffset: 0; }
+        }
+
+        .icon-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2c2c2e;
+            position: relative;
+            z-index: 2;
+        }
+
+        .icon-placeholder span {
+            font-size: 60px;
+            animation: colorPulse 3s infinite ease-in-out;
+            transition: transform 0.4s ease, opacity 0.3s ease;
+        }
+
+        .number-icon {
+            font-size: 40px !important;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        @keyframes colorPulse {
+            0% { color: var(--primary); }
+            50% { color: #ffffff; }
+            100% { color: var(--primary); }
+        }
+
+        @keyframes iconPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .nav-arrow {
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 60px;
+            user-select: none;
+            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            padding: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-arrow:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .slide { display: none; width: 100%; }
+        .slide.active { display: block; }
+
+        .slide h2, .slide p, .slide li, .slide div {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .slide.active h2 { animation-delay: 0.1s; }
+        .slide.active p { animation-delay: 0.2s; }
+        .slide.active li:nth-child(1) { animation-delay: 0.3s; }
+        .slide.active li:nth-child(2) { animation-delay: 0.4s; }
+        .slide.active li:nth-child(3) { animation-delay: 0.5s; }
+        .slide.active li:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+        h2 {
+            margin: 0 0 20px 0;
+            font-size: 24px;
+            font-weight: 600;
+            animation: colorPulse 3s infinite ease-in-out;
+        }
+
+        p, li { font-size: 18px; line-height: 1.6; margin-bottom: 6px; color: var(--text-muted); }
+        ul { list-style: none; padding: 0; margin: 0; }
+        li { display: flex; align-items: flex-start; gap: 8px; }
+
+        .card-1 li::before { content: "warning"; font-family: 'Material Icons Outlined'; color: var(--primary); font-size: 18px; margin-top: 4px; }
+        .card-3 li::before { content: "arrow_forward"; font-family: 'Material Icons Outlined'; color: var(--primary); font-size: 18px; margin-top: 4px; }
+
+        .dots-container { margin-top: 20px; display: flex; gap: 12px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.2); cursor: pointer; transition: 0.3s; }
+        .dot.active { background-color: var(--primary); transform: scale(1.2); }
+
+        .email-link { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 17px; }
+
+        @media (max-width: 600px) {
+            .glass-container { grid-template-columns: 1fr; height: auto; min-height: 450px; text-align: center; }
+            .icon-wrapper { margin: 0 auto 15px; }
+            .nav-controls-mobile { display: flex; justify-content: space-between; width: 100%; max-width: 250px; margin-bottom: 15px; }
+            .outer-wrapper > .nav-arrow { display: none; }
+            li { justify-content: center; }
+            .premium-title { font-size: 24px; letter-spacing: 2px; }
+        }
+        @media (min-width: 601px) { .nav-controls-mobile { display: none; } }
+    </style>
+</head>
+<body>
+
+    <h1 class="premium-title">IT &amp; InfoSec: Real Threats</h1>
+
+    <div class="nav-controls-mobile">
+        <span class="material-icons-outlined nav-arrow" onclick="prevSlide()">chevron_left</span>
+        <span class="material-icons-outlined nav-arrow" onclick="nextSlide()">chevron_right</span>
+    </div>
+
+    <div class="outer-wrapper">
+        <span class="material-icons-outlined nav-arrow" onclick="prevSlide()">chevron_left</span>
+
+        <div class="glass-container" id="cardContainer">
+            <div class="nav-section">
+                <div class="icon-wrapper active-timer" id="timerWrapper">
+                    <svg class="progress-ring" width="140" height="140" viewBox="-4 -4 148 148">
+  <circle class="progress-ring__circle" stroke="#317eff" stroke-width="4" fill="transparent" r="70" cx="70" cy="70"></circle>
+</svg>
+
+                    <div class="icon-placeholder" id="mainIconContainer">
+                        <span class="material-icons-outlined" id="mainIcon">gpp_bad</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="slide card-1 active">
+                    <h2>Common risks include:</h2>
+                    <ul>
+                        <li>Phishing</li>
+                        <li>Ransomware</li>
+                        <li>Credential sharing</li>
+                    </ul>
+                </div>
+                <div class="slide card-2">
+                    <h2>67% of breaches</h2>
+                    <p>happen because someone shared credentials.</p>
+                </div>
+                <div class="slide card-3">
+                    <h2>Impact chain:</h2>
+                    <p>One careless click on a malicious link:</p>
+                    <ul>
+                        <li>Account access</li>
+                        <li>Data exposure</li>
+                        <li>Legal and financial consequences</li>
+                        <li>Loss of client trust</li>
+                    </ul>
+                </div>
+                <div class="slide card-4">
+                    <h2>If something goes wrong</h2>
+                    <p>Report it immediately to:</p>
+                    <div style="display:flex; flex-direction:column; gap:5px; margin:10px 0;">
+                        <a href="mailto:security@turing.com" class="email-link">security@turing.com</a>
+                        <a href="mailto:phishing@turing.com" class="email-link">phishing@turing.com</a>
+                    </div>
+                    <p style="font-weight: 600; color: white;">Fast reporting limits damage.</p>
+                </div>
+            </div>
+        </div>
+
+        <span class="material-icons-outlined nav-arrow" onclick="nextSlide()">chevron_right</span>
+    </div>
+
+    <div class="dots-container">
+        <div class="dot active" onclick="showSlide(0)"></div>
+        <div class="dot" onclick="showSlide(1)"></div>
+        <div class="dot" onclick="showSlide(2)"></div>
+        <div class="dot" onclick="showSlide(3)"></div>
+    </div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const iconSpan = document.querySelector('#mainIcon');
+    const timerWrapper = document.getElementById('timerWrapper');
+    const dots = document.querySelectorAll('.dot');
+    const cardContainer = document.getElementById('cardContainer');
+    const icons = ['gpp_bad', 'number', 'link_off', 'notification_important'];
+    
+    let autoPlay;
+    let counterInterval;
+    const slideDuration = 5000; // Match CSS --timer-speed
+
+    function resetTimer() {
+        clearTimeout(autoPlay);
+        timerWrapper.classList.remove('active-timer');
+        void timerWrapper.offsetWidth; // Trigger reflow
+        timerWrapper.classList.add('active-timer');
+        autoPlay = setTimeout(nextSlide, slideDuration);
+    }
+
+    function animateCounter() {
+        let count = 0;
+        const target = 67;
+        const stepTime = Math.abs(Math.floor(1000 / target));
+        iconSpan.classList.add('number-icon');
+        counterInterval = setInterval(() => {
+            count++;
+            iconSpan.innerText = count + "%";
+            if (count >= target) clearInterval(counterInterval);
+        }, stepTime);
+    }
+
+    function showSlide(index) {
+        if (index >= slides.length) index = 0;
+        if (index < 0) index = slides.length - 1;
+        if (index === currentSlide && slides[currentSlide].classList.contains('active')) return;
+
+        // Cleanup
+        slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('active'));
+        cardContainer.classList.remove('blink-alert');
+        clearInterval(counterInterval);
+
+        // Icon Logic
+        if (index === 1) {
+            iconSpan.innerText = "0%";
+            animateCounter();
+        } else {
+            iconSpan.classList.remove('number-icon');
+            iconSpan.innerText = icons[index];
+        }
+
+        if (index === 3) cardContainer.classList.add('blink-alert');
+
+        // Apply Active States
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentSlide = index;
+        
+        resetTimer();
+    }
+
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+
+    // Start on load
+    resetTimer();
+</script>
+
+</body></html>

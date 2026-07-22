@@ -1,0 +1,298 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turing: Training Signal Lifecycle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    
+    <style>
+        :root {
+            --turing-blue: #2563eb;
+            --turing-green: #10b981;
+            --turing-red: #f43f5e;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --bg-slate: #f8fafc;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: transparent;
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px; /* Reduced from 40px */
+            display: flex;
+            justify-content: center;
+        }
+
+        .t-container {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .t-header {
+            padding: 20px 30px; /* Reduced vertical padding */
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .t-header h2 { margin: 0; font-size: 28px; font-weight: 800; color: var(--text-main); }
+        .t-header p { margin: 4px 0 0; color: var(--text-muted); font-size: 15px; } /* Reduced top margin */
+
+        .t-main {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr; 
+            min-height: 450px; /* Reduced from 600px */
+        }
+
+        /* Visualization Section */
+        .t-viz {
+            background: var(--bg-slate);
+            padding: 20px; /* Reduced from 40px */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .t-svg { 
+            width: 100%; 
+            max-width: 550px; 
+            height: auto; 
+            overflow: visible; 
+        }
+
+        .path-bg { fill: none; stroke: #cbd5e1; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 10 15; }
+        
+        #dataPacket {
+            offset-path: path("M60,150 L200,150 C300,150 300,60 400,60 C500,60 500,240 600,240 C700,240 700,150 740,150");
+            animation: flow 16s infinite linear;
+        }
+
+        .node-circle { fill: white; stroke: #cbd5e1; stroke-width: 3; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; }
+        .step-node.active .node-circle { fill: var(--turing-blue); stroke: var(--turing-blue); r: 32; filter: drop-shadow(0 6px 15px rgba(37, 99, 235, 0.4)); }
+        .node-text { font-size: 16px; font-weight: 800; fill: #94a3b8; pointer-events: none; transition: fill 0.3s; }
+        .step-node.active .node-text { fill: white; }
+
+        #packetDot { r: 18; stroke-width: 4; }
+        #packetLabel { font-size: 12px; font-weight: 900; }
+
+        /* Content Section */
+        .t-content { 
+            padding: 30px 40px; /* Reduced from 60px */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            background: white; 
+            border-left: 1px solid var(--border-color); 
+        }
+
+        .badge-container { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; } /* Reduced margin */
+        .badge {
+            font-size: 12px; font-weight: 700; color: var(--turing-blue);
+            background: #eff6ff; padding: 6px 14px; border-radius: 20px;
+            text-transform: uppercase; letter-spacing: 0.08em;
+        }
+
+        .title { font-size: 42px; font-weight: 800; margin: 0 0 8px; color: #0f172a; letter-spacing: -0.02em; } /* Reduced margin */
+        .description { font-size: 16px; line-height: 1.5; color: var(--text-muted); margin-bottom: 20px; font-weight: 400; } /* Reduced line-height and margin */
+
+        .info-card {
+            display: flex; gap: 16px; padding: 16px; border-radius: 20px; margin-bottom: 12px; /* Reduced gap, padding, and margin */
+            border: 1px solid var(--border-color);
+        }
+        .info-card .icon-box {
+            display: flex; align-items: center; justify-content: center;
+            width: 48px; height: 48px; border-radius: 14px; flex-shrink: 0;
+        }
+        .info-card strong { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; margin-bottom: 4px; display: block; }
+        .info-card p { margin: 0; font-size: 15px; font-weight: 500; color: var(--text-main); line-height: 1.4; } /* Tighter line-height */
+
+        .goal-card .icon-box { background: #dcfce7; color: var(--turing-green); }
+        .risk-card .icon-box { background: #fee2e2; color: var(--turing-red); }
+
+        .mode-indicator {
+            position: absolute; bottom: 15px; font-size: 11px; font-weight: 700; /* Adjusted bottom spacing */
+            letter-spacing: 0.1em; color: #94a3b8; display: flex; align-items: center; gap: 8px;
+        }
+
+        @keyframes flow { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+        @media (max-width: 950px) {
+            .t-main { grid-template-columns: 1fr; min-height: auto; } /* Let it collapse naturally on mobile */
+            .t-content { border-left: none; padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="t-container">
+    <div class="t-header">
+        <h2>Your Impact as a Teacher of AI</h2>
+        <p>Turning raw information into high-density intelligence through expert human judgment.</p>
+    </div>
+
+    <div class="t-main">
+        <div class="t-viz">
+            <svg viewBox="0 0 800 300" class="t-svg">
+                <path class="path-bg" d="M60,150 L200,150 C300,150 300,60 400,60 C500,60 500,240 600,240 C700,240 700,150 740,150"></path>
+                <g id="dataPacket">
+                    <circle id="packetDot" fill="#10b981" stroke="#059669"></circle>
+                    <text id="packetLabel" y="-30" text-anchor="middle" style="fill: rgb(5, 150, 105); text-transform: uppercase;">Input</text>
+                </g>
+
+                <g class="step-node" transform="translate(100,150)" data-step="1">
+                    <circle class="node-circle" r="28"></circle>
+                    <text class="node-text" y="7" text-anchor="middle">1</text>
+                </g>
+                <g class="step-node" transform="translate(350,85)" data-step="2">
+                    <circle class="node-circle" r="28"></circle>
+                    <text class="node-text" y="7" text-anchor="middle">2</text>
+                </g>
+                <g class="step-node" transform="translate(550,215)" data-step="3">
+                    <circle class="node-circle" r="28"></circle>
+                    <text class="node-text" y="7" text-anchor="middle">3</text>
+                </g>
+                <g class="step-node active" transform="translate(730,150)" data-step="4">
+                    <circle class="node-circle" r="28"></circle>
+                    <text class="node-text" y="7" text-anchor="middle">4</text>
+                </g>
+            </svg>
+            <div class="mode-indicator">
+                <span class="material-icons-round" style="font-size: 16px;">sync</span>
+                <span id="mode-text">AUTOPLAY SYNC ACTIVE</span>
+            </div>
+        </div>
+
+        <div class="t-content">
+            <div class="badge-container">
+                <span class="badge" id="badge">Phase 04: Quality Gate</span>
+            </div>
+            <h3 class="title" id="title">Finalize</h3>
+            <p class="description" id="description">The final audit. You perform a 'Zero-Defect' check to ensure data is 100% accurate and ready for model integration.</p>
+            
+            <div class="info-card goal-card">
+                <div class="icon-box"><span class="material-icons-round">ads_click</span></div>
+                <div class="text-box">
+                    <strong>Your Mission</strong>
+                    <p id="goal">Deliver a perfect, verified data point experts agree with immediately.</p>
+                </div>
+            </div>
+            
+            <div class="info-card risk-card">
+                <div class="icon-box"><span class="material-icons-round">warning_amber</span></div>
+                <div class="text-box">
+                    <strong>The Critical Risk</strong>
+                    <p id="risk">Submitting small errors that teach the model wrong patterns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const steps = {
+        "1": {
+            badge: "Phase 01: Analysis",
+            title: "Deconstruct",
+            desc: "Examine the raw task and its context. Before starting, you must identify every hidden rule, constraint, and technical requirement.",
+            goal: "Build a mental map of what a 'Gold Standard' outcome looks like.",
+            risk: "Starting work before fully understanding prompt 'traps'.",
+            packet: { fill: "#fff", stroke: "#94a3b8", label: "Raw Task" }
+        },
+        "2": {
+            badge: "Phase 02: Alignment",
+            title: "Calibrate",
+            desc: "Align your expertise with the official project 'Rubric.' This ensures your work meets universal standards for safety and accuracy.",
+            goal: "Ensure judgment matches project quality bar, not just personal opinion.",
+            risk: "Applying personal preference instead of official guidelines.",
+            packet: { fill: "#dbeafe", stroke: "#3b82f6", label: "Aligning" }
+        },
+        "3": {
+            badge: "Phase 03: Production",
+            title: "Process",
+            desc: "The core intelligence phase. Whether creating or auditing, you provide the high-quality logic the model needs to learn.",
+            goal: "Create a 'High-Density' signal showing the model how to reason.",
+            risk: "Focusing on the final result while ignoring the logical steps.",
+            packet: { fill: "#3b82f6", stroke: "#1d4ed8", label: "Generating" }
+        },
+        "4": {
+            badge: "Phase 04: Quality Gate",
+            title: "Finalize",
+            desc: "The final audit. You perform a 'Zero-Defect' check to ensure data is 100% accurate and ready for model integration.",
+            goal: "Deliver a perfect, verified data point experts agree with immediately.",
+            risk: "Submitting small errors that teach the model wrong patterns.",
+            packet: { fill: "#10b981", stroke: "#059669", label: "Gold Signal" }
+        }
+    };
+
+    const nodeElements = document.querySelectorAll('.step-node');
+    const packetDot = document.getElementById('packetDot');
+    const packetLabel = document.getElementById('packetLabel');
+    const dataPacket = document.getElementById('dataPacket');
+    const modeText = document.getElementById('mode-text');
+    
+    let currentStep = "1";
+    let isManual = false;
+    let timer;
+
+    function updateUI(id, manualTrigger = false) {
+        if (manualTrigger) {
+            isManual = true;
+            modeText.innerText = "MANUAL OVERRIDE: PAUSED";
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                isManual = false;
+                modeText.innerText = "AUTOPLAY SYNC ACTIVE";
+            }, 5000);
+        }
+
+        if (currentStep === id && !manualTrigger) return;
+        currentStep = id;
+
+        const data = steps[id];
+        nodeElements.forEach(n => n.classList.remove('active'));
+        document.querySelector(`[data-step="${id}"]`).classList.add('active');
+        
+        document.getElementById('badge').innerText = data.badge;
+        document.getElementById('title').innerText = data.title;
+        document.getElementById('description').innerText = data.desc;
+        document.getElementById('goal').innerText = data.goal;
+        document.getElementById('risk').innerText = data.risk;
+        
+        packetDot.setAttribute('fill', data.packet.fill);
+        packetDot.setAttribute('stroke', data.packet.stroke);
+        packetLabel.innerText = data.packet.label;
+        packetLabel.style.fill = data.packet.stroke;
+    }
+
+    function sync() {
+        if (!isManual) {
+            const distance = parseFloat(window.getComputedStyle(dataPacket).offsetDistance);
+            if (distance < 22) updateUI("1");
+            else if (distance < 52) updateUI("2");
+            else if (distance < 82) updateUI("3");
+            else updateUI("4");
+        }
+        requestAnimationFrame(sync);
+    }
+
+    sync();
+
+    nodeElements.forEach(node => {
+        ['mouseenter', 'click'].forEach(evt => {
+            node.addEventListener(evt, () => updateUI(node.dataset.step, true));
+        });
+    });
+</script>
+
+
+</body></html>

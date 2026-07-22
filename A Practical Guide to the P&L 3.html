@@ -1,0 +1,622 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Operating Modes Hit the P&amp;L</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+
+  /* ── KEYFRAMES ── */
+  @keyframes s7-border-rot {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  @keyframes s7-dot-pulse {
+    0%, 100% { box-shadow: 0 0 6px 1px rgba(49,126,255,0.7); opacity: 0.85; }
+    50%       { box-shadow: 0 0 16px 3px rgba(49,126,255,1); opacity: 1; }
+  }
+
+  @keyframes s7-slider-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(49,126,255,0); }
+    50%       { box-shadow: 0 0 0 4px rgba(49,126,255,0.15); }
+  }
+
+  @keyframes s7-val-flash {
+    0%   { background: rgba(49,126,255,0.1); }
+    100% { background: transparent; }
+  }
+
+  @keyframes s7-good-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0), 0 4px 16px rgba(22,163,74,0.1); }
+    50%       { box-shadow: 0 0 0 4px rgba(22,163,74,0.15), 0 6px 24px rgba(22,163,74,0.2); }
+  }
+
+  @keyframes s7-bad-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,0), 0 4px 16px rgba(220,38,38,0.1); }
+    50%       { box-shadow: 0 0 0 4px rgba(220,38,38,0.12), 0 6px 24px rgba(220,38,38,0.2); }
+  }
+
+  @keyframes s7-warn-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,6,0), 0 4px 16px rgba(217,119,6,0.1); }
+    50%       { box-shadow: 0 0 0 4px rgba(217,119,6,0.12), 0 6px 24px rgba(217,119,6,0.18); }
+  }
+
+  @keyframes s7-icon-float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-3px); }
+  }
+
+  /* ── WRAPPER ── */
+  .s7 {
+    font-family: 'Poppins', sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 28px;
+    background: #ffffff;
+    border-radius: 28px;
+    color: #0f172a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s7::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    border-radius: 28px;
+    opacity: 0.4;
+  }
+
+  .s7 > * { position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  .s7 .kicker {
+    display: inline-block;
+    background: #eef4ff;
+    color: #317eff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    padding: 5px 13px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(49,126,255,0.15);
+  }
+
+  .s7 .headline {
+    font-size: 30px;
+    font-weight: 700;
+    color: #020617;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+
+  .s7 .subtitle {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 24px;
+  }
+
+  /* ── NUDGE ── */
+  .s7 .nudge-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #317eff;
+    margin-bottom: 16px;
+  }
+
+  .s7 .nudge-row .material-icons-round { font-size: 15px; }
+
+  /* ── LAYOUT ── */
+  .s7 .sim-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  /* ── LEFT: LEVERS ── */
+  .s7 .levers-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .s7 .panel-eyebrow {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+
+  .s7 .control-group {
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+  }
+
+  .s7 .control-group::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 12px; right: 12px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(49,126,255,0.12), transparent);
+  }
+
+  .s7 .ctrl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+
+  .s7 .ctrl-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    flex: 1;
+  }
+
+  .s7 .val-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    min-width: 78px;
+    text-align: center;
+    border: 1px solid rgba(49,126,255,0.2);
+    background: #eef4ff;
+    color: #317eff;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+  }
+
+  .s7 .val-badge.bad  { background: #fef2f2; color: #dc2626; border-color: #fecaca; }
+  .s7 .val-badge.warn { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+  .s7 .val-badge.good { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+
+  /* Slider */
+  .s7 input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e2e8f0;
+    cursor: pointer;
+    animation: s7-slider-glow 2.5s ease-in-out infinite;
+    outline: none;
+  }
+
+  .s7 input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #317eff;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px rgba(49,126,255,0.25), 0 2px 6px rgba(0,0,0,0.15);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .s7 input[type=range]::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 5px rgba(49,126,255,0.2), 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .s7 .lever-context {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 10px;
+    font-style: italic;
+    line-height: 1.45;
+  }
+
+  /* ── RIGHT: P&L PANEL ── */
+  .s7 .pl-outer {
+    padding: 2px;
+    border-radius: 22px;
+    background: #0f172a;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    display: flex;
+  }
+
+  .s7 .pl-panel {
+    background: #fff;
+    border-radius: 21px;
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .s7 .pl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .s7 .pl-header-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #94a3b8;
+  }
+
+  .s7 .pl-header-tag {
+    font-size: 11px;
+    font-weight: 700;
+    background: #0f172a;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* P&L rows */
+  .s7 .pl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 10px;
+    margin-bottom: 2px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .s7 .pl-row.pl-indent { padding-left: 22px; font-size: 12.5px; }
+
+  .s7 .pl-row.pl-total {
+    font-weight: 700;
+    color: #0f172a;
+    border-top: 1px solid #e2e8f0;
+    border-radius: 0;
+    margin-top: 2px;
+    padding-top: 11px;
+  }
+
+  .s7 .pl-row.pl-final {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    border-top: 2px solid #0f172a;
+    border-bottom: 3px double #0f172a;
+    border-radius: 0;
+    margin-top: 6px;
+    padding: 11px 10px;
+  }
+
+  .s7 .pl-value {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+
+  .s7 .pl-final .pl-value { font-size: 15px; font-weight: 800; }
+
+  .s7 .val-neg { color: #dc2626 !important; font-weight: 700; }
+  .s7 .val-pos { color: #16a34a !important; font-weight: 700; }
+  .s7 .val-flash { animation: s7-val-flash 0.4s ease forwards; }
+
+  .s7 .margin-chip {
+    font-size: 10px;
+    font-weight: 700;
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 2px 7px;
+    border-radius: 5px;
+    margin-left: 6px;
+    transition: all 0.3s ease;
+  }
+
+  /* ── VERDICT ── */
+  .s7 .verdict {
+    margin-top: 14px;
+    border-radius: 12px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .s7 .verdict::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 12px; right: 12px;
+    height: 1px;
+  }
+
+  .s7 .v-good    { background: #f0fdf4; border: 1.5px solid #bbf7d0; animation: s7-good-glow 2.5s ease-in-out infinite; }
+  .s7 .v-bad     { background: #fef2f2; border: 1.5px solid #fecaca; animation: s7-bad-glow  2.5s ease-in-out infinite; }
+  .s7 .v-neutral { background: #fffbeb; border: 1.5px solid #fde68a; animation: s7-warn-glow 2.5s ease-in-out infinite; }
+
+  .s7 .v-good::before    { background: linear-gradient(90deg,transparent,rgba(22,163,74,0.25),transparent); }
+  .s7 .v-bad::before     { background: linear-gradient(90deg,transparent,rgba(239,68,68,0.2),transparent); }
+  .s7 .v-neutral::before { background: linear-gradient(90deg,transparent,rgba(217,119,6,0.2),transparent); }
+
+  .s7 .verdict-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+
+  .s7 .verdict-title .material-icons-round {
+    font-size: 16px;
+    animation: s7-icon-float 3s ease-in-out infinite;
+  }
+
+  .s7 .v-good    .verdict-title { color: #15803d; }
+  .s7 .v-bad     .verdict-title { color: #dc2626; }
+  .s7 .v-neutral .verdict-title { color: #b45309; }
+
+  .s7 .verdict-desc {
+    font-size: 12.5px;
+    line-height: 1.65;
+    margin: 0;
+    padding-left: 12px;
+    border-left: 3px solid;
+  }
+
+  .s7 .v-good    .verdict-desc { color: #166534; border-color: #16a34a; }
+  .s7 .v-bad     .verdict-desc { color: #991b1b; border-color: #ef4444; }
+  .s7 .v-neutral .verdict-desc { color: #92400e; border-color: #d97706; }
+
+  @media (max-width: 660px) {
+    .s7 { padding: 24px 18px; }
+    .s7 .headline { font-size: 24px; }
+    .s7 .sim-layout { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body style="margin:0;padding:36px 20px;background:linear-gradient(160deg,#f0f4ff 0%,#f8fafc 60%,#f0fdf4 100%);display:flex;justify-content:center;align-items:flex-start;min-height:100vh;">
+
+<div class="s7">
+
+  <div class="kicker">Financial Mechanics</div>
+  <h1 class="headline">How Operating Modes Hit the P&amp;L</h1>
+  <p class="subtitle">Start with a leaky operating mode, then move toward better decisions to see how margin and EBIT recover on a $1M engagement.</p>
+
+  <div class="nudge-row">
+    <span class="material-icons-round">tune</span>
+    Move the sliders from negative to positive to see how operating discipline improves the P&amp;L.
+  </div>
+
+  <div class="sim-layout">
+
+    <!-- LEFT: LEVERS -->
+    <div class="levers-panel">
+      <div class="panel-eyebrow">Operational Inputs</div>
+
+      <div class="control-group">
+        <div class="ctrl-row">
+          <span class="ctrl-label">Rework &amp; Quality</span>
+          <span class="val-badge bad" id="lbl-rework">Heavy</span>
+        </div>
+        <input type="range" id="sl-rework" min="0" max="2" value="0" step="1" style="background: linear-gradient(to right, rgb(49, 126, 255) 0%, rgb(226, 232, 240) 0%);">
+        <p class="lever-context">Paying talent to do the work twice directly hits delivery costs.</p>
+      </div>
+
+      <div class="control-group">
+        <div class="ctrl-row">
+          <span class="ctrl-label">Contract / Scope Clarity</span>
+          <span class="val-badge bad" id="lbl-scope">Ambiguous</span>
+        </div>
+        <input type="range" id="sl-scope" min="0" max="2" value="0" step="1" style="background: linear-gradient(to right, rgb(49, 126, 255) 0%, rgb(226, 232, 240) 0%);">
+        <p class="lever-context">Ambiguous scope causes unbilled effort (COGS) and management drag (OPEX).</p>
+      </div>
+
+      <div class="control-group">
+        <div class="ctrl-row">
+          <span class="ctrl-label">Staffing Lead Time</span>
+          <span class="val-badge bad" id="lbl-lead">Surge</span>
+        </div>
+        <input type="range" id="sl-lead" min="0" max="2" value="0" step="1" style="background: linear-gradient(to right, rgb(49, 126, 255) 0%, rgb(226, 232, 240) 0%);">
+        <p class="lever-context">Urgency demands a premium. Surge staffing shrinks the margin buffer.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: P&L -->
+    <div class="pl-outer">
+      <div class="pl-panel">
+
+        <div class="pl-header">
+          <span class="pl-header-label">Statement of Operations</span>
+          <span class="pl-header-tag">Base: $1M Deal</span>
+        </div>
+
+        <div class="pl-row">
+          <span style="font-weight:700;color:#0f172a;">Top Line Revenue</span>
+          <span class="pl-value">$1,000,000</span>
+        </div>
+
+        <div class="pl-row pl-indent">
+          <span>Cost of Delivery (COGS)</span>
+          <span class="pl-value val-neg" id="val-cogs">($900,000)</span>
+        </div>
+
+        <div class="pl-row pl-total">
+          <span>Gross Profit <span class="margin-chip" id="chip-gm">10.0%</span></span>
+          <span class="pl-value val-pos" id="val-gp">$100,000</span>
+        </div>
+
+        <div class="pl-row pl-indent" style="margin-top:6px;">
+          <span>Operating Overhead (OPEX)</span>
+          <span class="pl-value val-neg" id="val-opex">($300,000)</span>
+        </div>
+
+        <div class="pl-row pl-final">
+          <span>Operating Profit (EBIT) <span class="margin-chip" id="chip-ebit">-20.0%</span></span>
+          <span class="pl-value val-neg" id="val-ebit">($200,000)</span>
+        </div>
+
+        <div class="verdict v-bad" id="verdict">
+          <div class="verdict-title" id="verdict-title"><span class="material-icons-round">warning</span><span id="verdict-name">Subsidizing the Client</span></div>
+          <p class="verdict-desc" id="verdict-desc">Operating leaks have entirely wiped out the margin. This engagement is actively losing money for the enterprise.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const REVENUE = 1000000;
+  const BASE_OPEX = 250000;
+
+  function fmt(n) {
+    return n < 0
+      ? `($${Math.abs(n).toLocaleString()})`
+      : `$${n.toLocaleString()}`;
+  }
+
+  function flashEl(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('val-flash');
+    void el.offsetWidth;
+    el.classList.add('val-flash');
+    setTimeout(() => el.classList.remove('val-flash'), 400);
+  }
+
+  function setFill(el) {
+    const pct = ((el.value - el.min) / (el.max - el.min) * 100).toFixed(1);
+    el.style.background = `linear-gradient(to right, #317eff ${pct}%, #e2e8f0 ${pct}%)`;
+  }
+
+  function calculatePL() {
+    const rework = parseInt(document.getElementById('sl-rework').value);
+    const scope  = parseInt(document.getElementById('sl-scope').value);
+    const lead   = parseInt(document.getElementById('sl-lead').value);
+
+    // Update fills
+    ['sl-rework','sl-scope','sl-lead'].forEach(id => setFill(document.getElementById(id)));
+
+    // Labels + badge class
+    const rworkLabels = ['Heavy','Some','Minimal'];
+    const scopeLabels = ['Ambiguous','Partial','Defined'];
+    const leadLabels  = ['Surge','Reactive','Forecasted'];
+
+    const rl = document.getElementById('lbl-rework');
+    rl.textContent = rworkLabels[rework];
+    rl.className   = 'val-badge' + (rework===0?' bad':rework===1?' warn':' good');
+
+    const sl = document.getElementById('lbl-scope');
+    sl.textContent = scopeLabels[scope];
+    sl.className   = 'val-badge' + (scope===0?' bad':scope===1?' warn':' good');
+
+    const ll = document.getElementById('lbl-lead');
+    ll.textContent = leadLabels[lead];
+    ll.className   = 'val-badge' + (lead===0?' bad':lead===1?' warn':' good');
+
+    // Calculate
+    let cogs = 600000;
+    let opex = BASE_OPEX;
+
+    if (rework === 1) cogs += 75000;
+    if (rework === 0) cogs += 150000;
+
+    if (scope === 0) { cogs += 50000; opex += 50000; }
+    if (scope === 1) { cogs += 25000; opex += 25000; }
+
+    if (lead === 1) cogs += 40000;
+    if (lead === 0) cogs += 100000;
+
+    const gp   = REVENUE - cogs;
+    const ebit = gp - opex;
+    const gmPct   = ((gp   / REVENUE) * 100).toFixed(1);
+    const ebitPct = ((ebit / REVENUE) * 100).toFixed(1);
+
+    // Update DOM + flash changed rows
+    document.getElementById('val-cogs').textContent = `($${cogs.toLocaleString()})`;
+    flashEl('val-cogs');
+
+    const gpEl = document.getElementById('val-gp');
+    gpEl.textContent = fmt(gp);
+    gpEl.className   = 'pl-value ' + (gp < 0 ? 'val-neg' : 'val-pos');
+    flashEl('val-gp');
+
+    document.getElementById('chip-gm').textContent = gmPct + '%';
+
+    const opexEl = document.getElementById('val-opex');
+    opexEl.textContent = `($${opex.toLocaleString()})`;
+    flashEl('val-opex');
+
+    const ebitEl = document.getElementById('val-ebit');
+    ebitEl.textContent = fmt(ebit);
+    ebitEl.className   = 'pl-value ' + (ebit < 0 ? 'val-neg' : 'val-pos');
+    flashEl('val-ebit');
+
+    document.getElementById('chip-ebit').textContent = ebitPct + '%';
+
+    // Verdict
+    const v  = document.getElementById('verdict');
+    const vt = document.getElementById('verdict-title');
+    const vn = document.getElementById('verdict-name');
+    const vd = document.getElementById('verdict-desc');
+
+    const isLeaky = (rework===0 || scope===0 || lead===0);
+    const isTight = (rework===2 && scope===2 && lead===2);
+
+    let cls, icon, name, desc;
+
+    if (ebit < 0) {
+      cls='verdict v-bad'; icon='warning'; name='Subsidizing the Client';
+      desc='Operating leaks have entirely wiped out the margin. This engagement is actively losing money for the enterprise.';
+    } else if (isLeaky) {
+      cls='verdict v-bad'; icon='error_outline'; name='Structural Leakage';
+      desc='Poor scoping or reactive execution is eating the margin before it reaches the bottom line. You have zero buffer left.';
+    } else if (isTight) {
+      cls='verdict v-good'; icon='verified'; name='Optimized Engine';
+      desc='Clear scope, low rework, and planned staffing. Pricing discipline holds, generating healthy profit to fund enterprise growth.';
+    } else {
+      cls='verdict v-neutral'; icon='horizontal_rule'; name='Vulnerable Operations';
+      desc='Profitable for now, but inefficiencies are dragging down potential. One major scope change will push this into the red.';
+    }
+
+    v.className = cls;
+    vn.textContent = name;
+    vt.innerHTML = `<span class="material-icons-round">${icon}</span><span id="verdict-name">${name}</span>`;
+    vd.textContent = desc;
+  }
+
+  // Attach smooth drag listeners
+  ['sl-rework','sl-scope','sl-lead'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('input',  () => calculatePL());
+    el.addEventListener('change', () => calculatePL());
+    setFill(el);
+  });
+
+  calculatePL();
+</script>
+
+
+</body></html>
+

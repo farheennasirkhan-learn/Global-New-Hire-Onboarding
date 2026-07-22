@@ -1,0 +1,395 @@
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Process Flow - Responsive</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+    :root {
+        --bg-color: #ffffff;
+        --text-primary: #111827;
+        --text-secondary: #4b5563;
+        --accent-color: #317eff; /* Updated Blue */
+        --box-border: #e5e7eb;
+        
+        /* Packet Colors */
+        --pkt-req-bg: #eff6ff; --pkt-req-txt: #317eff; 
+        --pkt-sow-bg: #fff7ed; --pkt-sow-txt: #c2410c; 
+        --pkt-tal-bg: #f0fdf4; --pkt-tal-txt: #15803d; 
+        --pkt-sup-bg: #fdf4ff; --pkt-sup-txt: #a21caf; 
+        --pkt-fin-bg: #faf5ff; --pkt-fin-txt: #7e22ce; 
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: transparent;
+        display: flex;
+        flex-direction: column;
+        align-items: center; 
+        min-height: 100vh;
+        margin: 0;
+        padding: 40px 20px; 
+        box-sizing: border-box;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    /* --- TYPOGRAPHY --- */
+    h1 {
+        font-size: 32px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 16px 0;
+        text-align: center;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+    }
+
+    .subtitle {
+        font-size: 17px;
+        color: var(--text-secondary);
+        margin-bottom: 20px;
+        max-width: 900px; 
+        text-align: center;
+        line-height: 1.4;
+        font-weight: 400;
+    }
+
+    
+
+    /* --- DIAGRAM CONTAINER --- */
+    .diagram-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 1000px; /* Reduced container size */
+        aspect-ratio: 1000 / 350; /* Responsive scaling without scroll */
+        display: flex;
+        justify-content: center; 
+        z-index: 1;
+        margin-bottom: 20px;
+    }
+
+    .canvas {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* --- STATIONS --- */
+    .station {
+        position: absolute;
+        padding: 12px 16px;
+        min-width: 120px;
+        max-width: 150px;
+        background: #ffffff;
+        border: 2px solid var(--box-border);
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-size: 17px; 
+        font-weight: 700;
+        color: var(--text-primary);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        z-index: 10;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        transform: translate(-50%, -50%); /* Centers correctly at percentage coords */
+        line-height: 1.2;
+    }
+
+    .station:hover, .station.active {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 4px rgba(49, 126, 255, 0.15);
+        transform: translate(-50%, -50%) scale(1.05);
+        color: var(--accent-color);
+    }
+
+    /* COORDINATES (Percentage based for strict responsiveness) */
+    #client-start { top: 50%; left: 10%; border-color: #bfdbfe; color: var(--accent-color); }
+    #sales        { top: 50%; left: 30%; } 
+    
+    #Platform  { top: 15%; left: 50%; } 
+    #talent       { top: 50%; left: 50%; } 
+    #ga           { top: 85%; left: 50%; } 
+    
+    #delivery     { top: 50%; left: 70%; border-color: #e9d5ff; color: #7e22ce; } 
+    #client-end   { top: 50%; left: 90%; border-color: #bfdbfe; color: var(--accent-color); } 
+
+    /* --- PACKETS --- */
+    .packet {
+        position: absolute;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 17px; 
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        z-index: 5;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        white-space: nowrap;
+        opacity: 0; 
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .p-req { background: var(--pkt-req-bg); color: var(--pkt-req-txt); border: 1px solid var(--pkt-req-txt); }
+    .p-sow { background: var(--pkt-sow-bg); color: var(--pkt-sow-txt); border: 1px solid var(--pkt-sow-txt); }
+    .p-tal { background: var(--pkt-tal-bg); color: var(--pkt-tal-txt); border: 1px solid var(--pkt-tal-txt); }
+    .p-fin { background: var(--pkt-fin-bg); color: var(--pkt-fin-txt); border: 1px solid var(--pkt-fin-txt); }
+
+    /* UPDATED ANIMATIONS (Percentage-based routing) */
+    .step-1 { animation: move-1 15s linear infinite; }
+    @keyframes move-1 { 
+        0% { opacity: 0; top: 50%; left: 10%; } 
+        5% { opacity: 1; } 
+        25% { opacity: 1; } 
+        30% { opacity: 0; top: 50%; left: 30%; } 
+        100% { opacity: 0; } 
+    }
+
+    .step-2a { animation: move-2a 15s linear infinite; }
+    @keyframes move-2a { 
+        0% { opacity: 0; top: 50%; left: 30%; } 
+        30% { opacity: 0; top: 50%; left: 30%; } 
+        35% { opacity: 1; } 
+        45% { opacity: 1; } 
+        50% { opacity: 0; top: 15%; left: 50%; } 
+        100% { opacity: 0; } 
+    }
+    
+    .step-2b { animation: move-2b 15s linear infinite; }
+    @keyframes move-2b { 
+        0% { opacity: 0; top: 50%; left: 30%; } 
+        30% { opacity: 0; top: 50%; left: 30%; } 
+        35% { opacity: 1; } 
+        45% { opacity: 1; } 
+        50% { opacity: 0; top: 50%; left: 50%; } 
+        100% { opacity: 0; } 
+    }
+
+    .step-2c { animation: move-2c 15s linear infinite; }
+    @keyframes move-2c { 
+        0% { opacity: 0; top: 50%; left: 30%; } 
+        30% { opacity: 0; top: 50%; left: 30%; } 
+        35% { opacity: 1; } 
+        45% { opacity: 1; } 
+        50% { opacity: 0; top: 85%; left: 50%; } 
+        100% { opacity: 0; } 
+    }
+
+    .step-3a { animation: move-3a 15s linear infinite; }
+    @keyframes move-3a { 
+        0% { opacity: 0; top: 15%; left: 50%; } 
+        50% { opacity: 0; top: 15%; left: 50%; } 
+        55% { opacity: 1; } 
+        65% { opacity: 1; } 
+        70% { opacity: 0; top: 50%; left: 70%; } 
+        100% { opacity: 0; } 
+    }
+
+    .step-3b { animation: move-3b 15s linear infinite; }
+    @keyframes move-3b { 
+        0% { opacity: 0; top: 50%; left: 50%; } 
+        50% { opacity: 0; top: 50%; left: 50%; } 
+        55% { opacity: 1; } 
+        65% { opacity: 1; } 
+        70% { opacity: 0; top: 50%; left: 70%; } 
+        100% { opacity: 0; } 
+    }
+
+    .step-3c { animation: move-3c 15s linear infinite; }
+    @keyframes move-3c { 
+        0% { opacity: 0; top: 85%; left: 50%; } 
+        50% { opacity: 0; top: 85%; left: 50%; } 
+        55% { opacity: 1; } 
+        65% { opacity: 1; } 
+        70% { opacity: 0; top: 50%; left: 70%; } 
+        100% { opacity: 0; } 
+    }
+
+    .step-4 { animation: move-4 15s linear infinite; }
+    @keyframes move-4 { 
+        0% { opacity: 0; top: 50%; left: 70%; } 
+        70% { opacity: 0; top: 50%; left: 70%; } 
+        75% { opacity: 1; } 
+        95% { opacity: 1; } 
+        100% { opacity: 0; top: 50%; left: 90%; } 
+    }
+
+    /* --- DYNAMIC TEXT SECTION --- */
+    .text-display-container {
+        width: 100%;
+        max-width: 1000px; 
+        padding: 24px;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        text-align: left;
+        position: relative;
+        z-index: 20;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        margin: 0 auto;
+        min-height: 220px; 
+    }
+
+    .info-header {
+        font-size: 17px; 
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        font-weight: 700;
+        color: var(--accent-color);
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .info-content {
+        padding: 10px;
+        font-size: 17px; 
+        line-height: 1.6;
+        color: var(--text-primary);
+        display: none; 
+        animation: fadeIn 0.4s ease forwards;
+    }
+
+    .info-content.visible {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Connecting Lines */
+    .belt { fill: none; stroke: #e5e7eb; stroke-width: 2; stroke-linecap: round; }
+
+    
+  .paragraph1 {color: #317eff}
+  
+    /* Extra small screen fallback overrides */
+    @media (max-width: 600px) {
+        .diagram-wrapper { aspect-ratio: 1000 / 550; }
+        .station { min-width: 90px; padding: 8px; }
+    }
+</style>
+</head>
+<body>
+
+<h1>How the Company Works</h1>
+<div class="subtitle">
+    <div class="paragraph1"><strong>Is this an oversimplification?</strong></div>
+    <div class="paragraph">Yes, but we want to provide a foundational understanding of the company</div>
+</div>
+
+<div class="diagram-wrapper">
+    <div class="canvas">
+        
+        <svg width="100%" height="100%">
+            <defs>
+                <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                    <path d="M1,1 L7,4 L1,7" style="fill:none; stroke:#e5e7eb; stroke-width:1;"></path>
+                </marker>
+            </defs>
+            <line x1="10%" y1="50%" x2="30%" y2="50%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="30%" y1="50%" x2="50%" y2="15%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="30%" y1="50%" x2="50%" y2="50%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="30%" y1="50%" x2="50%" y2="85%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="50%" y1="15%" x2="70%" y2="50%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="50%" y1="50%" x2="70%" y2="50%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="50%" y1="85%" x2="70%" y2="50%" class="belt" marker-end="url(#arrow)"></line>
+            <line x1="70%" y1="50%" x2="90%" y2="50%" class="belt" marker-end="url(#arrow)"></line>
+        </svg>
+
+        <div id="client-start" class="station" onmouseenter="showInfo('client')" onmouseleave="resetInfo()">Client</div>
+        <div id="sales" class="station" onmouseenter="showInfo('sales')" onmouseleave="resetInfo()">Sales</div>
+        
+        <div id="Platform" class="station" onmouseenter="showInfo('resourcing')" onmouseleave="resetInfo()">Platform</div>
+        <div id="talent" class="station" onmouseenter="showInfo('resourcing')" onmouseleave="resetInfo()">Talent Acquisition</div>
+        <div id="ga" class="station" onmouseenter="showInfo('resourcing')" onmouseleave="resetInfo()">All Teams</div>
+        
+        <div id="delivery" class="station" onmouseenter="showInfo('delivery')" onmouseleave="resetInfo()">Production Engineering</div>
+        <div id="client-end" class="station" onmouseenter="showInfo('client')" onmouseleave="resetInfo()">Client</div>
+
+        <div class="packet p-req step-1">Requirements</div>
+        <div class="packet p-sow step-2a">SOW</div>
+        <div class="packet p-sow step-2b">SOW</div>
+        <div class="packet p-sow step-2c">SOW</div>
+        <div class="packet p-tal step-3a">Talent</div>
+        <div class="packet p-tal step-3b">Talent</div>
+        <div class="packet p-fin step-3c">Support</div>
+        <div class="packet p-fin step-4">Value</div>
+
+    </div>
+</div>
+
+<div class="text-display-container">
+    
+    <div id="info-intro" class="info-content visible">
+        <span class="info-header">Overview</span>
+        <div class="paragraph">Below is a simplified view of how work flows through the organization to deliver value to a client. <br><strong>Hover over the diagram to explore.</strong></div>
+        <div class="paragraph" style="color:var(--accent-color); font-weight:600;">As a new team member, your work supports Production Engineering’s ability to drive value for our clients.</div>
+    </div>
+
+    <div id="info-client" class="info-content">
+        <span class="info-header">Client</span>
+        <div class="paragraph">Client-first means our work must help the client succeed.</div>
+        <div class="paragraph">Clients bring us a need.</div>
+        <div class="paragraph">We do the work and deliver value back to them.</div>
+        <div class="paragraph"><strong>If something doesn’t clearly benefit the client, it’s unlikely to build a strong, long-term partnership.</strong></div>
+    </div>
+
+    <div id="info-sales" class="info-content">
+        <span class="info-header">Sales</span>
+        <div class="paragraph">Our clients partner with our Sales and technical teams to establish the key requirements needed for the scope of work (SOW). We are using 'SOW' as a placeholder term for any agreement with a client.</div>
+        <div class="paragraph">This is a deeply cross-functional process, and “Sales” is used as a placeholder to represent many different functions within Turing.</div>
+        <div class="paragraph"><strong>Together, this sets the foundation for all operational execution that follows.</strong></div>
+    </div>
+
+    <div id="info-resourcing" class="info-content">
+        <span class="info-header">Resourcing &amp; Support</span>
+        <div class="paragraph">Once the Scope of Work is set, <strong>Fulfillment</strong> and <strong>Talent Acquisition</strong> act as the recruiting engines for Production Engineering, sourcing the world’s leading talent on behalf of Production Engineering.</div>
+        <div class="paragraph">Simultaneously, <strong>G&amp;A functions (Finance, Legal, HR, Security), R&amp;D, Marketing,</strong> and other teams support the process to ensure delivery execution remains innovative and runs smoothly.</div>
+    </div>
+
+    <div id="info-delivery" class="info-content">
+        <span class="info-header">Production Engineering</span>
+        <div class="paragraph">Production Engineering is where the magic happens. It’s the operational arm responsible for execution and creating value for our clients. We cannot achieve a “client-first” approach without all of us working together to empower Production Engineering.</div>
+    </div>
+
+</div>
+
+
+<script>
+    function showInfo(sectionId) {
+        document.querySelectorAll('.station').forEach(el => el.classList.remove('active'));
+        
+        if (sectionId === 'resourcing') {
+            document.getElementById('fulfillment').classList.add('active');
+            document.getElementById('talent').classList.add('active');
+            document.getElementById('ga').classList.add('active');
+        } else if (sectionId === 'client') {
+            document.getElementById('client-start').classList.add('active');
+            document.getElementById('client-end').classList.add('active');
+        } else {
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        document.querySelectorAll('.info-content').forEach(el => el.classList.remove('visible'));
+        document.getElementById(`info-${sectionId}`).classList.add('visible');
+    }
+
+    function resetInfo() {
+        document.querySelectorAll('.station').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.info-content').forEach(el => el.classList.remove('visible'));
+        document.getElementById('info-intro').classList.add('visible');
+    }
+</script>
+
+
+</body></html>

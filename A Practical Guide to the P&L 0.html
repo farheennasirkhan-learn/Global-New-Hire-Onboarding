@@ -1,0 +1,693 @@
+
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity is Not Value</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+<style>
+@keyframes s1-glow-pulse {
+  0%,100% { box-shadow:0 0 0 0 rgba(49,126,255,0),0 4px 18px rgba(49,126,255,.35); }
+  50% { box-shadow:0 0 0 6px rgba(49,126,255,.18),0 4px 28px rgba(49,126,255,.5); }
+}
+@keyframes s1-btn-glow {
+  0%,100% { box-shadow:0 0 0 0 rgba(49,126,255,0),0 4px 14px rgba(49,126,255,.4); }
+  50% { box-shadow:0 0 0 5px rgba(49,126,255,.2),0 8px 28px rgba(49,126,255,.6); }
+}
+@keyframes s1-warn-glow {
+  0%,100% { box-shadow:0 0 0 0 rgba(239,68,68,0),0 4px 20px rgba(0,0,0,.12); }
+  50% { box-shadow:0 0 0 4px rgba(239,68,68,.12),0 6px 24px rgba(239,68,68,.2); }
+}
+@keyframes s1-blink { 0%,100%{opacity:.5} 50%{opacity:1} }
+@keyframes s1-border-rot { 0%{background-position:0% 50%} 100%{background-position:300% 50%} }
+@keyframes s1-conclusion-breathe {
+  0%,100% { box-shadow:0 0 0 0 rgba(16,185,129,0),0 20px 60px rgba(0,0,0,.12); }
+  50% { box-shadow:0 0 0 3px rgba(16,185,129,.3),0 20px 60px rgba(16,185,129,.12); }
+}
+
+.s1 {
+  font-family:'Poppins',sans-serif;
+  max-width:880px;
+  margin:0 auto;
+  padding:48px 28px;
+  background:#fff;
+  border-radius:28px;
+  color:#0f172a;
+  position:relative;
+  overflow:hidden;
+}
+.s1::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  border-radius:28px;
+  opacity:.4;
+}
+.s1 > * { position:relative; z-index:1; }
+
+.s1 .kicker {
+  display:inline-block;
+  background:#eef4ff;
+  color:#317eff;
+  font-size:12px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+  padding:6px 14px;
+  border-radius:100px;
+  margin-bottom:20px;
+  border:1px solid rgba(49,126,255,.15);
+}
+.s1 .headline {
+  font-size:40px;
+  font-weight:700;
+  color:#020617;
+  letter-spacing:-.035em;
+  line-height:1.1;
+  margin-bottom:14px;
+}
+.s1 .subtitle {
+  font-size:17px;
+  color:#475569;
+  line-height:1.7;
+  max-width:640px;
+  margin-bottom:36px;
+}
+.s1 .top-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  gap:12px;
+}
+.s1 .nudge-row {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:13px;
+  font-weight:600;
+  color:#317eff;
+}
+.s1 .nudge-row .material-icons-round { font-size:15px; }
+.s1 .reset-btn {
+  display:none;
+  align-items:center;
+  gap:5px;
+  font-family:'Poppins',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  color:#94a3b8;
+  background:none;
+  border:1.5px solid #e2e8f0;
+  border-radius:8px;
+  padding:7px 13px;
+  cursor:pointer;
+}
+.s1 .reset-btn.visible { display:inline-flex; }
+
+.s1 .pill-stepper {
+  display:flex;
+  align-items:center;
+  background:#f1f5f9;
+  border-radius:999px;
+  padding:6px;
+  gap:2px;
+  margin-bottom:20px;
+  border:1px solid #e2e8f0;
+}
+.s1 .pill-step {
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:12px 16px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  color:#94a3b8;
+  transition:all .35s cubic-bezier(.25,.46,.45,.94);
+  cursor:pointer;
+  white-space:nowrap;
+}
+.s1 .pill-step .material-icons-round { font-size:16px; display:none; }
+.s1 .pill-step.active {
+  background:#317eff;
+  color:#fff;
+  animation:s1-glow-pulse 2.2s ease-in-out infinite;
+}
+.s1 .pill-step.active .material-icons-round,
+.s1 .pill-step.done .material-icons-round,
+.s1 .pill-step.final .material-icons-round { display:inline; }
+.s1 .pill-step.done {
+  background:#fff;
+  color:#16a34a;
+  box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.s1 .pill-step.done .material-icons-round { color:#16a34a; }
+.s1 .pill-step.final {
+  background:#0f172a;
+  color:#fff;
+  box-shadow:0 4px 14px rgba(15,23,42,.25);
+}
+
+.s1 .panel-glow-wrap {
+  padding:1.5px;
+  border-radius:24px;
+  background:linear-gradient(120deg,#e2e8f0 0%,#317eff55 25%,#e2e8f0 50%,#317eff33 75%,#e2e8f0 100%);
+  background-size:300% 300%;
+  animation:s1-border-rot 5s linear infinite;
+  box-shadow:0 20px 60px rgba(0,0,0,.07);
+  margin-bottom:20px;
+}
+.s1 .panel-wrap {
+  border-radius:23px;
+  overflow:hidden;
+  background:#fff;
+}
+.s1 .panel { display:none; flex-direction:row; }
+.s1 .panel.active { display:flex; }
+
+.s1 .panel-left {
+  width:200px;
+  flex-shrink:0;
+  padding:44px 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-right:1px solid #e2e8f0;
+  text-align:center;
+  gap:14px;
+  background:linear-gradient(160deg,#fff5f5 0%,#fef2f2 100%);
+}
+.s1 .wrong-icon-wrap {
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:#fee2e2;
+  border:1.5px solid #fecaca;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 16px rgba(239,68,68,.15);
+}
+.s1 .wrong-icon-wrap .material-icons-round {
+  font-size:28px;
+  color:#dc2626;
+}
+.s1 .panel-word {
+  font-size:26px;
+  font-weight:600;
+  color:#0f172a;
+  letter-spacing:-.025em;
+  line-height:1.1;
+}
+.s1 .panel-tag {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:11px;
+  font-weight:600;
+  padding:5px 12px;
+  border-radius:20px;
+  background:#fee2e2;
+  color:#dc2626;
+  border:1px solid #fecaca;
+}
+.s1 .panel-tag .material-icons-round { font-size:13px; }
+
+.s1 .panel-right {
+  flex:1;
+  padding:40px 40px 32px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  background:#fff;
+}
+.s1 .panel-reason {
+  font-size:16px;
+  font-weight:500;
+  color:#1e293b;
+  line-height:1.75;
+  margin-bottom:22px;
+}
+.s1 .panel-reason em {
+  font-style:normal;
+  color:#317eff;
+  font-weight:600;
+}
+.s1 .bridge-block {
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-left:3px solid #317eff;
+  border-radius:0 10px 10px 0;
+  padding:13px 17px;
+  font-size:14px;
+  color:#475569;
+  line-height:1.65;
+}
+.s1 .bridge-label {
+  font-size:10px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color:#317eff;
+  margin-bottom:5px;
+}
+.s1 .panel-footer {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-top:30px;
+  padding-top:22px;
+  border-top:1px solid #f1f5f9;
+}
+.s1 .step-counter {
+  font-size:13px;
+  font-weight:600;
+  color:#94a3b8;
+}
+.s1 .nav-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:#317eff;
+  color:#fff;
+  font-family:'Poppins',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  border:none;
+  border-radius:10px;
+  padding:12px 22px;
+  cursor:pointer;
+  animation:s1-btn-glow 2s ease-in-out infinite;
+}
+.s1 .nav-btn:hover {
+  background:#1a6aff;
+  animation:none;
+  box-shadow:0 10px 32px rgba(49,126,255,.55);
+}
+
+.s1 .conclusion { display:none; }
+.s1 .conclusion.visible {
+  display:flex;
+  border-radius:22px;
+  overflow:hidden;
+  animation:s1-conclusion-breathe 3s ease-in-out infinite;
+}
+.s1 .conclusion-left {
+  background:linear-gradient(160deg,#16a34a,#15803d);
+  color:#fff;
+  width:200px;
+  flex-shrink:0;
+  padding:44px 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:10px;
+}
+.s1 .conclusion-left .material-icons-round {
+  font-size:32px;
+  opacity:.85;
+}
+.s1 .conclusion-left h3 {
+  font-size:12px;
+  font-weight:600;
+  opacity:.75;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  margin:0;
+}
+.s1 .conclusion-left p {
+  font-size:17px;
+  font-weight:600;
+  line-height:1.2;
+  letter-spacing:-.02em;
+  margin:0;
+}
+.s1 .conclusion-right {
+  flex:1;
+  padding:36px 40px;
+  background:linear-gradient(160deg,#f0fdf4 0%,#dcfce7 100%);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:14px;
+}
+.s1 .warning-outer {
+  padding:1.5px;
+  border-radius:14px;
+  background:linear-gradient(120deg,#fecaca 0%,#ef444455 40%,#fecaca 70%,#ef444433 100%);
+  background-size:300% 300%;
+  animation:s1-border-rot 4s linear infinite;
+}
+.s1 .warning-wrap {
+  border-radius:13px;
+  overflow:hidden;
+  background:#fff;
+}
+.s1 .warning-trigger {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 20px;
+  cursor:pointer;
+  animation:s1-warn-glow 2.4s ease-in-out infinite;
+}
+.s1 .warning-trigger-left {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  font-weight:600;
+  color:#dc2626;
+}
+.s1 .warning-trigger-left .material-icons-round { font-size:18px; }
+.s1 .reveal-pill {
+  font-size:11px;
+  font-weight:600;
+  background:#fef2f2;
+  color:#dc2626;
+  padding:4px 12px;
+  border-radius:20px;
+  border:1px solid #fecaca;
+  animation:s1-blink 2s infinite;
+  white-space:nowrap;
+}
+.s1 .warning-body {
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .45s cubic-bezier(.25,.46,.45,.94);
+}
+.s1 .warning-open .warning-body { max-height:280px; }
+.s1 .warning-open .warning-trigger {
+  animation:none;
+  border-bottom:1px solid #fecaca;
+}
+.s1 .warning-inner {
+  padding:18px 20px;
+  background:#fef2f2;
+  border-left:3px solid #ef4444;
+  font-size:14px;
+  color:#991b1b;
+  line-height:1.7;
+}
+.s1 .warning-inner .wquote {
+  margin-top:14px;
+  font-style:italic;
+  font-size:13px;
+  color:#b91c1c;
+  padding-top:14px;
+  border-top:1px solid rgba(220,38,38,.2);
+}
+
+.s1 .complete-note {
+  display:none;
+  align-items:center;
+  gap:12px;
+  background:#0f172a;
+  color:#fff;
+  border-radius:14px;
+  padding:16px 18px;
+  font-size:14px;
+  font-weight:500;
+  line-height:1.5;
+}
+.s1 .complete-note.visible { display:flex; }
+.s1 .complete-note .material-icons-round {
+  font-size:28px;
+  color:#22c55e;
+  flex-shrink:0;
+}
+.s1 .complete-note strong {
+  font-weight:600;
+  color:#fff;
+}
+
+@media(max-width:640px) {
+  .s1 { padding:32px 20px; }
+  .s1 .headline { font-size:30px; }
+  .s1 .subtitle { font-size:15px; }
+  .s1 .top-row { flex-direction:column; align-items:flex-start; }
+  .s1 .panel { flex-direction:column; }
+  .s1 .panel-left {
+    width:100%;
+    border-right:none;
+    border-bottom:1px solid #e2e8f0;
+    flex-direction:row;
+    justify-content:flex-start;
+    padding:20px 24px;
+  }
+  .s1 .panel-right { padding:24px; }
+  .s1 .conclusion.visible { flex-direction:column; }
+  .s1 .conclusion-left { width:100%; }
+  .s1 .pill-stepper { padding:4px; }
+  .s1 .pill-step { padding:10px 8px; font-size:12px; }
+}
+</style>
+</head>
+
+<body style="margin:0;padding:48px 20px;background:linear-gradient(160deg,#f0f4ff 0%,#f8fafc 60%,#f0fdf4 100%);">
+
+<div class="s1">
+
+  <div class="kicker">Introduction: The Misunderstanding</div>
+  <h1 class="headline">Activity is Not Value.</h1>
+  <p class="subtitle">Most people—perfectly intelligent people—think they know how their company makes money. But there is an uncomfortable truth about how we measure success.</p>
+
+  <div class="top-row">
+    <div class="nudge-row">
+      <span class="material-icons-round">arrow_forward</span>
+      Work through each misconception in order.
+    </div>
+    <button class="reset-btn" id="resetBtn" onclick="resetSlide()">
+      <span class="material-icons-round">replay</span> Start over
+    </button>
+  </div>
+
+  <div class="pill-stepper">
+    <div class="pill-step active" id="ps-0" onclick="jumpToStep(0)">
+      <span class="material-icons-round">radio_button_checked</span> Activity
+    </div>
+    <div class="pill-step" id="ps-1" onclick="jumpToStep(1)">
+      <span class="material-icons-round">check_circle</span> Output
+    </div>
+    <div class="pill-step" id="ps-2" onclick="jumpToStep(2)">
+      <span class="material-icons-round">check_circle</span> Busyness
+    </div>
+    <div class="pill-step" id="ps-3" onclick="jumpToStep(3)">
+      <span class="material-icons-round">flag</span> The Reality
+    </div>
+  </div>
+
+  <div class="panel-glow-wrap" id="panelGlowWrap">
+    <div class="panel-wrap">
+
+      <div class="panel active" id="panel-0">
+        <div class="panel-left">
+          <div class="wrong-icon-wrap"><span class="material-icons-round">block</span></div>
+          <div class="panel-word">Activity</div>
+          <div class="panel-tag"><span class="material-icons-round">close</span> Not value</div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-body">
+            <p class="panel-reason">Doing things — meetings, emails, tasks — <em>feels</em> like progress. But activity alone has no direction. It doesn't tell you if any effort is moving the business forward.</p>
+            <div class="bridge-block">
+              <div class="bridge-label">For example</div>
+              100 sales calls, zero deals closed — lots of activity, no value created.
+            </div>
+          </div>
+          <div class="panel-footer">
+            <span class="step-counter">1 of 3</span>
+            <button class="nav-btn" onclick="nextStep(0)">Next <span class="material-icons-round">arrow_forward</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-1">
+        <div class="panel-left">
+          <div class="wrong-icon-wrap"><span class="material-icons-round">block</span></div>
+          <div class="panel-word">Output</div>
+          <div class="panel-tag"><span class="material-icons-round">close</span> Not value</div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-body">
+            <p class="panel-reason">Output is what you produced — a report, a feature, a session. But it doesn't tell you whether it <em>changed anything.</em> Value is not what you made. It's what it did.</p>
+            <div class="bridge-block">
+              <div class="bridge-label">For example</div>
+              10 features shipped, nobody uses them — high output, no value delivered.
+            </div>
+          </div>
+          <div class="panel-footer">
+            <span class="step-counter">2 of 3</span>
+            <button class="nav-btn" onclick="nextStep(1)">Next <span class="material-icons-round">arrow_forward</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-2">
+        <div class="panel-left">
+          <div class="wrong-icon-wrap"><span class="material-icons-round">block</span></div>
+          <div class="panel-word">Busyness</div>
+          <div class="panel-tag"><span class="material-icons-round">close</span> Not value</div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-body">
+            <p class="panel-reason">Busyness <em>feels virtuous</em> — full calendars, long hours get rewarded. But it's just sustained activity and output. It can quietly mask zero real value for a very long time.</p>
+            <div class="bridge-block">
+              <div class="bridge-label">For example</div>
+              50 training sessions, performance unchanged — busy team, value unproven.
+            </div>
+          </div>
+          <div class="panel-footer">
+            <span class="step-counter">3 of 3</span>
+            <button class="nav-btn" onclick="nextStep(2)">See the reality <span class="material-icons-round">arrow_forward</span></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="conclusion" id="conclusion">
+    <div class="conclusion-left">
+      <span class="material-icons-round">adjust</span>
+      <h3>The Reality</h3>
+      <p>True Value Creation</p>
+    </div>
+
+    <div class="conclusion-right">
+      <div class="warning-outer">
+        <div class="warning-wrap" id="warningWrap">
+          <div class="warning-trigger" onclick="toggleWarning()">
+            <div class="warning-trigger-left">
+              <span class="material-icons-round">warning_amber</span>
+              The Danger of Misinterpretation
+            </div>
+            <span class="reveal-pill" id="revealPill">Click to Reveal</span>
+          </div>
+          <div class="warning-body">
+            <div class="warning-inner">
+              You can be extremely productive and quietly unprofitable. Focusing entirely on outputs rather than outcomes gives the illusion of progress while draining resources.
+              <div class="wquote">"From a business perspective, it's a bit like being very good at running… in the wrong direction."</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="complete-note" id="completeNote">
+        <span class="material-icons-round">check_circle</span>
+        <div><strong>Complete.</strong> You can now proceed to the next slide.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function jumpToStep(i) {
+  if (i === 3) {
+    if (!document.getElementById('conclusion').classList.contains('visible')) return;
+    document.getElementById('conclusion').scrollIntoView({ behavior:'smooth', block:'nearest' });
+    return;
+  }
+
+  for (let j = 0; j < 3; j++) {
+    const ps = document.getElementById('ps-' + j);
+    ps.classList.remove('active', 'done');
+    if (j < i) ps.classList.add('done');
+    else if (j === i) ps.classList.add('active');
+  }
+
+  for (let j = 0; j < 3; j++) document.getElementById('panel-' + j).classList.remove('active');
+  document.getElementById('panel-' + i).classList.add('active');
+
+  document.getElementById('panelGlowWrap').style.display = '';
+  document.getElementById('ps-3').classList.remove('final');
+  document.getElementById('conclusion').classList.remove('visible');
+  document.getElementById('completeNote').classList.remove('visible');
+
+  resetWarning();
+  document.getElementById('resetBtn').classList.add('visible');
+}
+
+function nextStep(from) {
+  const ps = document.getElementById('ps-' + from);
+  ps.classList.remove('active');
+  ps.classList.add('done');
+
+  document.getElementById('panel-' + from).classList.remove('active');
+  document.getElementById('resetBtn').classList.add('visible');
+
+  const next = from + 1;
+
+  if (next < 3) {
+    document.getElementById('ps-' + next).classList.add('active');
+    document.getElementById('panel-' + next).classList.add('active');
+  } else {
+    document.getElementById('ps-3').classList.add('final');
+    document.getElementById('panelGlowWrap').style.display = 'none';
+    document.getElementById('conclusion').classList.add('visible');
+    document.getElementById('completeNote').classList.add('visible');
+    document.getElementById('conclusion').scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+}
+
+function resetWarning() {
+  const ww = document.getElementById('warningWrap');
+  const pill = document.getElementById('revealPill');
+  ww.classList.remove('warning-open');
+  pill.textContent = 'Click to Reveal';
+  pill.style.animation = '';
+  pill.style.opacity = '';
+}
+
+function resetSlide() {
+  ['ps-0','ps-1','ps-2'].forEach(id => document.getElementById(id).classList.remove('active','done'));
+  document.getElementById('ps-0').classList.add('active');
+  document.getElementById('ps-3').classList.remove('final');
+
+  for (let i = 0; i < 3; i++) document.getElementById('panel-' + i).classList.remove('active');
+  document.getElementById('panel-0').classList.add('active');
+
+  document.getElementById('panelGlowWrap').style.display = '';
+  document.getElementById('conclusion').classList.remove('visible');
+  document.getElementById('completeNote').classList.remove('visible');
+
+  resetWarning();
+
+  document.getElementById('resetBtn').classList.remove('visible');
+  document.querySelector('.s1').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function toggleWarning() {
+  const wrap = document.getElementById('warningWrap');
+  const pill = document.getElementById('revealPill');
+
+  wrap.classList.toggle('warning-open');
+
+  if (wrap.classList.contains('warning-open')) {
+    pill.textContent = 'Revealed';
+    pill.style.animation = 'none';
+    pill.style.opacity = '1';
+    document.getElementById('completeNote').classList.add('visible');
+  } else {
+    pill.textContent = 'Click to Reveal';
+    pill.style.animation = '';
+    pill.style.opacity = '';
+  }
+}
+</script>
+
+
+</body></html>
+

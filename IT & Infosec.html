@@ -1,0 +1,353 @@
+<html><head></head><body><div class="it-v2">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+.it-v2 {
+    --blue: #317eff; --ink: #1f2933; --muted: #65717c; --line: #e5eaf0; --soft: #f7f9fc;
+    --purple: #8b5cf6; --green: #10b981; --orange: #f59e0b; --cyan: #0ea5e9; --red: #ef4444; --grey: #64748b;
+    font-family: 'Poppins', sans-serif; background: #fff; color: var(--ink); padding: 0; width: 100%; max-width: 1200px; margin: 0 auto;
+}
+.it-v2 * {box-sizing:border-box}
+.it-v2 strong {font-weight:600}
+.it-v2 .module {width:100%;max-width:1200px;min-height:550px;height:auto;margin:0 auto;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#fff;box-shadow:0 18px 50px rgba(15,23,42,.06);position:relative;display:flex;flex-direction:column}
+.it-v2 .hero {padding:22px 36px 16px;background:linear-gradient(180deg,#ffffff 0%,#f7faff 100%);text-align:center;border-bottom:1px solid var(--line);flex:0 0 auto}
+.it-v2 .hero h1 {margin:0;font-size:29px;line-height:1.15;font-weight:600;color:var(--blue);letter-spacing:-.03em}
+.it-v2 .hero p {margin:7px auto 0;max-width:900px;font-size:15px;line-height:1.45;color:var(--muted)}
+.it-v2 .tabs {display:flex;justify-content:center;gap:8px;padding:10px 14px;overflow-x:auto;background:#fff;border-bottom:1px solid var(--line);scrollbar-width:none;flex:0 0 auto}
+.it-v2 .tabs::-webkit-scrollbar {display:none}
+.it-v2 .tab {flex:0 0 auto;width:44px;height:44px;border:1px solid var(--line);background:#fff;color:#475569;border-radius:999px;padding:0;font-family:'Poppins',sans-serif;font-size:0;font-weight:500;cursor:pointer;transition:.2s ease;display:inline-flex;align-items:center;justify-content:center}
+.it-v2 .tab:hover {border-color:var(--blue);color:var(--blue);background:#f3f7ff;box-shadow:0 0 0 6px rgba(49,126,255,.08)}
+.it-v2 .tab.active {background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 0 0 6px rgba(49,126,255,.12)}
+.it-v2 .tab .material-icons {font-size:22px;color:currentColor;line-height:1}
+.it-v2 .sr-only {position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.it-v2 .main {width:100%}
+.it-v2 .complete-btn {display:none}
+.it-v2 .nav-btn:disabled {opacity:.45;cursor:not-allowed}
+.it-v2 .content {padding:30px 30px 40px;flex:1 1 auto;overflow:hidden}
+.it-v2 .panel {display:none}
+.it-v2 .panel.active {display:block;animation:itV2In .28s ease both}
+@keyframes itV2In {from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.it-v2 .visual {display:none}
+.it-v2 .hex {width:118px;height:104px;background:#fff;clip-path:polygon(25% 6%,75% 6%,100% 50%,75% 94%,25% 94%,0 50%);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 34px rgba(15,23,42,.08);margin-bottom:20px;animation:itV2Float 4s ease-in-out infinite}
+@keyframes itV2Float {0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.it-v2 .material-icons {font-family:'Material Icons'!important;font-size:72px;color:var(--blue);line-height:1}
+.it-v2 .visual-title {font-size:22px;line-height:1.2;font-weight:600;color:var(--ink)}
+.it-v2 .main h2 {display:none}
+.it-v2 .lead {display:none}
+
+/* Grid System */
+.it-v2 .cards {display:grid; gap:12px;}
+.it-v2 .col-2 {grid-template-columns:repeat(2,1fr);}
+.it-v2 .col-3 {grid-template-columns:repeat(3,1fr);}
+.it-v2 .col-4 {grid-template-columns:repeat(4,1fr);}
+.it-v2 .span-2 {grid-column: span 2;}
+
+.it-v2 .card {border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff;min-height:70px;transition:all .3s cubic-bezier(0.25, 0.8, 0.25, 1);position:relative;overflow:hidden}
+.it-v2 .card-title {font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px; display: flex; align-items: center; gap: 8px;}
+.it-v2 .card-title .material-icons {font-size: 20px;}
+.it-v2 .card-text {font-size:13.5px;line-height:1.45;color:var(--muted)}
+
+/* Thematic Colors & Active/Hover states */
+.it-v2 .card.theme-blue:hover, .it-v2 .card.theme-blue.active { border-color:var(--blue); box-shadow:0 0 0 6px rgba(49,126,255,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-blue .material-icons { color: var(--blue); }
+
+.it-v2 .card.theme-purple:hover, .it-v2 .card.theme-purple.active { border-color:var(--purple); box-shadow:0 0 0 6px rgba(139,92,246,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-purple .material-icons { color: var(--purple); }
+
+.it-v2 .card.theme-green:hover, .it-v2 .card.theme-green.active { border-color:var(--green); box-shadow:0 0 0 6px rgba(16,185,129,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-green .material-icons { color: var(--green); }
+
+.it-v2 .card.theme-orange:hover, .it-v2 .card.theme-orange.active { border-color:var(--orange); box-shadow:0 0 0 6px rgba(245,158,11,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-orange .material-icons { color: var(--orange); }
+
+.it-v2 .card.theme-cyan:hover, .it-v2 .card.theme-cyan.active { border-color:var(--cyan); box-shadow:0 0 0 6px rgba(14,165,233,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-cyan .material-icons { color: var(--cyan); }
+
+.it-v2 .card.theme-red:hover, .it-v2 .card.theme-red.active { border-color:var(--red); box-shadow:0 0 0 6px rgba(239,68,68,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-red .material-icons { color: var(--red); }
+
+.it-v2 .card.theme-grey:hover, .it-v2 .card.theme-grey.active { border-color:var(--grey); box-shadow:0 0 0 6px rgba(100,116,139,.10), 0 16px 34px rgba(15,23,42,.10); transform:translateY(-4px); }
+.it-v2 .card.theme-grey .material-icons { color: var(--grey); }
+
+.it-v2 .dont-ignore {color:var(--red);font-weight:600;background:#fff1f2;border:1px solid #fecdd3;border-radius:999px;padding:2px 10px;display:inline-block;margin-left:4px}
+.it-v2 .complete-card {display:block;margin-top:0;border-radius:24px;padding:30px;text-align:center;background:linear-gradient(135deg,#f3f7ff,#ffffff);border:2px solid #d9e7ff;animation:itV2Reveal .45s ease both}
+.it-v2 .complete-card.show {display:block}
+@keyframes itV2Reveal {from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.it-v2 .complete-title {font-size:30px;font-weight:600;color:var(--blue);letter-spacing:-.04em;margin-bottom:8px}
+.it-v2 .complete-sub {font-size:15px;line-height:1.55;color:var(--muted)}
+.it-v2 .confetti-layer {pointer-events:none;position:absolute;inset:0;overflow:hidden;z-index:20}
+.it-v2 .confetti {position:absolute;top:-18px;width:10px;height:16px;border-radius:3px;animation:itV2Confetti 2.8s ease-in forwards}
+@keyframes itV2Confetti {0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(820px) rotate(720deg);opacity:0}}
+.it-v2 .footer {display:flex;justify-content:space-between;align-items:center;padding:12px 30px;border-top:1px solid var(--line);background:#fafcff;flex:0 0 auto}
+.it-v2 .nav-btn {border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 16px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:#475569;cursor:pointer;transition:.2s ease}
+.it-v2 .nav-btn:hover {border-color:var(--blue);color:var(--blue);box-shadow:0 0 0 6px rgba(49,126,255,.08)}
+.it-v2 .nav-btn.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+    animation: itV2PulseGlow 1.5s infinite ease-in-out;
+}
+@keyframes itV2PulseGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(49, 126, 255, 0.6);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(49, 126, 255, 0);
+        transform: scale(1.03);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(49, 126, 255, 0);
+        transform: scale(1);
+    }
+}
+.it-v2 .progress {font-size:14px;font-weight:500;color:var(--muted)}
+.it-v2 .table-container {border:1px solid var(--line);border-radius:18px;overflow-x:auto;background:#fff}
+.it-v2 table {width:100%;border-collapse:collapse;text-align:left;min-width:600px}
+.it-v2 th {padding:14px 16px;font-weight:600;color:var(--ink);background:var(--soft);border-bottom:2px solid var(--line);font-size:13.5px}
+.it-v2 td {padding:14px 16px;color:var(--muted);border-bottom:1px solid var(--line);font-size:13px;vertical-align:top;line-height:1.5}
+.it-v2 tr:last-child td {border-bottom:none}
+.it-v2 .priority-0 {color:var(--red);font-weight:600;white-space:nowrap}
+.it-v2 .priority-1 {color:var(--orange);font-weight:600;white-space:nowrap}
+.it-v2 .priority-2 {color:var(--blue);font-weight:600;white-space:nowrap}
+.it-v2 .priority-3 {color:var(--green);font-weight:600;white-space:nowrap}
+.it-v2 .priority-4 {color:var(--ink);font-weight:600;white-space:nowrap}
+.it-v2 .brand-logo {width: 24px; height: 24px; display: inline-block;}
+
+/* Hero Reflection Specific Styling */
+.it-v2 .reflection-card { text-align: center; padding: 40px 30px; font-size: 16px; line-height: 1.6; border: none; background: transparent; box-shadow: none; pointer-events: none; grid-column: 1 / -1; }
+.it-v2 .reflection-card .material-icons.quote-icon { font-size: 48px; color: var(--blue); display: block; margin: 0 auto 16px; opacity: 0.2; }
+
+@media(max-width:820px){.it-v2 .cards{grid-template-columns:1fr; gap: 10px;}.it-v2 .visual{display:none} .it-v2 .span-2{grid-column: 1/-1;}}
+@media(max-width:620px){.it-v2{padding:20px 12px}.it-v2 .hero,.it-v2 .content,.it-v2 .footer{padding-left:20px;padding-right:20px}}
+</style>
+
+<div class="module">
+<div class="confetti-layer"></div>
+
+<div class="hero">
+<h1 id="itV2HeroTitle">At Turing, the IT is a part of Infosec team</h1>
+<p id="itV2HeroSubtitle">Meet your IT Team</p>
+</div>
+
+<div class="tabs">
+<button class="tab active" data-panel="0" aria-label="InfoSec Team" title="InfoSec Team"><span class="material-icons" aria-hidden="true">shield</span><span class="sr-only">InfoSec Team</span></button>
+<button class="tab" data-panel="1" aria-label="Guidelines" title="Guidelines"><span class="material-icons" aria-hidden="true">security</span><span class="sr-only">Guidelines</span></button>
+<button class="tab" data-panel="2" aria-label="Tools" title="Tools"><span class="material-icons" aria-hidden="true">hub</span><span class="sr-only">Tools</span></button>
+<button class="tab" data-panel="3" aria-label="Getting Started" title="Getting Started"><span class="material-icons" aria-hidden="true">rocket_launch</span><span class="sr-only">Getting Started</span></button>
+<button class="tab" data-panel="4" aria-label="Training" title="Training"><span class="material-icons" aria-hidden="true">school</span><span class="sr-only">Training</span></button>
+<button class="tab" data-panel="5" aria-label="SLAs" title="SLAs"><span class="material-icons" aria-hidden="true">timer</span><span class="sr-only">SLAs</span></button>
+<button class="tab" data-panel="6" aria-label="Contact &amp; Complete" title="Contact &amp; Complete"><span class="material-icons" aria-hidden="true">support_agent</span><span class="sr-only">Contact &amp; Complete</span></button>
+</div>
+
+<div class="content">
+<section class="panel active">
+<div class="visual"><div class="hex"><span class="material-icons">shield</span></div><div class="visual-title">About InfoSec Team</div></div>
+<div class="main">
+<h2>At Turing, the IT is a part of Infosec team</h2><div class="lead">Meet your IT Team</div>
+<div class="cards" style="display: block;">
+<div class="card reflection-card theme-blue">
+<span class="material-icons quote-icon">format_quote</span>
+<div class="card-text" style="font-size: 16px; max-width: 800px; margin: 0 auto; color: var(--ink);">
+At InfoSec, IT and Security work hand-in-hand to power the organisation's goals while keeping it protected. We don't just defend; we enable. From securing infrastructure to supporting day-to-day operations, we make sure the right people have the right access, safely and efficiently.
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="panel guidelines-panel">
+<div class="visual"><div class="hex"><span class="material-icons">security</span></div><div class="visual-title">General IT / Security Guidelines</div></div>
+<div class="main"><h2>General IT / Security Guidelines</h2><div class="lead">All of these pointers are important. Use the autoplay highlight to walk through them cleanly.</div>
+<div class="cards col-4">
+<div class="card theme-blue"><div class="card-title"><span class="material-icons">lock</span> Lock your device</div><div class="card-text">when unattended, even for a short time.</div></div>
+<div class="card theme-red"><div class="card-title"><span class="material-icons">password</span> Never share your password</div><div class="card-text">with anyone, including IT staff and your manager.</div></div>
+<div class="card theme-cyan"><div class="card-title"><span class="material-icons">cloud_off</span> Do not use public cloud storage</div><div class="card-text">for Turing related information on services like Google Drive, Dropbox, etc.</div></div>
+<div class="card theme-orange"><div class="card-title"><span class="material-icons">gpp_bad</span> Avoid suspicious links</div><div class="card-text">untrusted websites, and unexpected prompts.</div></div>
+<div class="card theme-orange"><div class="card-title"><span class="material-icons">notification_important</span> Be aware of urgent requests</div><div class="card-text">asking for financial details, login credentials, or immediate action.</div></div>
+<div class="card theme-purple"><div class="card-title"><span class="material-icons">verified_user</span> You are the last line of defense</div><div class="card-text">against cyber threats. Report all security incidents immediately.</div></div>
+<div class="card theme-red"><div class="card-title"><span class="material-icons">phishing</span> Report phishing</div><div class="card-text">emails to IT or your security team.</div></div>
+<div class="card theme-green"><div class="card-title"><span class="material-icons">work</span> Use Turing email for work only</div><div class="card-text">and keep work communications in approved channels.</div></div>
+<div class="card theme-grey"><div class="card-title"><span class="material-icons">travel_explore</span> Browse with a business reason</div><div class="card-text">and avoid wandering on the internet without a work purpose.</div></div>
+<div class="card theme-purple"><div class="card-title"><span class="material-icons">app_blocking</span> Do not install unauthorized software</div><div class="card-text">especially from unverified sources.</div></div>
+<div class="card span-2 theme-blue"><div class="card-title"><span class="material-icons">contact_support</span> When in doubt, ask IT:</div><div class="card-text">itsupport@turing.com</div></div>
+</div></div>
+</section>
+
+<section class="panel">
+<div class="visual"><div class="hex"><span class="material-icons">hub</span></div><div class="visual-title">Collaboration Tools</div></div>
+<div class="main"><h2>Primary collaboration tools</h2><div class="lead">These are the tools employees will use for communication, meetings, files, ticketing, and app access.</div>
+<div class="cards col-3">
+<div class="card theme-red"><div class="card-title">
+    <svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="52 42 88 66"><path fill="#4285f4" d="M58 108h14V74L52 59v43c0 3.32 2.69 6 6 6"></path><path fill="#34a853" d="M120 108h14c3.32 0 6-2.69 6-6V59l-20 15"></path><path fill="#fbbc04" d="M120 48v26l20-15v-8c0-7.42-8.47-11.65-14.4-7.2"></path><path fill="#ea4335" d="M72 74V48l24 18 24-18v26L96 92"></path><path fill="#c5221f" d="M52 51v8l20 15V48l-5.6-4.2c-5.94-4.45-14.4-.22-14.4 7.2"></path></svg>
+    Gmail</div><div class="card-text">For email communication</div></div>
+<div class="card theme-purple"><div class="card-title">
+    <svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="-2.45 0 2452.5 2452.5"><g clip-rule="evenodd" fill-rule="evenodd"><path d="m897.4 0c-135.3.1-244.8 109.9-244.7 245.2-.1 135.3 109.5 245.1 244.8 245.2h244.8v-245.1c.1-135.3-109.5-245.1-244.9-245.3.1 0 .1 0 0 0m0 654h-652.6c-135.3.1-244.9 109.9-244.8 245.2-.2 135.3 109.4 245.1 244.7 245.3h652.7c135.3-.1 244.9-109.9 244.8-245.2.1-135.4-109.5-245.2-244.8-245.3z" fill="#36c5f0"></path><path d="m2447.6 899.2c.1-135.3-109.5-245.1-244.8-245.2-135.3.1-244.9 109.9-244.8 245.2v245.3h244.8c135.3-.1 244.9-109.9 244.8-245.3zm-652.7 0v-654c.1-135.2-109.4-245-244.7-245.2-135.3.1-244.9 109.9-244.8 245.2v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.3z" fill="#2eb67d"></path><path d="m1550.1 2452.5c135.3-.1 244.9-109.9 244.8-245.2.1-135.3-109.5-245.1-244.8-245.2h-244.8v245.2c-.1 135.2 109.5 245 244.8 245.2zm0-654.1h652.7c135.3-.1 244.9-109.9 244.8-245.2.2-135.3-109.4-245.1-244.7-245.3h-652.7c-135.3.1-244.9 109.9-244.8 245.2-.1 135.4 109.4 245.2 244.7 245.3z" fill="#ecb22e"></path><path d="m0 1553.2c-.1 135.3 109.5 245.1 244.8 245.2 135.3-.1 244.9-109.9 244.8-245.2v-245.2h-244.8c-135.3.1-244.9 109.9-244.8 245.2zm652.7 0v654c-.2 135.3 109.4 245.1 244.7 245.3 135.3-.1 244.9-109.9 244.8-245.2v-653.9c.2-135.3-109.4-245.1-244.7-245.3-135.4 0-244.9 109.8-244.8 245.1 0 0 0 .1 0 0" fill="#e01e5a"></path></g></svg>
+    Slack</div><div class="card-text">For messaging and day to day communication</div></div>
+<div class="card theme-blue"><div class="card-title">
+    <svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 224.72337"><path d="m 814.1856,67.388717 c 3.82247,6.59494 5.07303,14.0983 5.48595,22.53368 l 0.5427,11.243253 v 78.62013 l 0.55449,11.25504 c 1.10899,18.38088 14.66459,31.97188 33.18704,33.12806 l 11.19606,0.55449 V 101.16565 l 0.55449,-11.243253 c 0.46011,-8.341 1.69888,-15.98593 5.58033,-22.62806 a 44.902197,44.902197 0 0 1 77.74711,0.14157 c 3.82246,6.59494 5.01403,14.23987 5.47415,22.48649 l 0.55449,11.207863 v 78.65552 l 0.55449,11.25504 c 1.15618,18.47526 14.60561,32.06626 33.18705,33.12806 L 1000,224.72337 V 89.922397 A 89.898775,89.898775 0 0 0 910.13662,0.02362708 89.662821,89.662821 0 0 0 842.71254,30.473587 89.780798,89.780798 0 0 0 775.28845,0.01182708 c -18.66402,0 -35.9831,5.66292002 -50.32915,15.44323992 C 716.20538,5.6865371 696.62113,0.01182708 685.37788,0.01182708 V 224.72337 l 11.24325,-0.55449 c 18.80559,-1.23877 32.39659,-14.46403 33.12805,-33.12806 l 0.60168,-11.25504 v -78.62013 l 0.5545,-11.243253 c 0.47191,-8.48257 1.65168,-15.93874 5.48595,-22.58087 a 45.020174,45.020174 0 0 1 38.89714,-22.39211 44.949388,44.949388 0 0 1 38.89715,22.4393 z M 44.93759,224.18067 l 11.243246,0.5427 H 224.71155 l -0.5545,-11.20785 c -1.52191,-18.47526 -14.6056,-31.97188 -33.13985,-33.17525 l -11.24324,-0.55449 H 78.667327 L 213.4683,44.937617 212.91381,33.741567 C 212.04077,15.077537 198.40259,1.5927271 179.77396,0.56631708 l -11.24325,-0.5073 L 0,0.01182708 0.55449376,11.255077 C 2.0292112,29.553367 15.301668,43.333127 33.682546,44.394927 l 11.255044,0.55449 H 146.04422 L 11.243246,179.79758 11.79774,191.04082 c 1.108987,18.52245 14.475826,31.93648 33.13985,33.12806 z M 641.26613,32.903927 a 112.34987,112.34987 0 0 1 0,158.903753 112.43246,112.43246 0 0 1 -158.93914,0 c -43.8758,-43.8758 -43.8758,-115.027963 0,-158.903753 A 112.29089,112.29089 0 0 1 561.72577,2.7082708e-5 112.37347,112.37347 0 0 1 641.26613,32.915727 Z m -31.7949,31.8185 a 67.447677,67.447677 0 0 1 0,95.349333 67.447677,67.447677 0 0 1 -95.34934,0 67.447677,67.447677 0 0 1 0,-95.349333 67.447677,67.447677 0 0 1 95.34934,0 z M 325.91256,2.7082708e-5 A 112.29089,112.29089 0 0 1 405.31134,32.915727 c 43.88759,43.86399 43.88759,115.027953 0,158.891953 a 112.43246,112.43246 0 0 1 -158.93914,0 c -43.8758,-43.8758 -43.8758,-115.027963 0,-158.903753 A 112.29089,112.29089 0 0 1 325.77098,2.7082708e-5 Z M 373.51643,64.698837 a 67.447677,67.447677 0 0 1 0,95.361123 67.447677,67.447677 0 0 1 -95.34933,0 67.447677,67.447677 0 0 1 0,-95.349333 67.447677,67.447677 0 0 1 95.34933,0 z" style="fill:#2d8cff;fill-rule:evenodd"></path></svg>
+    Zoom</div><div class="card-text">For Video conferencing</div></div>
+<div class="card theme-green"><div class="card-title"><span class="material-icons">folder_shared</span> Google Workspace tools</div><div class="card-text">Sheets/Docs/Slides/Meet/Drive etc</div></div>
+<div class="card theme-cyan"><div class="card-title"><span class="material-icons">task</span> Jira</div><div class="card-text">For ticketing and Project management</div></div>
+<div class="card theme-grey"><div class="card-title"><span class="material-icons">fingerprint</span> Okta</div><div class="card-text">For SSO related apps</div></div>
+</div></div>
+</section>
+
+<section class="panel">
+<div class="visual"><div class="hex"><span class="material-icons">rocket_launch</span></div><div class="visual-title">Getting Started Tips</div></div>
+<div class="main"><h2>Getting Started Tips</h2><div class="lead">Start with Gmail, then use the invitation emails to complete Slack, Okta, and multi factor authentication setup.</div>
+<div class="cards col-4">
+<div class="card span-2 theme-blue"><div class="card-title"><span class="material-icons">explore</span> Visit the IT Tech Orientation site</div><div class="card-text">Visit the IT Tech Orientation site for all the info for setup.</div></div>
+<div class="card span-2 theme-red"><div class="card-title"><span class="material-icons">mail</span> Log into Gmail</div><div class="card-text">important emails are waiting in your inbox like Slack &amp; Okta invitations</div></div>
+<div class="card span-2 theme-orange"><div class="card-title"><span class="material-icons">gpp_maybe</span> MANDATORY</div><div class="card-text">Set up 2FA via Google Authenticator within the first 24 hours, and add the Recovery email and phone number so that you are not locked out frequently.</div></div>
+<div class="card theme-purple"><div class="card-title"><span class="material-icons">chat</span> Setup Slack</div><div class="card-text">locate the invitation email in your inbox</div></div>
+<div class="card theme-grey"><div class="card-title"><span class="material-icons">vpn_key</span> Setup Okta</div><div class="card-text">locate the invitation email in your inbox</div></div>
+</div></div>
+</section>
+
+<section class="panel">
+<div class="visual"><div class="hex"><span class="material-icons">school</span></div><div class="visual-title">Security Awareness Training</div></div>
+<div class="main"><h2>Security Awareness Training</h2><div class="lead">Turing security awareness training is a mandatory training course for all new employees. The security awareness tool is Adaptive. The training must be completed within 30 days of the start date.</div>
+<div class="cards col-3">
+<div class="card theme-orange"><div class="card-title"><span class="material-icons">model_training</span> Adaptive</div><div class="card-text">The security awareness tool is Adaptive. <span class="dont-ignore">Please do not ignore it.</span></div></div>
+<div class="card theme-blue"><div class="card-title"><span class="material-icons">mark_email_read</span> Email Security</div><div class="card-text">The course covers this topic.</div></div>
+<div class="card theme-red"><div class="card-title"><span class="material-icons">phishing</span> Phishing</div><div class="card-text">The course covers this topic.</div></div>
+<div class="card theme-green"><div class="card-title"><span class="material-icons">travel_explore</span> Browsing Safely</div><div class="card-text">The course covers this topic.</div></div>
+<div class="card theme-purple"><div class="card-title"><span class="material-icons">password</span> Passwords</div><div class="card-text">The course covers this topic.</div></div>
+<div class="card theme-cyan"><div class="card-title"><span class="material-icons">psychology</span> Social Engineering</div><div class="card-text">Security is a shared responsibility and requires all employees to be educated on how to protect our data, people and assets.</div></div>
+</div></div>
+</section>
+
+<section class="panel">
+<div class="visual"><div class="hex"><span class="material-icons">timer</span></div><div class="visual-title">SLAs / Response Times</div></div>
+<div class="main"><h2>SLAs / Response Times</h2><div class="lead">Priority Levels and Response Targets</div><div class="table-container"><table><thead><tr><th>Priority</th><th>Description</th><th>Initial Response Time</th><th>Target Resolution Time</th></tr></thead><tbody>
+<tr><td class="priority-0">P0 – Highest</td><td>Critical request requiring immediate action. Usually impacts business operations or leadership.</td><td>15 minutes</td><td>2 hours</td></tr>
+<tr><td class="priority-1">P1 – High</td><td>Urgent request impacting user productivity or time-sensitive operations.</td><td>30 minutes</td><td>4 hours</td></tr>
+<tr><td class="priority-2">P2 – Medium</td><td>Standard IT request with moderate impact.</td><td>4 business hours</td><td>1 business day</td></tr>
+<tr><td class="priority-3">P3 – Low</td><td>Non-urgent request with minimal impact on issues.</td><td>8 business hours</td><td>3 business days</td></tr>
+<tr><td class="priority-4">P4 – Lowest</td><td>Informational requests, improvements, or low-priority service requests.</td><td>10 business hours</td><td>4 business days</td></tr>
+</tbody></table></div></div>
+</section>
+
+<section class="panel complete-panel">
+<div class="visual"><div class="hex"><span class="material-icons">support_agent</span></div><div class="visual-title">Contact &amp; Complete</div></div>
+<div class="main">
+<h2>Contact &amp; Complete Orientation</h2>
+<div class="lead">Congratulations. You have completed Turing's IT Orientation. You now know where to get support. Use the right channel depending on the request. For leads working with Non FTEs, advise the dedicated channel.</div>
+
+<div class="cards col-3">
+<div class="card theme-blue"><div class="card-title"><span class="material-icons">confirmation_number</span> Submit a ticket via JIRA</div></div>
+<div class="card theme-red"><div class="card-title"><span class="material-icons">email</span> Email</div><div class="card-text">itsupport@turing.com</div></div>
+<div class="card theme-purple"><div class="card-title"><span class="material-icons">forum</span> Slack</div><div class="card-text">#support-it-workspace</div></div>
+<div class="card theme-green"><div class="card-title"><span class="material-icons">security</span> Security question or issue</div><div class="card-text">security@turing.com</div></div>
+<div class="card theme-orange"><div class="card-title"><span class="material-icons">trending_up</span> Escalations</div><div class="card-text">Edwin Katabaro, Head of Information Security, edwin@turing.com</div></div>
+<div class="card theme-grey"><div class="card-title"><span class="material-icons">badge</span> Support for Non FTEs</div><div class="card-text">Send us an email on turingitsupport@turing.com</div></div>
+</div>
+
+<div class="complete-card show" style="margin-top: 24px;">
+<div class="complete-title">Done - you're ready to start!</div>
+<div class="complete-sub">You know where to go, what to set up, and how to reach IT when you need support. We are just a ticket away :)</div>
+</div>
+</div>
+</section>
+</div>
+
+<div class="footer">
+<button class="nav-btn" id="itV2Prev" disabled="">Previous</button>
+<div class="progress" id="itV2Progress">1 / 7</div>
+<button class="nav-btn primary" id="itV2Next">Next</button>
+</div>
+</div>
+
+<script>
+(function(){
+var root=document.currentScript.closest('.it-v2');
+var tabs=root.querySelectorAll('.tab');
+var panels=root.querySelectorAll('.panel');
+var prev=root.querySelector('#itV2Prev');
+var next=root.querySelector('#itV2Next');
+var progress=root.querySelector('#itV2Progress');
+var heroTitle=root.querySelector('#itV2HeroTitle');
+var heroSubtitle=root.querySelector('#itV2HeroSubtitle');
+var confettiLayer=root.querySelector('.confetti-layer');
+var current=0,cardTimer=null,activeCardIndex=0,confettiReady=true;
+
+function clearCardTimer(){if(cardTimer)clearInterval(cardTimer);cardTimer=null}
+
+function startCardAutoplay(){
+    clearCardTimer();
+    var cards=panels[current].querySelectorAll('.card:not(.reflection-card)');
+    if(!cards.length)return;
+    
+    var currentActive=panels[current].querySelector('.card.active:not(.reflection-card)');
+    if(!currentActive){
+        cards[0].classList.add('active');
+        activeCardIndex=0;
+    } else {
+        activeCardIndex=Array.from(cards).indexOf(currentActive);
+    }
+    
+    cardTimer=setInterval(function(){
+        cards[activeCardIndex].classList.remove('active');
+        activeCardIndex=(activeCardIndex+1)%cards.length;
+        cards[activeCardIndex].classList.add('active');
+    }, 2200);
+}
+
+root.querySelectorAll('.card').forEach(function(card){
+    card.addEventListener('mouseenter',function(){
+        clearCardTimer();
+        var panelCards=card.closest('.panel').querySelectorAll('.card');
+        panelCards.forEach(function(c){c.classList.remove('active')});
+        card.classList.add('active');
+    });
+    card.addEventListener('mouseleave',function(){
+        var parentPanel=card.closest('.panel');
+        if(parentPanel===panels[current])startCardAutoplay();
+    });
+});
+
+function go(i,playConfetti){
+    if(i<0||i>=tabs.length)return;
+    tabs[current].classList.remove('active');
+    panels[current].classList.remove('active');
+    current=i;
+    tabs[current].classList.add('active');
+    panels[current].classList.add('active');
+    var panelTitle=panels[current].querySelector('.main h2');
+    var panelSubtitle=panels[current].querySelector('.main > .lead');
+    if(heroTitle&&panelTitle)heroTitle.textContent=panelTitle.textContent.trim();
+    if(heroSubtitle&&panelSubtitle)heroSubtitle.textContent=panelSubtitle.textContent.trim();
+    progress.textContent=(current+1)+' / '+tabs.length;
+    prev.disabled=current===0;
+    next.textContent=current===tabs.length-1?'Done':'Next';
+    startCardAutoplay();
+    if(playConfetti&&current===tabs.length-1)launchConfetti();
+}
+
+function launchConfetti(){
+    if(!confettiReady)return;
+    confettiReady=false;
+    confettiLayer.innerHTML='';
+    var colors=['#317eff','#10b981','#f59e0b','#ef4444','#8b5cf6','#0ea5e9'];
+    for(var i=0;i<110;i++){
+        var piece=document.createElement('span');
+        piece.className='confetti';
+        piece.style.left=(Math.random()*100)+'%';
+        piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+        piece.style.animationDelay=(Math.random()*0.35)+'s';
+        piece.style.transform='rotate('+(Math.random()*180)+'deg)';
+        confettiLayer.appendChild(piece);
+    }
+    setTimeout(function(){confettiLayer.innerHTML='';confettiReady=true},3300);
+}
+
+tabs.forEach(function(tab,i){tab.addEventListener('click',function(){go(i,i===tabs.length-1)})});
+prev.addEventListener('click',function(){go(current-1,false)});
+next.addEventListener('click',function(){if(current<tabs.length-1){go(current+1,current+1===tabs.length-1)}else{launchConfetti()}});
+
+go(0,false);
+})();
+</script>
+</div></body></html>

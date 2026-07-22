@@ -1,0 +1,1122 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slack Onboarding Mockup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --slack-purple-dark: #3f0e40;
+      --slack-purple-mid:  #4a154b;
+      --slack-purple-light:#5a1d5b;
+      --slack-sidebar-bg:  #3f0e40;
+      --slack-active:      #1164a3;
+      --slack-hover:       rgba(255,255,255,0.1);
+      --slack-text-white:  #ffffff;
+      --slack-text-dim:    rgba(255,255,255,0.72);
+      --slack-text-faint:  rgba(255,255,255,0.5);
+      --slack-main-bg:     #ffffff;
+      --slack-border:      #e8e8e8;
+      --slack-msg-hover:   #f8f8f8;
+      --slack-blue:        #1264a3;
+      --slack-green:       #2bac76;
+      --rainbow: linear-gradient(90deg, #4A154B, #E01E5A, #ECB22E, #2EB67D, #36C5F0, #4A154B);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #eeeaf4;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* ── Rainbow wrapper ── */
+    .card-wrap {
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 16px;
+      padding: 3px;
+      background: var(--rainbow);
+      background-size: 200% 100%;
+      animation: shimmer 3s linear infinite;
+      box-shadow: 0 24px 70px rgba(74,21,75,0.32), 0 4px 16px rgba(74,21,75,0.18);
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+
+    /* ── Mac window frame ── */
+    .window {
+      border-radius: 13px;
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Title bar */
+    .titlebar {
+      height: 40px;
+      background: linear-gradient(180deg, #4a154b 0%, #3f0e40 100%);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0 14px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .titlebar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      margin-right: 14px;
+    }
+
+    .tl {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+    .tl.red    { background: #ff5f57; border: 1px solid #e0443e; }
+    .tl.yellow { background: #febc2e; border: 1px solid #d4a017; }
+    .tl.green  { background: #28c840; border: 1px solid #14ae32; }
+
+    .tb-nav {
+      display: flex;
+      gap: 2px;
+      margin-right: 10px;
+    }
+
+    .tb-btn {
+      width: 26px; height: 26px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.75);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .tb-search {
+      flex: 1;
+      max-width: 420px;
+      height: 26px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      color: rgba(255,255,255,0.65);
+      font-size: 11px;
+      font-family: 'Poppins', sans-serif;
+      margin: 0 auto;
+    }
+
+    .tb-search svg {
+      width: 12px; height: 12px;
+      stroke: rgba(255,255,255,0.5);
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    .tb-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 10px;
+    }
+
+    .tb-icon {
+      width: 26px; height: 26px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.75);
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* ── App body ── */
+    .app-body {
+      display: grid;
+      grid-template-columns: 68px 260px 1fr;
+      height: 580px;
+    }
+
+    /* Global nav bar */
+    .globalbar {
+      background: var(--slack-purple-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0 12px;
+      gap: 2px;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .gb-workspace {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .gb-item {
+      width: 46px; height: 42px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      cursor: pointer;
+      color: var(--slack-text-dim);
+      transition: background 0.15s;
+    }
+    .gb-item:hover { background: var(--slack-hover); color: #fff; }
+    .gb-item.active { background: rgba(255,255,255,0.15); color: #fff; }
+
+    .gb-item svg {
+      width: 22px; height: 22px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+    }
+
+    .gb-label {
+      font-size: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .gb-spacer { flex: 1; }
+
+    .gb-plus {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      margin-bottom: 6px;
+    }
+
+    .gb-avatar {
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f0bc5b, #df9e25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+    }
+    .gb-avatar::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; right: -2px;
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: #2bac76;
+      border: 1.5px solid var(--slack-purple-dark);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--slack-sidebar-bg);
+      padding: 10px 8px 10px;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .sb-workspace {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px 12px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .sb-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--slack-text-faint);
+      padding: 12px 10px 5px;
+      font-family: 'Poppins', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .sb-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 7px;
+      color: var(--slack-text-dim);
+      font-size: 14px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      cursor: pointer;
+      transition: background 0.12s;
+      position: relative;
+    }
+    .sb-row:hover { background: var(--slack-hover); color: #fff; }
+    .sb-row.active {
+      background: var(--slack-blue);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .sb-icon {
+      font-size: 14px;
+      width: 16px;
+      text-align: center;
+      flex-shrink: 0;
+      opacity: 0.8;
+    }
+
+    .sb-badge {
+      margin-left: auto;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #e01e5a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0 5px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .sb-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #2bac76;
+      flex-shrink: 0;
+    }
+
+    /* ── Main content area ── */
+    .main {
+      display: flex;
+      flex-direction: column;
+      background: var(--slack-main-bg);
+      min-width: 0;
+    }
+
+    /* Channel header */
+    .channel-header {
+      height: 50px;
+      border-bottom: 1px solid var(--slack-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: #fff;
+      flex-shrink: 0;
+    }
+
+    .ch-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ch-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1d1c1d;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .ch-desc {
+      font-size: 14px;
+      color: #616061;
+      font-weight: 400;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .ch-divider {
+      width: 1px; height: 18px;
+      background: #e8e8e8;
+    }
+
+    .ch-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ch-avatars {
+      display: flex;
+    }
+
+    .ch-av {
+      width: 22px; height: 22px;
+      border-radius: 4px;
+      border: 1.5px solid #fff;
+      margin-left: -5px;
+    }
+    .ch-av:first-child { margin-left: 0; }
+    .ch-av-1 { background: linear-gradient(135deg, #f1b067, #cc6c34); }
+    .ch-av-2 { background: linear-gradient(135deg, #50c084, #239663); }
+    .ch-av-3 { background: linear-gradient(135deg, #ffbf7d, #d46a3d); }
+
+    .ch-count {
+      font-size: 12px;
+      color: #616061;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .ch-btn {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fff;
+      font-size: 12px;
+      color: #1d1c1d;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Chat area */
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* Event banner */
+    .event-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff8f0;
+      border-left: 3px solid #e8912d;
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: #4a3728;
+      margin-bottom: 10px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .event-banner strong {
+      font-weight: 600;
+      color: #1d1c1d;
+    }
+
+    /* Messages */
+    .msg {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 10px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      transition: background 0.1s;
+    }
+    .msg:hover { background: var(--slack-msg-hover); }
+
+    .msg-avatar {
+      width: 36px; height: 36px;
+      border-radius: 6px;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+    .av-orange { background: linear-gradient(135deg, #f1b067, #cc6c34); }
+    .av-green  { background: linear-gradient(135deg, #50c084, #239663); }
+    .av-pink   { background: linear-gradient(135deg, #f685b5, #c23a7a); }
+    .av-teal   { background: linear-gradient(135deg, #5bc8d3, #2a8fa0); }
+
+    .msg-body { min-width: 0; }
+
+    .msg-head {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 2px;
+      flex-wrap: wrap;
+    }
+
+    Mpx;
+      font-weight: 700;
+      color: #1d1c1d;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .msg-app-badge {
+      font-size: 9px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: #e8e8e8;
+      color: #616061;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.04em;
+    }
+
+    Kpx;
+      color: #939093;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    Mpx;
+      	.52;
+      color: #1d1c1d;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+    }
+
+    .msg-mention { color: #1264a3; font-weight: 500; }
+
+    /* Meeting card / attachment */
+    .slack-card {
+      display: inline-flex;
+      flex-direction: column;
+      margin-top: 6px;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 10px 14px;
+      max-width: 340px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .slack-card-icon {
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .icon-blue   { background: #1264a3; }
+    .icon-orange { background: #e8912d; }
+
+    Mpx;
+      font-weight: 600;
+      color: #1d1c1d;
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 2px;
+    }
+
+    Kpx;
+      color: #616061;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Huddle note */
+    Lpx;
+      color: #616061;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .huddle-row strong { color: #1d1c1d; font-weight: 600; }
+
+    /* Composer */
+    .composer {
+      flex-shrink: 0;
+      margin: 0 16px 12px;
+      border: 1px solid #c7c7c7;
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    Mpx;
+      color: #939093;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+    }
+
+    .composer-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 4px 10px 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .ct-btn {
+      width: 28px; height: 28px;
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      color: #616061;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .ct-btn:hover { background: #f0f0f0; }
+
+    .ct-sep {
+      width: 1px; height: 18px;
+      background: #e8e8e8;
+      margin: 0 4px;
+    }
+
+    .ct-send {
+      margin-left: auto;
+      width: 30px; height: 30px;
+      border-radius: 6px;
+      background: #007a5a;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Hotspots — premium sequential breath */
+    .hotspot {
+      position: absolute;
+      z-index: 5;
+      width: 38px; height: 38px;
+      border: 2px solid rgba(18,100,163,0.45);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      display: grid; place-items: center;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+    }
+
+    .hs-search    { animation: hsBreath1 12s ease-in-out infinite; }
+    .hs-workspace { animation: hsBreath2 12s ease-in-out infinite; }
+    .hs-channels  { animation: hsBreath3 12s ease-in-out infinite; }
+    .hs-dms       { animation: hsBreath4 12s ease-in-out infinite; }
+    .hs-composer  { animation: hsBreath5 12s ease-in-out infinite; }
+
+    @keyframes hsBreath1 {
+      0%,14%,100% { transform:scale(1);    box-shadow:0 2px 8px rgba(0,0,0,0.12); border-color:rgba(18,100,163,0.4); }
+      5%          { transform:scale(1.22); box-shadow:0 0 0 12px rgba(18,100,163,0),0 6px 24px rgba(18,100,163,0.55); border-color:rgba(18,100,163,1); }
+      10%         { transform:scale(1.1);  box-shadow:0 0 0 6px rgba(18,100,163,0.07),0 3px 12px rgba(18,100,163,0.22); border-color:rgba(18,100,163,0.65); }
+    }
+    @keyframes hsBreath2 {
+      0%,15%,37%,100% { transform:scale(1);    box-shadow:0 2px 8px rgba(0,0,0,0.12); border-color:rgba(18,100,163,0.4); }
+      24%             { transform:scale(1.22); box-shadow:0 0 0 12px rgba(18,100,163,0),0 6px 24px rgba(18,100,163,0.55); border-color:rgba(18,100,163,1); }
+      31%             { transform:scale(1.1);  box-shadow:0 0 0 6px rgba(18,100,163,0.07),0 3px 12px rgba(18,100,163,0.22); border-color:rgba(18,100,163,0.65); }
+    }
+    @keyframes hsBreath3 {
+      0%,38%,60%,100% { transform:scale(1);    box-shadow:0 2px 8px rgba(0,0,0,0.12); border-color:rgba(18,100,163,0.4); }
+      47%             { transform:scale(1.22); box-shadow:0 0 0 12px rgba(18,100,163,0),0 6px 24px rgba(18,100,163,0.55); border-color:rgba(18,100,163,1); }
+      54%             { transform:scale(1.1);  box-shadow:0 0 0 6px rgba(18,100,163,0.07),0 3px 12px rgba(18,100,163,0.22); border-color:rgba(18,100,163,0.65); }
+    }
+    @keyframes hsBreath4 {
+      0%,61%,83%,100% { transform:scale(1);    box-shadow:0 2px 8px rgba(0,0,0,0.12); border-color:rgba(18,100,163,0.4); }
+      70%             { transform:scale(1.22); box-shadow:0 0 0 12px rgba(18,100,163,0),0 6px 24px rgba(18,100,163,0.55); border-color:rgba(18,100,163,1); }
+      77%             { transform:scale(1.1);  box-shadow:0 0 0 6px rgba(18,100,163,0.07),0 3px 12px rgba(18,100,163,0.22); border-color:rgba(18,100,163,0.65); }
+    }
+    @keyframes hsBreath5 {
+      0%,84%,100% { transform:scale(1);    box-shadow:0 2px 8px rgba(0,0,0,0.12); border-color:rgba(18,100,163,0.4); }
+      91%         { transform:scale(1.22); box-shadow:0 0 0 12px rgba(18,100,163,0),0 6px 24px rgba(18,100,163,0.55); border-color:rgba(18,100,163,1); }
+      96%         { transform:scale(1.1);  box-shadow:0 0 0 6px rgba(18,100,163,0.07),0 3px 12px rgba(18,100,163,0.22); border-color:rgba(18,100,163,0.65); }
+    }
+
+    .hotspot:hover {
+      transform: scale(1.2) !important;
+      box-shadow: 0 0 0 8px rgba(18,100,163,0.14), 0 6px 20px rgba(18,100,163,0.4) !important;
+      animation: none;
+    }
+
+    .hotspot.active {
+      transform: scale(1.2) !important;
+      background: #1264a3;
+      border-color: #1264a3;
+      box-shadow: 0 0 0 6px rgba(18,100,163,0.22), 0 6px 20px rgba(18,100,163,0.5) !important;
+      animation: none;
+    }
+
+    .hotspot.active svg { stroke: #ffffff; }
+
+    .hotspot svg {
+      width: 16px; height: 16px;
+      stroke: #1264a3;
+      stroke-width: 2.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      z-index: 10;
+      width: 320px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.18), 0 1px 4px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.08);
+      padding: 16px 18px;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      transition: opacity 0.18s ease, transform 0.2s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .tooltip.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .tooltip::before {
+      content: '';
+      position: absolute;
+      width: 12px; height: 12px;
+      background: #fff;
+      transform: rotate(45deg);
+      left: -6px; top: 22px;
+      border-left: 1px solid rgba(0,0,0,0.07);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .tt-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .tt-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1d1c1d;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .tt-close {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      color: #616061;
+      border: none;
+    }
+
+    .tt-body {
+      font-size: 12.5px;
+      line-height: 1.6;
+      color: #434040;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+    }
+
+    .tt-footer {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tt-step {
+      font-size: 11px;
+      color: #939093;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .tt-nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tt-nav-btn {
+      height: 26px;
+      padding: 0 12px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      border: none;
+    }
+    .tt-nav-btn.prev { background: #f0f0f0; color: #616061; }
+    .tt-nav-btn.next { background: #1264a3; color: #fff; }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4;
+      transition: opacity 0.15s;
+    }
+    .overlay.show { opacity: 1; pointer-events: auto; }
+
+    /* hotspot positions — relative to .scene */
+    .hs-search     { top: 12px;  left: 370px; }
+    .hs-workspace  { top: 148px; left: 196px; }
+    .hs-channels   { top: 268px; left: 200px; }
+    .hs-dms        { top: 478px; left: 200px; }
+    .hs-composer   { bottom: 34px; left: 360px; }
+
+    @media (max-width: 720px) {
+      .app-body { grid-template-columns: 44px 160px 1fr; }
+      .ch-desc, .ch-btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card-wrap">
+  <div class="scene">
+    <div class="window">
+
+      <!-- Title bar -->
+      <div class="titlebar">
+        <div class="traffic-lights">
+          <div class="tl red"></div>
+          <div class="tl yellow"></div>
+          <div class="tl green"></div>
+        </div>
+        <div class="tb-nav">
+          <div class="tb-btn">‹</div>
+          <div class="tb-btn">›</div>
+        </div>
+        <div class="tb-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5 21 21"></path></svg>
+          Search Turing
+        </div>
+        <div class="tb-right">
+          <div class="tb-icon">?</div>
+          <div class="tb-icon">🔔</div>
+        </div>
+      </div>
+
+      <!-- App body -->
+      <div class="app-body">
+
+        <!-- Global nav -->
+        <aside class="globalbar">
+          <div class="gb-workspace">📸</div>
+
+          <div class="gb-item active">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span class="gb-label">Home</span>
+          </div>
+
+          <div class="gb-item">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <span class="gb-label">DMs</span>
+          </div>
+
+          <div class="gb-item">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <span class="gb-label">Activity</span>
+          </div>
+
+          <div class="gb-item">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            <span class="gb-label">More</span>
+          </div>
+
+          <div class="gb-spacer"></div>
+          <div class="gb-plus">＋</div>
+          <div class="gb-avatar">FK</div>
+        </aside>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="sb-workspace">
+            <span>Turing</span>
+            <span style="font-size:11px;opacity:.6">▾</span>
+          </div>
+
+          <div class="sb-row"><span class="sb-icon">≡</span>Unreads</div>
+          <div class="sb-row"><span class="sb-icon">💬</span>Threads</div>
+          <div class="sb-row"><span class="sb-icon">📤</span>Drafts &amp; sent</div>
+
+          <div class="sb-section-title">Channels</div>
+          <div class="sb-row"><span class="sb-icon">#</span>announcements</div>
+          <div class="sb-row"><span class="sb-icon">🔒</span>design-crit</div>
+          <div class="sb-row"><span class="sb-icon">#</span>media-and-pr <span class="sb-badge">1</span></div>
+          <div class="sb-row active"><span class="sb-icon">#</span>social-media</div>
+          <div class="sb-row"><span class="sb-icon">#</span>team-marketing</div>
+
+          <div class="sb-section-title">Direct messages</div>
+          <div class="sb-row">
+            <div class="sb-dot"></div>Lee Hao
+            <span class="sb-badge">2</span>
+          </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+          <div class="channel-header">
+            <div class="ch-left">
+              <span class="ch-name"># social-media</span>
+              <div class="ch-divider"></div>
+              <span class="ch-desc">Track and coordinate social media</span>
+            </div>
+            <div class="ch-right">
+              <div class="ch-avatars">
+                <div class="ch-av ch-av-1"></div>
+                <div class="ch-av ch-av-2"></div>
+                <div class="ch-av ch-av-3"></div>
+              </div>
+              <span class="ch-count">58</span>
+              <div class="ch-btn">🎧 Huddle</div>
+            </div>
+          </div>
+
+          <div class="chat">
+            <div class="event-banner">
+              📅 <span><strong>Event starting in 15 minutes:</strong> Social Content Strategy Review</span>
+            </div>
+
+            <!-- Message 1 -->
+            <div class="msg">
+              <div class="msg-avatar av-teal"></div>
+              <div class="msg-body">
+                <div class="msg-head">
+                  <span class="msg-name">Turing Team</span>
+                  <span class="msg-app-badge">APP</span>
+                  <span class="msg-time">12:45 PM</span>
+                </div>
+                <div class="slack-card">
+                  <div class="slack-card-icon icon-blue">📝</div>
+                  <div class="slack-card-title">Team Status Meeting 📝</div>
+                  <div class="slack-card-meta">Today from 1:00 PM to 1:30 PM</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message 2 -->
+            <div class="msg">
+              <div class="msg-avatar av-pink"></div>
+              <div class="msg-body">
+                <div class="msg-head">
+                  <span class="msg-name">Zoe Maxwell</span>
+                  <span class="msg-time">12:55 PM</span>
+                </div>
+                <div class="msg-text">Today <span class="msg-mention">@Lisa</span> will join our team huddle to provide updates on the launch. If you have questions, bring them. See you all soon!</div>
+              </div>
+            </div>
+
+            <!-- Huddle note -->
+            <div class="huddle-row">
+              🎧 <span><strong>A huddle happened</strong> &nbsp;1:00 PM &nbsp;·&nbsp; Lisa Dawson and 5 others were in the huddle for 28 minutes.</span>
+            </div>
+
+            <!-- Message 3 -->
+            <div class="msg">
+              <div class="msg-avatar av-orange"></div>
+              <div class="msg-body">
+                <div class="msg-head">
+                  <span class="msg-name">Lee Hao</span>
+                  <span class="msg-time">1:45 PM</span>
+                </div>
+                <div class="msg-text">Please add any other notes from our sync today!</div>
+                <div class="slack-card">
+                  <div class="slack-card-icon icon-orange">📄</div>
+                  <div class="slack-card-title">1/9 Meeting notes</div>
+                  <div class="slack-card-meta">Canvas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Composer -->
+          <div class="composer">
+            <div class="composer-input">Message #social-media</div>
+            <div class="composer-toolbar">
+              <div class="ct-btn">＋</div>
+              <div class="ct-sep"></div>
+              <div class="ct-btn"><b>B</b></div>
+              <div class="ct-btn"><i>I</i></div>
+              <div class="ct-btn"><s>S</s></div>
+              <div class="ct-btn">☺</div>
+              <div class="ct-btn">@</div>
+              <div class="ct-btn">🔗</div>
+              <div class="ct-sep"></div>
+              <div class="ct-btn">🎙</div>
+              <div class="ct-send">▶</div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- Hotspots -->
+    <button class="hotspot hs-search" data-title="Search" data-body="Use search to find channels, messages, people, and files across the workspace instantly." data-step="1 of 5">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5 21 21"></path></svg>
+    </button>
+
+    <button class="hotspot hs-workspace" data-title="Workspace menu" data-body="The workspace menu helps you switch views, change settings, and access workspace-level actions from one place." data-step="2 of 5">
+      <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"></path></svg>
+    </button>
+
+    <button class="hotspot hs-channels" data-title="Channels" data-body="Channels organize conversations by topic, team, or project so updates stay easy to find and collaborate on." data-step="3 of 5">
+      <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"></path></svg>
+    </button>
+
+    <button class="hotspot hs-dms active" data-title="Direct messages" data-body="Direct messages are for smaller conversations with teammates when a full channel is not needed." data-step="4 of 5">
+      <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"></path></svg>
+    </button>
+
+    <button class="hotspot hs-composer" data-title="Huddle" data-body="Slack Huddles are instant, informal audio conversations within any channel or direct message — ideal for quick discussions and spontaneous collaboration." data-step="5 of 5">
+      <svg viewBox="0 0 24 24"><path d="M8 5l7 7-7 7"></path></svg>
+    </button>
+
+    <div class="overlay show" id="overlay"></div>
+
+    <div class="tooltip show" id="tooltip" style="left: 255.787px; top: 450px;">
+      <div class="tt-header">
+        <div class="tt-title" id="tt-title">Direct messages</div>
+        <button class="tt-close" id="tt-close">✕</button>
+      </div>
+      <div class="tt-body" id="tt-body">Direct messages are for smaller conversations with teammates when a full channel is not needed.</div>
+      <div class="tt-footer">
+        <span class="tt-step" id="tt-step">4 of 5</span>
+        <div class="tt-nav">
+          <button class="tt-nav-btn prev" id="tt-prev" style="">← Prev</button>
+          <button class="tt-nav-btn next" id="tt-next">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const hotspots = [...document.querySelectorAll('.hotspot')];
+  const tooltip  = document.getElementById('tooltip');
+  const ttTitle  = document.getElementById('tt-title');
+  const ttBody   = document.getElementById('tt-body');
+  const ttStep   = document.getElementById('tt-step');
+  const ttClose  = document.getElementById('tt-close');
+  const ttPrev   = document.getElementById('tt-prev');
+  const ttNext   = document.getElementById('tt-next');
+  const overlay  = document.getElementById('overlay');
+  const scene    = document.querySelector('.scene');
+
+  let currentIdx  = -1;
+  let autoTimer   = null;
+  let userPaused  = false;
+  const AUTO_DELAY = 2500; // ms per slide
+
+  function openAt(idx, fromUser = false) {
+    if (fromUser) {
+      userPaused = true;
+      clearTimeout(autoTimer);
+    }
+
+    const hs = hotspots[idx];
+    hotspots.forEach(h => h.classList.remove('active'));
+    hs.classList.add('active');
+    currentIdx = idx;
+
+    ttTitle.textContent = hs.dataset.title;
+    ttBody.textContent  = hs.dataset.body;
+    ttStep.textContent  = hs.dataset.step;
+
+    ttPrev.style.display = idx === 0 ? 'none' : '';
+    ttNext.textContent = idx === hotspots.length - 1 ? 'Done ✓' : 'Next →';
+
+    // Position tooltip
+    const sceneRect = scene.getBoundingClientRect();
+    const hsRect    = hs.getBoundingClientRect();
+    const ttW = 320, ttH = 160;
+
+    let left = hsRect.right - sceneRect.left + 14;
+    let top  = hsRect.top  - sceneRect.top  - 10;
+
+    if (left + ttW > sceneRect.width - 10) {
+      left = hsRect.left - sceneRect.left - ttW - 14;
+    }
+    if (top + ttH > sceneRect.height - 10) top = sceneRect.height - ttH - 10;
+    if (top < 6) top = 6;
+    if (left < 6) left = 6;
+
+    tooltip.style.left = left + 'px';
+    tooltip.style.top  = top  + 'px';
+
+    overlay.classList.add('show');
+    tooltip.classList.add('show');
+  }
+
+  function close(fromUser = false) {
+    if (fromUser) {
+      userPaused = true;
+      clearTimeout(autoTimer);
+    }
+    hotspots.forEach(h => h.classList.remove('active'));
+    overlay.classList.remove('show');
+    tooltip.classList.remove('show');
+    currentIdx = -1;
+  }
+
+  function autoAdvance() {
+    if (userPaused) return;
+    const next = (currentIdx + 1) % hotspots.length;
+    openAt(next, false);
+    autoTimer = setTimeout(autoAdvance, AUTO_DELAY);
+  }
+
+  // Manual hotspot clicks
+  hotspots.forEach((hs, i) => {
+    hs.addEventListener('click', e => {
+      e.stopPropagation();
+      currentIdx === i ? close(true) : openAt(i, true);
+    });
+  });
+
+  ttClose.addEventListener('click', () => close(true));
+  overlay.addEventListener('click', () => close(true));
+
+  ttNext.addEventListener('click', () => {
+    if (currentIdx < hotspots.length - 1) openAt(currentIdx + 1, true);
+    else close(true);
+  });
+
+  ttPrev.addEventListener('click', () => {
+    if (currentIdx > 0) openAt(currentIdx - 1, true);
+  });
+
+  // Kick off autoplay after a short initial delay
+  autoTimer = setTimeout(autoAdvance, 800);
+</script>
+
+</body></html>
